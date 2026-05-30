@@ -1,0 +1,169 @@
+particulars,posting_date,voucher_type,debit,credit,net_balance
+Opening Balance,,,,,-0.000343
+Funds added using UPI from VG7860 with reference number 109505823516,2026-04-02,Bank Receipts,0.000000,50000.000000,49999.999657
+Bank Modification Charges,2026-04-02,Journal Entry,29.500000,0.000000,49970.499657
+Net settlement for Equity with settlement number: 2026062,2026-04-02,Book Voucher,49637.666345,0.000000,332.833312
+Funds added using UPI from VG7860 with reference number 408642421056,2026-04-15,Bank Receipts,0.000000,50000.000000,50332.833312
+Funds added using UPI from VG7860 with reference number 103115596666,2026-04-15,Bank Receipts,0.000000,50000.000000,100332.833312
+Funds added using UPI from VG7860 with reference number 103115469960,2026-04-15,Bank Receipts,0.000000,50000.000000,150332.833312
+Net settlement for Equity with settlement number: 2026069,2026-04-15,Book Voucher,99146.816083,0.000000,51186.017229
+DP Charges for Sale of TARIL on 16/04/2026,2026-04-16,Journal Entry,15.340000,0.000000,51170.677229
+Net settlement for Equity with settlement number: 2026070,2026-04-16,Book Voucher,0.000000,8101.718584,59272.395813
+Charges for enabling DDPI,2026-04-16,Journal Entry,118.000000,0.000000,59154.395813
+Funds added using UPI from VG7860 with reference number 754282361076,2026-04-17,Bank Receipts,0.000000,10000.000000,69154.395813
+Funds added using UPI from VG7860 with reference number 752487321076,2026-04-17,Bank Receipts,0.000000,50000.000000,119154.395813
+Funds added using UPI from VG7860 with reference number 103123814252,2026-04-17,Bank Receipts,0.000000,100000.000000,219154.395813
+MTM obligation blocked for MTF,2026-04-17,MTF Delivery Voucher,5842.300000,0.000000,213312.095813
+Initial margin charged for MTF,2026-04-17,Book Voucher,206031.881560,0.000000,7280.214253
+Net settlement for Equity with settlement number: 2026071,2026-04-17,Book Voucher,839.893441,0.000000,6440.320812
+MTM obligation reversed for MTF,2026-04-20,MTF Delivery Voucher,0.000000,5842.300000,12282.620812
+MTM obligation blocked for MTF,2026-04-20,MTF Delivery Voucher,4543.700000,0.000000,7738.920812
+Interest for MTF funded value on 2026-04-18,2026-04-20,Journal Entry,168.814000,0.000000,7570.106812
+Interest for MTF funded value on 2026-04-19,2026-04-20,Journal Entry,168.814000,0.000000,7401.292812
+Interest for MTF funded value on 2026-04-20,2026-04-20,Journal Entry,168.814000,0.000000,7232.478812
+MTF pledge charges for AZAD,2026-04-20,Journal Entry,17.700000,0.000000,7214.778812
+MTF pledge charges for WABAG,2026-04-20,Journal Entry,17.700000,0.000000,7197.078812
+MTF pledge charges for JSWENERGY,2026-04-20,Journal Entry,17.700000,0.000000,7179.378812
+MTF pledge charges for OLECTRA,2026-04-20,Journal Entry,17.700000,0.000000,7161.678812
+MTM obligation reversed for MTF,2026-04-21,MTF Delivery Voucher,0.000000,4543.700000,11705.378812
+MTM obligation blocked for MTF,2026-04-21,MTF Delivery Voucher,1037.500000,0.000000,10667.878812
+Interest for MTF funded value on 2026-04-21,2026-04-21,Journal Entry,168.814000,0.000000,10499.064812
+Funds added using UPI from VG7860 with reference number 103149343171,2026-04-22,Bank Receipts,0.000000,50000.000000,60499.064812
+MTM obligation reversed for MTF,2026-04-22,MTF Delivery Voucher,0.000000,1037.500000,61536.564812
+Initial margin charged for MTF,2026-04-22,Book Voucher,49554.161250,0.000000,11982.403562
+Net settlement for Equity with settlement number: 2026074,2026-04-22,Book Voucher,157.091672,0.000000,11825.311890
+Interest for MTF funded value on 2026-04-22,2026-04-22,Journal Entry,168.814000,0.000000,11656.497890
+Interest for MTF funded value on 2026-04-23,2026-04-23,Journal Entry,194.351000,0.000000,11462.146890
+MTF pledge charges for TARIL,2026-04-23,Journal Entry,17.700000,0.000000,11444.446890
+MTM obligation blocked for MTF,2026-04-24,MTF Delivery Voucher,2035.500000,0.000000,9408.946890
+Net settlement for Equity with settlement number: 2026076,2026-04-24,Book Voucher,0.000000,138891.215410,148300.162300
+DP Charges for Sale of AZAD on 24/04/2026,2026-04-24,Journal Entry,15.340000,0.000000,148284.822300
+Interest for MTF funded value on 2026-04-24,2026-04-24,Journal Entry,194.351000,0.000000,148090.471300
+MTF unpledge charges for AZAD,2026-04-24,Journal Entry,17.700000,0.000000,148072.771300
+MTM obligation reversed for MTF,2026-04-27,MTF Delivery Voucher,0.000000,2035.500000,150108.271300
+MTM obligation blocked for MTF,2026-04-27,MTF Delivery Voucher,1075.000000,0.000000,149033.271300
+Initial margin charged for MTF,2026-04-27,Book Voucher,49059.000000,0.000000,99974.271300
+Net settlement for Equity with settlement number: 2026077,2026-04-27,Book Voucher,191.919133,0.000000,99782.352167
+Interest for MTF funded value on 2026-04-25,2026-04-27,Journal Entry,153.170000,0.000000,99629.182167
+Interest for MTF funded value on 2026-04-26,2026-04-27,Journal Entry,153.170000,0.000000,99476.012167
+Interest for MTF funded value on 2026-04-27,2026-04-27,Journal Entry,153.170000,0.000000,99322.842167
+Funds added using UPI from VG7860 with reference number 109700234985,2026-04-28,Bank Receipts,0.000000,20000.000000,119322.842167
+MTM obligation reversed for MTF,2026-04-28,MTF Delivery Voucher,0.000000,1075.000000,120397.842167
+MTM obligation blocked for MTF,2026-04-28,MTF Delivery Voucher,1523.000000,0.000000,118874.842167
+Initial margin charged for MTF,2026-04-28,Book Voucher,101802.239880,0.000000,17072.602287
+Net settlement for Equity with settlement number: 2026078,2026-04-28,Book Voucher,386.532318,0.000000,16686.069969
+Interest for MTF funded value on 2026-04-28,2026-04-28,Journal Entry,190.426000,0.000000,16495.643969
+MTF pledge charges for PGEL,2026-04-28,Journal Entry,17.700000,0.000000,16477.943969
+MTM obligation reversed for MTF,2026-04-29,MTF Delivery Voucher,0.000000,1523.000000,18000.943969
+MTM obligation blocked for MTF,2026-04-29,MTF Delivery Voucher,5405.600000,0.000000,12595.343969
+Interest for MTF funded value on 2026-04-29,2026-04-29,Journal Entry,264.579000,0.000000,12330.764969
+MTF pledge charges for GENUSPOWER,2026-04-29,Journal Entry,17.700000,0.000000,12313.064969
+MTF pledge charges for TRANSRAILL,2026-04-29,Journal Entry,17.700000,0.000000,12295.364969
+MTM obligation reversed for MTF,2026-04-30,MTF Delivery Voucher,0.000000,5405.600000,17700.964969
+MTM obligation blocked for MTF,2026-04-30,MTF Delivery Voucher,11757.600000,0.000000,5943.364969
+Interest for MTF funded value on 2026-04-30,2026-04-30,Journal Entry,264.579000,0.000000,5678.785969
+MTM obligation reversed for MTF,2026-05-04,MTF Delivery Voucher,0.000000,11757.600000,17436.385969
+MTM obligation blocked for MTF,2026-05-04,MTF Delivery Voucher,10864.600000,0.000000,6571.785969
+Interest for MTF funded value on 2026-05-01,2026-05-04,Journal Entry,264.579000,0.000000,6307.206969
+Interest for MTF funded value on 2026-05-02,2026-05-04,Journal Entry,264.579000,0.000000,6042.627969
+Interest for MTF funded value on 2026-05-03,2026-05-04,Journal Entry,264.579000,0.000000,5778.048969
+Interest for MTF funded value on 2026-05-04,2026-05-04,Journal Entry,264.579000,0.000000,5513.469969
+MTM obligation reversed for MTF,2026-05-05,MTF Delivery Voucher,0.000000,10864.600000,16378.069969
+MTM obligation blocked for MTF,2026-05-05,MTF Delivery Voucher,14822.100000,0.000000,1555.969969
+Interest for MTF funded value on 2026-05-05,2026-05-05,Journal Entry,264.579000,0.000000,1291.390969
+DP Charges for Sale of TRANSRAILL on 06/05/2026,2026-05-06,Journal Entry,15.340000,0.000000,1276.050969
+MTM obligation reversed for MTF,2026-05-06,MTF Delivery Voucher,0.000000,14822.100000,16098.150969
+MTM obligation blocked for MTF,2026-05-06,MTF Delivery Voucher,6075.000000,0.000000,10023.150969
+Net settlement for Equity with settlement number: 2026083,2026-05-06,Book Voucher,0.000000,43212.177965,53235.328934
+Interest for MTF funded value on 2026-05-06,2026-05-06,Journal Entry,264.579000,0.000000,52970.749934
+MTF unpledge charges for TRANSRAILL,2026-05-06,Journal Entry,17.700000,0.000000,52953.049934
+MTM obligation reversed for MTF,2026-05-07,MTF Delivery Voucher,0.000000,6075.000000,59028.049934
+MTM obligation blocked for MTF,2026-05-07,MTF Delivery Voucher,8325.000000,0.000000,50703.049934
+Interest for MTF funded value on 2026-05-07,2026-05-07,Journal Entry,226.251000,0.000000,50476.798934
+DP Charges for Sale of OLECTRA on 08/05/2026,2026-05-08,Journal Entry,15.340000,0.000000,50461.458934
+DP Charges for Sale of WABAG on 08/05/2026,2026-05-08,Journal Entry,15.340000,0.000000,50446.118934
+MTM obligation reversed for MTF,2026-05-08,MTF Delivery Voucher,0.000000,8325.000000,58771.118934
+MTM obligation blocked for MTF,2026-05-08,MTF Delivery Voucher,9612.500000,0.000000,49158.618934
+Initial margin charged for MTF,2026-05-08,Book Voucher,99770.736750,0.000000,-50612.117816
+Net settlement for Equity with settlement number: 2026085,2026-05-08,Book Voucher,0.000000,235507.164860,184895.047044
+Interest for MTF funded value on 2026-05-08,2026-05-08,Journal Entry,226.251000,0.000000,184668.796044
+MTF unpledge charges for OLECTRA,2026-05-08,Journal Entry,17.700000,0.000000,184651.096044
+MTF unpledge charges for WABAG,2026-05-08,Journal Entry,17.700000,0.000000,184633.396044
+MTM obligation reversed for MTF,2026-05-11,MTF Delivery Voucher,0.000000,9612.500000,194245.896044
+MTM obligation blocked for MTF,2026-05-11,MTF Delivery Voucher,21499.500000,0.000000,172746.396044
+Interest for MTF funded value on 2026-05-09,2026-05-11,Journal Entry,226.901000,0.000000,172519.495044
+Interest for MTF funded value on 2026-05-10,2026-05-11,Journal Entry,226.901000,0.000000,172292.594044
+Interest for MTF funded value on 2026-05-11,2026-05-11,Journal Entry,226.901000,0.000000,172065.693044
+MTF pledge charges for ANGELONE,2026-05-11,Journal Entry,17.700000,0.000000,172047.993044
+MTF pledge charges for HBLENGINE,2026-05-11,Journal Entry,17.700000,0.000000,172030.293044
+MTM obligation reversed for MTF,2026-05-12,MTF Delivery Voucher,0.000000,21499.500000,193529.793044
+MTM obligation blocked for MTF,2026-05-12,MTF Delivery Voucher,52398.500000,0.000000,141131.293044
+Interest for MTF funded value on 2026-05-12,2026-05-12,Journal Entry,226.901000,0.000000,140904.392044
+MTM obligation reversed for MTF,2026-05-13,MTF Delivery Voucher,0.000000,52398.500000,193302.892044
+MTM obligation blocked for MTF,2026-05-13,MTF Delivery Voucher,51621.000000,0.000000,141681.892044
+Additional maintenance margin blocked for MTF,2026-05-13,MTF Delivery Voucher,376.969638,0.000000,141304.922406
+Interest for MTF funded value on 2026-05-13,2026-05-13,Journal Entry,226.901000,0.000000,141078.021406
+MTM obligation reversed for MTF,2026-05-14,MTF Delivery Voucher,0.000000,51621.000000,192699.021406
+Additional maintenance margin reversed for MTF,2026-05-14,MTF Delivery Voucher,0.000000,376.969638,193075.991044
+MTM obligation blocked for MTF,2026-05-14,MTF Delivery Voucher,50282.000000,0.000000,142793.991044
+Additional maintenance margin blocked for MTF,2026-05-14,MTF Delivery Voucher,272.437625,0.000000,142521.553419
+Interest for MTF funded value on 2026-05-14,2026-05-14,Journal Entry,226.751000,0.000000,142294.802419
+MTM obligation reversed for MTF,2026-05-15,MTF Delivery Voucher,0.000000,50282.000000,192576.802419
+Additional maintenance margin reversed for MTF,2026-05-15,MTF Delivery Voucher,0.000000,272.437625,192849.240044
+MTM obligation blocked for MTF,2026-05-15,MTF Delivery Voucher,49929.500000,0.000000,142919.740044
+Additional maintenance margin blocked for MTF,2026-05-15,MTF Delivery Voucher,186.963150,0.000000,142732.776894
+Interest for MTF funded value on 2026-05-15,2026-05-15,Journal Entry,226.792000,0.000000,142505.984894
+MTM obligation reversed for MTF,2026-05-18,MTF Delivery Voucher,0.000000,49929.500000,192435.484894
+Additional maintenance margin reversed for MTF,2026-05-18,MTF Delivery Voucher,0.000000,186.963150,192622.448044
+MTM obligation blocked for MTF,2026-05-18,MTF Delivery Voucher,64280.000000,0.000000,128342.448044
+Additional maintenance margin blocked for MTF,2026-05-18,MTF Delivery Voucher,139.669200,0.000000,128202.778844
+Interest for MTF funded value on 2026-05-16,2026-05-18,Journal Entry,226.827000,0.000000,127975.951844
+Interest for MTF funded value on 2026-05-17,2026-05-18,Journal Entry,226.827000,0.000000,127749.124844
+Interest for MTF funded value on 2026-05-18,2026-05-18,Journal Entry,226.827000,0.000000,127522.297844
+MTM obligation reversed for MTF,2026-05-19,MTF Delivery Voucher,0.000000,64280.000000,191802.297844
+Additional maintenance margin reversed for MTF,2026-05-19,MTF Delivery Voucher,0.000000,139.669200,191941.967044
+MTM obligation blocked for MTF,2026-05-19,MTF Delivery Voucher,45488.250000,0.000000,146453.717044
+Additional maintenance margin blocked for MTF,2026-05-19,MTF Delivery Voucher,158.345550,0.000000,146295.371494
+Interest for MTF funded value on 2026-05-19,2026-05-19,Journal Entry,226.846000,0.000000,146068.525494
+MTM obligation reversed for MTF,2026-05-20,MTF Delivery Voucher,0.000000,45488.250000,191556.775494
+Additional maintenance margin reversed for MTF,2026-05-20,MTF Delivery Voucher,0.000000,158.345550,191715.121044
+MTM obligation blocked for MTF,2026-05-20,MTF Delivery Voucher,41042.250000,0.000000,150672.871044
+Additional maintenance margin blocked for MTF,2026-05-20,MTF Delivery Voucher,412.902050,0.000000,150259.968994
+Net settlement for Equity with settlement number: 2026093,2026-05-20,Book Voucher,54710.455866,0.000000,95549.513128
+Interest for MTF funded value on 2026-05-20,2026-05-20,Journal Entry,226.838000,0.000000,95322.675128
+MTM obligation reversed for MTF,2026-05-21,MTF Delivery Voucher,0.000000,41042.250000,136364.925128
+Additional maintenance margin reversed for MTF,2026-05-21,MTF Delivery Voucher,0.000000,412.902050,136777.827178
+MTM obligation blocked for MTF,2026-05-21,MTF Delivery Voucher,35933.500000,0.000000,100844.327178
+Interest for MTF funded value on 2026-05-21,2026-05-21,Journal Entry,226.736000,0.000000,100617.591178
+Funds added using UPI from VG7860 with reference number 573035771426,2026-05-22,Bank Receipts,0.000000,50000.000000,150617.591178
+MTM obligation reversed for MTF,2026-05-22,MTF Delivery Voucher,0.000000,35933.500000,186551.091178
+MTM obligation blocked for MTF,2026-05-22,MTF Delivery Voucher,36741.750000,0.000000,149809.341178
+Initial margin charged for MTF,2026-05-22,Book Voucher,101365.377000,0.000000,48443.964178
+Net settlement for Equity with settlement number: 2026095,2026-05-22,Book Voucher,416.286717,0.000000,48027.677461
+Interest for MTF funded value on 2026-05-22,2026-05-22,Journal Entry,226.901000,0.000000,47800.776461
+MTM obligation reversed for MTF,2026-05-25,MTF Delivery Voucher,0.000000,36741.750000,84542.526461
+MTM obligation blocked for MTF,2026-05-25,MTF Delivery Voucher,38151.500000,0.000000,46391.026461
+Interest for MTF funded value on 2026-05-23,2026-05-25,Journal Entry,310.792000,0.000000,46080.234461
+Interest for MTF funded value on 2026-05-24,2026-05-25,Journal Entry,310.792000,0.000000,45769.442461
+Interest for MTF funded value on 2026-05-25,2026-05-25,Journal Entry,310.792000,0.000000,45458.650461
+MTF pledge charges for AEROFLEX,2026-05-25,Journal Entry,17.700000,0.000000,45440.950461
+MTF pledge charges for CGPOWER,2026-05-25,Journal Entry,17.700000,0.000000,45423.250461
+Funds added using UPI from VG7860 with reference number 109884845032,2026-05-26,Bank Receipts,0.000000,150000.000000,195423.250461
+MTM obligation reversed for MTF,2026-05-26,MTF Delivery Voucher,0.000000,38151.500000,233574.750461
+MTM obligation blocked for MTF,2026-05-26,MTF Delivery Voucher,37446.850000,0.000000,196127.900461
+Initial margin charged for MTF,2026-05-26,Book Voucher,148745.595270,0.000000,47382.305191
+Net settlement for Equity with settlement number: 2026097,2026-05-26,Book Voucher,573.627266,0.000000,46808.677925
+Interest for MTF funded value on 2026-05-26,2026-05-26,Journal Entry,310.792000,0.000000,46497.885925
+Funds added using UPI from VG7860 with reference number 109890038587,2026-05-27,Bank Receipts,0.000000,50000.000000,96497.885925
+MTM obligation reversed for MTF,2026-05-27,MTF Delivery Voucher,0.000000,37446.850000,133944.735925
+MTM obligation blocked for MTF,2026-05-27,MTF Delivery Voucher,31307.600000,0.000000,102637.135925
+Net obligation for Equity F&O,2026-05-27,Book Voucher,48324.898554,0.000000,54312.237371
+Interest for MTF funded value on 2026-05-27,2026-05-27,Journal Entry,420.221000,0.000000,53892.016371
+MTF pledge charges for KIRLOSENG,2026-05-27,Journal Entry,17.700000,0.000000,53874.316371
+MTF pledge charges for WALCHANNAG,2026-05-27,Journal Entry,17.700000,0.000000,53856.616371
+MTF pledge charges for INOXINDIA,2026-05-27,Journal Entry,17.700000,0.000000,53838.916371
+MTM obligation reversed for MTF,2026-05-29,MTF Delivery Voucher,0.000000,31307.600000,85146.516371
+MTM obligation blocked for MTF,2026-05-29,MTF Delivery Voucher,34160.500000,0.000000,50986.016371
+Interest for MTF funded value on 2026-05-28,2026-05-29,Journal Entry,420.221000,0.000000,50565.795371
+Interest for MTF funded value on 2026-05-29,2026-05-29,Journal Entry,420.221000,0.000000,50145.574371
+Closing Balance,,,,,50145.574371

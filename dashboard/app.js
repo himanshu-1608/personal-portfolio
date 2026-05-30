@@ -1,7 +1,7 @@
 const REPORT_PATH = "../reports/stock_closing_prices.csv";
 const PNL_REPORT_PATH = "../reports/stock_pnl_summary.csv";
 const MTF_PNL_REPORT_PATH = "../reports/mtf_pnl_summary.csv";
-const LEDGER_PATH = "../input/all-ledger.csv";
+const LEDGER_PATH = "../reports/exported_all_ledger.csv";
 const DAY_COUNT = 30;
 const IS_FILE_PROTOCOL = window.location.protocol === "file:";
 const VIEW = {
