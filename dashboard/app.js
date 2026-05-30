@@ -511,8 +511,8 @@ function drawChart(svg, points) {
     const value = maxReturn - ratio * span;
     const y = yForValue(value);
     return `
-      <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(29,42,49,0.12)" stroke-dasharray="4 6" />
-      <text x="${padding.left - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#57656c">${formatPercent(value)}</text>
+      <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 6" />
+      <text x="${padding.left - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#5a6b8a">${formatPercent(value)}</text>
     `;
   }).join("");
 
@@ -521,7 +521,7 @@ function drawChart(svg, points) {
     .map((point, index) => {
       const x = xForIndex(index);
       const y = yForValue(point.returnValue);
-      return `<circle cx="${x}" cy="${y}" r="4.5" fill="${point.returnValue >= 0 ? "#0d8c6d" : "#c24b44"}" />`;
+      return `<circle cx="${x}" cy="${y}" r="4.5" fill="${point.returnValue >= 0 ? "#00e5a0" : "#ff4d6a"}" />`;
     })
     .join("");
 
@@ -529,22 +529,22 @@ function drawChart(svg, points) {
     .filter((_, index) => index === 0 || index === points.length - 1 || index === Math.floor((points.length - 1) / 2))
     .map((point) => {
       const x = xForIndex(point.dayIndex - 1);
-      return `<text x="${x}" y="${height - 10}" text-anchor="middle" font-size="11" fill="#57656c">${point.date.slice(5)}</text>`;
+      return `<text x="${x}" y="${height - 10}" text-anchor="middle" font-size="11" fill="#5a6b8a">${point.date.slice(5)}</text>`;
     })
     .join("");
 
   svg.innerHTML = `
     <defs>
       <linearGradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="rgba(13,140,109,0.28)" />
-        <stop offset="100%" stop-color="rgba(13,140,109,0.04)" />
+        <stop offset="0%" stop-color="rgba(0,229,160,0.22)" />
+        <stop offset="100%" stop-color="rgba(0,229,160,0.03)" />
       </linearGradient>
     </defs>
     <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="transparent" />
     ${gridLines}
-    <line x1="${padding.left}" y1="${zeroLineY}" x2="${width - padding.right}" y2="${zeroLineY}" stroke="rgba(29,42,49,0.24)" />
+    <line x1="${padding.left}" y1="${zeroLineY}" x2="${width - padding.right}" y2="${zeroLineY}" stroke="rgba(255,255,255,0.15)" />
     <path d="${areaPath}" fill="url(#areaGradient)" />
-    <path d="${linePath}" fill="none" stroke="#0d5d71" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="${linePath}" fill="none" stroke="#00e5a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
     ${pointsMarkup}
     ${xLabels}
   `;
@@ -1011,8 +1011,8 @@ function renderInvestmentTimeline(filteredPnlRows) {
         {
           label: "Input Capital",
           data: timeline.map((p) => p.inputCapital),
-          borderColor: "#0d5d71",
-          backgroundColor: "rgba(13,93,113,0.08)",
+          borderColor: "#5b8dee",
+          backgroundColor: "rgba(91,141,238,0.08)",
           borderWidth: 2.4,
           borderDash: [7, 4],
           tension: 0.3,
@@ -1023,8 +1023,8 @@ function renderInvestmentTimeline(filteredPnlRows) {
         {
           label: "Portfolio Value",
           data: timeline.map((p) => p.portfolioValue),
-          borderColor: "#0d8c6d",
-          backgroundColor: "rgba(13,140,109,0.12)",
+          borderColor: "#00e5a0",
+          backgroundColor: "rgba(0,229,160,0.1)",
           borderWidth: 3.2,
           tension: 0.3,
           pointRadius: 4,
@@ -1042,6 +1042,11 @@ function renderInvestmentTimeline(filteredPnlRows) {
       },
       plugins: {
         tooltip: {
+          backgroundColor: "rgba(7,12,26,0.92)",
+          borderColor: "rgba(255,255,255,0.1)",
+          borderWidth: 1,
+          titleColor: "#dde4f5",
+          bodyColor: "#5a6b8a",
           callbacks: {
             label: (ctx) => ` ${ctx.dataset.label}: ${formatCompactCurrency(ctx.parsed.y)}`,
           },
@@ -1049,21 +1054,21 @@ function renderInvestmentTimeline(filteredPnlRows) {
         legend: {
           display: true,
           position: "top",
-          labels: { font: { size: 12 }, color: "#57656c" },
+          labels: { font: { size: 12 }, color: "#5a6b8a" },
         },
       },
       scales: {
         x: {
-          ticks: { maxTicksLimit: 10, color: "#57656c", font: { size: 11 } },
+          ticks: { maxTicksLimit: 10, color: "#5a6b8a", font: { size: 11 } },
           grid: { display: false },
         },
         y: {
           ticks: {
             callback: (v) => formatCompactCurrency(v),
-            color: "#57656c",
+            color: "#5a6b8a",
             font: { size: 11 },
           },
-          grid: { color: "rgba(29,42,49,0.09)" },
+          grid: { color: "rgba(255,255,255,0.06)" },
         },
       },
     },
