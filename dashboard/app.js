@@ -56,6 +56,7 @@ const pnlPage = document.getElementById("pnlPage");
 const pnlTable = document.getElementById("pnlTable");
 const pnlTableBody = document.getElementById("pnlTableBody");
 const pnlExcludedColumns = document.getElementById("pnlExcludedColumns");
+const pnlExportButton = document.getElementById("pnlExportButton");
 const totalRealizedPnl = document.getElementById("totalRealizedPnl");
 const totalChargesTaxesOthers = document.getElementById("totalChargesTaxesOthers");
 const netRealizedPnl = document.getElementById("netRealizedPnl");
@@ -114,6 +115,10 @@ pnlBasisButtons.forEach((button) => {
     setPnlBasis(button.dataset.basis || PNL_BASIS.ALL_HOLDINGS);
   });
 });
+
+if (pnlExportButton) {
+  pnlExportButton.addEventListener("click", exportPnlCsv);
+}
 
 loadDashboard();
 initializeColumnControls();
@@ -351,9 +356,11 @@ function renderCards(filterText = "") {
   });
 }
 
-function renderPnlTable(filterText = "") {
+// Rows for the Portfolio P&L table after the active filter + search box,
+// sorted newest trade date first. Shared by the table render and CSV export.
+function getFilteredSortedPnlRows(filterText = "") {
   const normalizedFilter = filterText.trim().toLowerCase();
-  const filtered = getPnlRowsByActiveFilter(pnlRows)
+  return getPnlRowsByActiveFilter(pnlRows)
     .filter((item) => item.stockCode.toLowerCase().includes(normalizedFilter))
     .sort((left, right) => {
       const leftDate = left.tradeDate || "9999-12-31";
@@ -364,6 +371,11 @@ function renderPnlTable(filterText = "") {
       }
       return left.stockCode.localeCompare(right.stockCode);
     });
+}
+
+function renderPnlTable(filterText = "") {
+  const normalizedFilter = filterText.trim().toLowerCase();
+  const filtered = getFilteredSortedPnlRows(filterText);
   pnlTableBody.innerHTML = "";
 
   if (filtered.length === 0) {
@@ -400,6 +412,84 @@ function renderPnlTable(filterText = "") {
     pnlTableBody.appendChild(row);
   });
   applyColumnVisibility(TABLE_KEYS.PNL);
+}
+
+// Wrap a value for CSV: stringify, then quote if it holds a comma, quote, or newline.
+function toCsvField(value) {
+  const text = value === null || value === undefined ? "" : String(value);
+  if (/[",\n\r]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+  return text;
+}
+
+// Export the currently-filtered Portfolio P&L rows (all 16 columns) as a CSV download.
+function exportPnlCsv() {
+  const rows = getFilteredSortedPnlRows(searchInput.value);
+  if (rows.length === 0) {
+    return;
+  }
+
+  const headers = [
+    "Stock",
+    "Trade Date",
+    "Buy Qty",
+    "Buy Avg",
+    "Total Bought",
+    "Sell Qty",
+    "Sell Avg",
+    "Total Sold",
+    "Current Qty",
+    "Latest Price",
+    "Realized P&L",
+    "Charges, Taxes, Others",
+    "Net Realized P&L",
+    "Unrealized P&L",
+    "Total P&L",
+    "Return %",
+  ];
+
+  const money = (value) => (Number.isFinite(value) ? value.toFixed(2) : "");
+  const lines = [headers.map(toCsvField).join(",")];
+  rows.forEach((item) => {
+    const base = getPnlRowBaseValue(item);
+    const returnPct = base ? (item.totalPnlValue / base) * 100 : null;
+    lines.push(
+      [
+        item.stockCode,
+        item.tradeDate || "",
+        item.buyQuantity,
+        item.averageBuyPrice || "",
+        money(item.buyValueRaw),
+        item.sellQuantity,
+        item.averageSellPrice || "",
+        money(item.sellValueRaw),
+        item.netQuantity,
+        item.latestMarketPrice || "",
+        money(item.realizedPnlValue),
+        money(item.chargesTaxesOthersValue),
+        money(item.netRealizedPnlValue),
+        money(item.unrealizedPnlValue),
+        money(item.totalPnlValue),
+        returnPct === null ? "" : returnPct.toFixed(2),
+      ]
+        .map(toCsvField)
+        .join(",")
+    );
+  });
+
+  const csv = lines.join("\n");
+  const stamp = new Date().toISOString().slice(0, 10);
+  const fileName = `portfolio-pnl_${activePnlFilter}_${BASIS_TO_PARAM[activePnlBasis] || "total"}_${stamp}.csv`;
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  URL.revokeObjectURL(url);
 }
 
 function fillTable(tableBody, points) {

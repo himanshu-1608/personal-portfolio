@@ -516,6 +516,43 @@ code {
 .badge.negative { color: var(--danger); background: var(--danger-soft); }
 .badge.neutral  { color: var(--gold);   background: rgba(245, 197, 65, 0.13); }
 
+/* Export-CSV action row above the Portfolio P&L table. */
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.export-button:hover {
+  background: var(--accent);
+  color: #03130d;
+}
+
+.export-button:active {
+  transform: translateY(1px);
+}
+
+.export-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
 /* Radiant-green pill flagging MTF-funded lots in the Portfolio P&L table. */
 .mtf-tag {
   display: inline-block;

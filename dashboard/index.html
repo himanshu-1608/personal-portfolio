@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Return Dashboard</title>
-    <link rel="stylesheet" href="./styles.css?v=20260531-10" />
+    <link rel="stylesheet" href="./styles.css?v=20260531-11" />
   </head>
   <body>
     <div class="bg-mesh" aria-hidden="true"></div>
@@ -12,7 +12,7 @@
       <section class="top-toggle-shell">
         <div class="toggle-header">
           <p class="toggle-eyebrow">View Mode</p>
-          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.5.1</span></h2>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.6.0</span></h2>
         </div>
         <div class="view-switch" role="tablist" aria-label="Dashboard Views">
           <button id="chartViewButton" class="view-button active" type="button">
@@ -102,6 +102,12 @@
             <p class="summary-label">Net Total P&amp;L</p>
             <p class="summary-value" id="netTotalPnl">--</p>
           </article>
+        </div>
+
+        <div class="table-actions">
+          <button id="pnlExportButton" class="export-button" type="button">
+            <span class="export-icon" aria-hidden="true">&#8595;</span> Export CSV
+          </button>
         </div>
 
         <div class="data-table-wrap pnl-table-wrap">
@@ -210,6 +216,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.1780172640139.js"></script>
-    <script src="./app.js?v=20260531-8"></script>
+    <script src="./app.js?v=20260531-9"></script>
   </body>
 </html>
