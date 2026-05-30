@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Build dashboard/data.YYYYMMDD.js from generated CSV reports.
+"""Build dashboard/data.<epoch_millis>.js from generated CSV reports.
 
-Each run writes a date-stamped data file (e.g. data.20260531.js) and
-updates the <script> tag in index.html to reference it. Old date-stamped
-files from previous days are deleted. This forces GitHub Pages CDN to
-serve a new URL on every push, bypassing CDN-level caching.
+Each run writes a new epoch-millis-stamped data file and updates the <script>
+tag in index.html to reference it. This forces GitHub Pages CDN to serve a
+new URL on every push, bypassing CDN-level caching.
 """
 
 from __future__ import annotations
@@ -13,7 +12,7 @@ import csv
 import io
 import json
 import re
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -55,17 +54,6 @@ def export_stripped_ledger() -> None:
     print(f"Exported stripped ledger: {EXPORTED_LEDGER_FILE} ({len(rows)} rows)")
 
 
-def cleanup_old_data_files(keep: Path) -> None:
-    removed = []
-    for pattern in ("data.js", "data.1*.js", "data.2*.js"):
-        for old in DASHBOARD_DIR.glob(pattern):
-            if old != keep:
-                old.unlink()
-                removed.append(old.name)
-    if removed:
-        print(f"Removed old data files: {', '.join(removed)}")
-
-
 def update_index_html(new_filename: str) -> None:
     content = INDEX_HTML_FILE.read_text(encoding="utf-8")
     updated = re.sub(
@@ -97,7 +85,6 @@ def main() -> int:
     data_file.write_text(output, encoding="utf-8")
     print(f"Wrote dashboard data bundle: {data_file}")
 
-    cleanup_old_data_files(keep=data_file)
     update_index_html(data_filename)
 
     return 0
