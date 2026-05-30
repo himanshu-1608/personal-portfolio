@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
-"""Build dashboard/data.js from generated CSV reports."""
+"""Build dashboard/data.YYYYMMDD.js from generated CSV reports.
+
+Each run writes a date-stamped data file (e.g. data.20260531.js) and
+updates the <script> tag in index.html to reference it. Old date-stamped
+files from previous days are deleted. This forces GitHub Pages CDN to
+serve a new URL on every push, bypassing CDN-level caching.
+"""
 
 from __future__ import annotations
 
 import csv
 import io
 import json
-from datetime import datetime, timezone
+import re
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 REPORTS_DIR = BASE_DIR / "reports"
-DASHBOARD_DATA_FILE = BASE_DIR / "dashboard" / "data.js"
+DASHBOARD_DIR = BASE_DIR / "dashboard"
+INDEX_HTML_FILE = DASHBOARD_DIR / "index.html"
 
 STOCK_REPORT_FILE = REPORTS_DIR / "stock_closing_prices.csv"
 PNL_REPORT_FILE = REPORTS_DIR / "stock_pnl_summary.csv"
@@ -46,8 +54,38 @@ def export_stripped_ledger() -> None:
     print(f"Exported stripped ledger: {EXPORTED_LEDGER_FILE} ({len(rows)} rows)")
 
 
+def cleanup_old_data_files(keep: Path) -> None:
+    removed = []
+    for old in DASHBOARD_DIR.glob("data.js"):
+        old.unlink()
+        removed.append(old.name)
+    for old in DASHBOARD_DIR.glob("data.2*.js"):
+        if old != keep:
+            old.unlink()
+            removed.append(old.name)
+    if removed:
+        print(f"Removed old data files: {', '.join(removed)}")
+
+
+def update_index_html(new_filename: str) -> None:
+    content = INDEX_HTML_FILE.read_text(encoding="utf-8")
+    updated = re.sub(
+        r'<script src="\.\/data[^"]*\.js[^"]*">',
+        f'<script src="./{new_filename}">',
+        content,
+    )
+    if updated != content:
+        INDEX_HTML_FILE.write_text(updated, encoding="utf-8")
+        print(f"Updated index.html: data script → {new_filename}")
+
+
 def main() -> int:
     export_stripped_ledger()
+
+    today = date.today()
+    data_filename = f"data.{today.strftime('%Y%m%d')}.js"
+    data_file = DASHBOARD_DIR / data_filename
+
     payload = {
         "generatedAtUtc": datetime.now(timezone.utc).isoformat(),
         "stockClosingPricesCsv": read_text_or_empty(STOCK_REPORT_FILE),
@@ -56,8 +94,12 @@ def main() -> int:
         "allLedgerCsv": read_text_or_empty(EXPORTED_LEDGER_FILE),
     }
     output = f"window.__DASHBOARD_DATA__ = {json.dumps(payload, separators=(',', ':'))};\n"
-    DASHBOARD_DATA_FILE.write_text(output, encoding="utf-8")
-    print(f"Wrote dashboard data bundle: {DASHBOARD_DATA_FILE}")
+    data_file.write_text(output, encoding="utf-8")
+    print(f"Wrote dashboard data bundle: {data_file}")
+
+    cleanup_old_data_files(keep=data_file)
+    update_index_html(data_filename)
+
     return 0
 
 
