@@ -27,6 +27,7 @@ PNL_REPORT_FILE = REPORTS_DIR / "stock_pnl_summary.csv"
 MTF_REPORT_FILE = REPORTS_DIR / "mtf_pnl_summary.csv"
 ALL_LEDGER_FILE = BASE_DIR / "input" / "all-ledger.csv"
 EXPORTED_LEDGER_FILE = REPORTS_DIR / "exported_all_ledger.csv"
+PORTFOLIO_TIMELINE_FILE = REPORTS_DIR / "portfolio_timeline.csv"
 
 LEDGER_EXPORT_COLUMNS = ["particulars", "posting_date", "voucher_type", "debit", "credit", "net_balance"]
 
@@ -92,6 +93,7 @@ def main() -> int:
         "stockPnlSummaryCsv": read_text_or_empty(PNL_REPORT_FILE),
         "mtfPnlSummaryCsv": read_text_or_empty(MTF_REPORT_FILE),
         "allLedgerCsv": read_text_or_empty(EXPORTED_LEDGER_FILE),
+        "portfolioTimelineCsv": read_text_or_empty(PORTFOLIO_TIMELINE_FILE),
     }
     output = f"window.__DASHBOARD_DATA__ = {json.dumps(payload, separators=(',', ':'))};\n"
     data_file.write_text(output, encoding="utf-8")

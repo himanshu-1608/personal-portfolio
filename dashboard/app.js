@@ -67,6 +67,7 @@ let mtfRows = [];
 let ledgerRows = [];
 let otherCreditsDebitsValue = 0;
 let portfolioChart = null;
+let realPortfolioTimeline = [];
 let activeView = VIEW.CHARTS;
 let activePnlFilter = STOCK_FILTER.ALL;
 let activePnlBasis = PNL_BASIS.ALL_HOLDINGS;
@@ -123,7 +124,7 @@ async function loadDashboard() {
   setStatus("", false);
 
   try {
-    const { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText } = await loadCsvSources();
+    const { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText, portfolioTimelineCsvText } = await loadCsvSources();
     const rows = parseCsv(reportCsvText);
     const recommendationDateBySymbol = buildRecommendationDateBySymbol(rows);
     const mtfSourceRows = mtfCsvText ? parseCsv(mtfCsvText) : [];
@@ -139,6 +140,7 @@ async function loadDashboard() {
     }
     ledgerRows = ledgerCsvText ? parseCsv(ledgerCsvText) : [];
     otherCreditsDebitsValue = computeOtherCreditsDebits(ledgerRows);
+    realPortfolioTimeline = portfolioTimelineCsvText ? parseCsv(portfolioTimelineCsvText) : [];
 
     updateSummary(allStocks);
     renderCards(searchInput.value);
@@ -220,6 +222,7 @@ function getEmbeddedCsvSources() {
     pnlCsvText: embeddedData.stockPnlSummaryCsv,
     mtfCsvText: embeddedData.mtfPnlSummaryCsv,
     ledgerCsvText: embeddedData.allLedgerCsv,
+    portfolioTimelineCsvText: embeddedData.portfolioTimelineCsv,
   };
 }
 
@@ -245,7 +248,7 @@ async function fetchCsvSources() {
   const [reportCsvText, pnlCsvText] = await Promise.all([reportResponse.text(), pnlResponse.text()]);
   const mtfCsvText = mtfResponse.ok ? await mtfResponse.text() : "";
   const ledgerCsvText = ledgerResponse.ok ? await ledgerResponse.text() : "";
-  return { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText };
+  return { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText, portfolioTimelineCsvText: "" };
 }
 
 function readEmbeddedData() {
@@ -256,6 +259,7 @@ function readEmbeddedData() {
       stockPnlSummaryCsv: "",
       mtfPnlSummaryCsv: "",
       allLedgerCsv: "",
+      portfolioTimelineCsv: "",
     };
   }
 
@@ -264,6 +268,7 @@ function readEmbeddedData() {
     stockPnlSummaryCsv: String(data.stockPnlSummaryCsv || ""),
     mtfPnlSummaryCsv: String(data.mtfPnlSummaryCsv || ""),
     allLedgerCsv: String(data.allLedgerCsv || ""),
+    portfolioTimelineCsv: String(data.portfolioTimelineCsv || ""),
   };
 }
 
@@ -990,7 +995,14 @@ function renderInvestmentTimeline(filteredPnlRows) {
     timelineCurrentGain.classList.add("table-negative");
   }
 
-  const timeline = buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCreditsDebitsValue);
+  const timeline = realPortfolioTimeline.length > 0
+    ? realPortfolioTimeline.map((row) => ({
+        date: row.date,
+        inputCapital: parseNumber(row.invested_capital),
+        portfolioValue: parseNumber(row.portfolio_value),
+      }))
+    : buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCreditsDebitsValue);
+
   if (timeline.length === 0) {
     return;
   }

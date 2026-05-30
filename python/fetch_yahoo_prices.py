@@ -63,6 +63,8 @@ CONTRACT_NOTES_FILE = INPUT_DIR / "contract_notes.xlsx"
 OUTPUT_FILE = REPORTS_DIR / "stock_closing_prices.csv"
 PNL_OUTPUT_FILE = REPORTS_DIR / "stock_pnl_summary.csv"
 MTF_PNL_OUTPUT_FILE = REPORTS_DIR / "mtf_pnl_summary.csv"
+PORTFOLIO_TIMELINE_FILE = REPORTS_DIR / "portfolio_timeline.csv"
+PORTFOLIO_TIMELINE_HEADERS = ["date", "portfolio_value", "invested_capital"]
 
 STOCK_COLUMN = "Stock Code/Name"
 DATE_COLUMN = "Recommendation Date"
@@ -1373,6 +1375,124 @@ def build_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[str, s
     return [row for _date, _symbol, _trade_date, row in sortable_rows]
 
 
+def build_portfolio_timeline(report_rows: Sequence[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Compute real day-by-day portfolio value from stock prices x quantities held."""
+    import bisect
+
+    if not TRADEBOOK_FILE.exists():
+        return []
+
+    # Build price lookup: {base_symbol: {iso_date: price}}
+    price_by_symbol: Dict[str, Dict[str, float]] = {}
+    for row in report_rows:
+        stock_code = (row.get(STOCK_COLUMN) or "").strip()
+        base_symbol = normalize_symbol(stock_code.split(".")[0])
+        if not base_symbol:
+            continue
+        sym_prices = price_by_symbol.setdefault(base_symbol, {})
+        for index in range(1, DAY_COUNT + 1):
+            row_date = (row.get(f"Date {index}") or "").strip()
+            row_price = (row.get(f"Day {index} Price") or "").strip()
+            if row_date and row_price:
+                try:
+                    sym_prices[row_date] = float(row_price)
+                except ValueError:
+                    pass
+
+    if not price_by_symbol:
+        return []
+
+    # Read tradebook into chronological trade events
+    trades: List[Tuple[str, str, float, float]] = []  # (sort_time, symbol, signed_qty, buy_price)
+    with TRADEBOOK_FILE.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        if reader.fieldnames is None:
+            return []
+        for row in reader:
+            symbol = normalize_symbol((row.get("symbol") or "").strip())
+            trade_type = (row.get("trade_type") or "").strip().lower()
+            quantity = parse_amount(row.get("quantity") or "")
+            price = parse_amount(row.get("price") or "")
+            trade_date = (row.get("trade_date") or "").strip()
+            if not symbol or trade_type not in {"buy", "sell"} or not trade_date:
+                continue
+            if quantity <= 0 or price <= 0:
+                continue
+            sort_time = (row.get("order_execution_time") or "").strip() or trade_date
+            signed_qty = quantity if trade_type == "buy" else -quantity
+            trades.append((sort_time, symbol, signed_qty, price))
+
+    if not trades:
+        return []
+
+    trades.sort(key=lambda t: t[0])
+
+    # All market dates across all stocks in the price data
+    all_market_dates = sorted({
+        d for sym_prices in price_by_symbol.values() for d in sym_prices
+    })
+    if not all_market_dates:
+        return []
+
+    # Pre-sort each symbol's known dates for efficient forward-fill lookup
+    sorted_dates_by_symbol: Dict[str, List[str]] = {
+        sym: sorted(dates.keys()) for sym, dates in price_by_symbol.items()
+    }
+
+    positions: Dict[str, float] = {}  # symbol -> net qty
+    cumulative_invested = 0.0
+    trade_idx = 0
+    n_trades = len(trades)
+    timeline: List[Dict[str, str]] = []
+
+    for market_date in all_market_dates:
+        # Apply every trade whose execution datetime falls on or before market_date
+        while trade_idx < n_trades and trades[trade_idx][0][:10] <= market_date:
+            _, symbol, signed_qty, buy_price = trades[trade_idx]
+            positions[symbol] = positions.get(symbol, 0.0) + signed_qty
+            if signed_qty > 0:
+                cumulative_invested += signed_qty * buy_price
+            trade_idx += 1
+
+        # Skip days before any position exists
+        if not any(q > 0.0 for q in positions.values()):
+            continue
+
+        # Sum market value of all held positions using forward-filled prices
+        portfolio_value = 0.0
+        for symbol, qty in positions.items():
+            if qty <= 0.0:
+                continue
+            sym_dates = sorted_dates_by_symbol.get(symbol)
+            sym_prices = price_by_symbol.get(symbol)
+            if not sym_dates or not sym_prices:
+                continue
+            # Forward-fill: find the latest known date <= market_date
+            pos = bisect.bisect_right(sym_dates, market_date)
+            if pos == 0:
+                continue  # no price data on or before this date for this symbol
+            price_on_date = sym_prices[sym_dates[pos - 1]]
+            portfolio_value += qty * price_on_date
+
+        if portfolio_value <= 0.0:
+            continue
+
+        timeline.append({
+            "date": market_date,
+            "portfolio_value": f"{portfolio_value:.2f}",
+            "invested_capital": f"{cumulative_invested:.2f}",
+        })
+
+    return timeline
+
+
+def write_portfolio_timeline_output(rows: Sequence[Dict[str, str]]) -> None:
+    with PORTFOLIO_TIMELINE_FILE.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=PORTFOLIO_TIMELINE_HEADERS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def write_pnl_output(rows: Sequence[Dict[str, str]]) -> None:
     with PNL_OUTPUT_FILE.open("w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=PNL_HEADERS)
@@ -1770,6 +1890,13 @@ def main() -> int:
             print(f"Saved MTF P&L report to: {MTF_PNL_OUTPUT_FILE}")
         else:
             print("No MTF summary data found. Skipped MTF P&L summary generation.")
+
+        timeline_rows = build_portfolio_timeline(final_rows)
+        if timeline_rows:
+            write_portfolio_timeline_output(timeline_rows)
+            print(f"Saved portfolio timeline to: {PORTFOLIO_TIMELINE_FILE}")
+        else:
+            print("No portfolio timeline data generated.")
 
         return 0
 
