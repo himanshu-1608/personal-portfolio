@@ -1091,19 +1091,24 @@ def build_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[str, s
                     if debit_amount <= 0:
                         continue
 
-                    if any(
-                        token in particulars_lower
-                        for token in (
-                            "mtf ",
-                            "mtm obligation",
-                            "initial margin charged for mtf",
-                            "interest for mtf funded value",
-                            "funds added using upi",
-                            "net settlement for equity",
-                            "opening balance",
-                            "closing balance",
-                        )
-                    ):
+                    # Inclusion approach: only count debits that are explicitly known
+                    # brokerage/exchange charges. Unknown entries are ignored so new
+                    # ledger categories never silently inflate the charge pool.
+                    CHARGE_INCLUDE_TOKENS = (
+                        "dp charges",
+                        "brokerage",
+                        "stamp duty",
+                        "stt",
+                        "securities transaction tax",
+                        "sebi",
+                        "exchange transaction charge",
+                        "clearing charge",
+                        "cgst",
+                        "sgst",
+                        "igst",
+                    )
+                    is_known_charge = any(token in particulars_lower for token in CHARGE_INCLUDE_TOKENS)
+                    if not is_known_charge:
                         continue
 
                     matched_sale_charge = re.search(r"sale of ([A-Za-z0-9._-]+)", particulars, flags=re.IGNORECASE)
