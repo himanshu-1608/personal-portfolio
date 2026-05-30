@@ -1083,22 +1083,26 @@ function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw", oth
       return;
     }
     if (!byDate[date]) {
-      byDate[date] = { inputCapital: 0, totalPnl: 0 };
+      byDate[date] = 0;
     }
-    byDate[date].inputCapital += row[capitalKey];
-    byDate[date].totalPnl += row.totalPnlValue;
+    byDate[date] += row[capitalKey];
   });
+
+  const totalCapital = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
+  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherPnl;
+  const totalPortfolioValue = totalCapital + totalPnl;
+  // returnMultiplier: spread P&L proportionally to capital deployed at each date
+  // ensures final point matches summary exactly while intermediate points scale smoothly
+  const returnMultiplier = totalCapital > 0 ? totalPortfolioValue / totalCapital : 1;
 
   const sorted = Object.keys(byDate).sort();
   let cumCapital = 0;
-  let cumPnl = 0;
   return sorted.map((date) => {
-    cumCapital += byDate[date].inputCapital;
-    cumPnl += byDate[date].totalPnl;
+    cumCapital += byDate[date];
     return {
       date,
       inputCapital: cumCapital,
-      portfolioValue: cumCapital + cumPnl + otherPnl,
+      portfolioValue: cumCapital * returnMultiplier,
     };
   });
 }
