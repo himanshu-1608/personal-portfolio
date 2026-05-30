@@ -985,7 +985,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
   const capitalKey = activePnlBasis === PNL_BASIS.PERSONAL_FUNDING ? "myFundingRaw" : "buyValueRaw";
   const totalInvested = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
   const totalSold = filteredPnlRows.reduce((s, r) => s + r.sellValueRaw, 0);
-  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0);
+  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherCreditsDebitsValue;
 
   timelineTotalAdded.textContent = formatCurrency(totalInvested);
   timelineTotalWithdrawn.textContent = formatCurrency(totalSold);
@@ -997,7 +997,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
     timelineCurrentGain.classList.add("table-negative");
   }
 
-  const timeline = buildPortfolioTimeline(filteredPnlRows, capitalKey);
+  const timeline = buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCreditsDebitsValue);
   if (timeline.length === 0) {
     return;
   }
@@ -1070,7 +1070,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
   });
 }
 
-function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw") {
+function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw", otherPnl = 0) {
   const byDate = {};
   filteredPnlRows.forEach((row) => {
     const date = (row.tradeDate || "").trim();
@@ -1093,7 +1093,7 @@ function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw") {
     return {
       date,
       inputCapital: cumCapital,
-      portfolioValue: cumCapital + cumPnl,
+      portfolioValue: cumCapital + cumPnl + otherPnl,
     };
   });
 }
