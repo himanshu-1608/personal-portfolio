@@ -915,6 +915,7 @@ function computeOtherCreditsDebits(rows) {
     if (
       particulars.includes("funds added using upi") ||
       particulars.includes("net settlement for equity") ||
+      particulars.includes("net obligation for equity") ||
       particulars.includes("initial margin charged for mtf") ||
       particulars.includes("mtm obligation blocked for mtf") ||
       particulars.includes("mtm obligation reversed for mtf")
