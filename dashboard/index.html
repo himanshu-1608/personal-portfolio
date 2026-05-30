@@ -71,8 +71,8 @@
       <section id="pnlPage" class="dashboard-page">
         <section class="timeline-shell">
           <div class="timeline-header">
-            <p class="timeline-eyebrow">Cashflow Timeline</p>
-            <h3 class="timeline-title">Date-wise Invested, Withdrawn, and Growth</h3>
+            <p class="timeline-eyebrow">Portfolio Timeline</p>
+            <h3 class="timeline-title">Input Capital vs Portfolio Value Over Time</h3>
           </div>
           <div class="timeline-summary">
             <article class="summary-card">
@@ -89,13 +89,7 @@
             </article>
           </div>
           <div class="timeline-chart-panel">
-            <svg
-              id="investmentTimelineChart"
-              class="timeline-chart"
-              viewBox="0 0 900 320"
-              preserveAspectRatio="none"
-              aria-label="Investment timeline chart"
-            ></svg>
+            <canvas id="investmentTimelineChart" class="timeline-chart"></canvas>
           </div>
         </section>
         <div class="pnl-summary-grid">
@@ -286,6 +280,7 @@
       </article>
     </template>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.js?v=20260425-1"></script>
     <script src="./app.js?v=20260425-9"></script>
   </body>

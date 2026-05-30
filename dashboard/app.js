@@ -59,7 +59,6 @@ const mtfHoldingPnl = document.getElementById("mtfHoldingPnl");
 const mtfNetFundingPnl = document.getElementById("mtfNetFundingPnl");
 const mtfYourFunding = document.getElementById("mtfYourFunding");
 const mtfTotalCarryingCost = document.getElementById("mtfTotalCarryingCost");
-const investmentTimelineChart = document.getElementById("investmentTimelineChart");
 const timelineTotalAdded = document.getElementById("timelineTotalAdded");
 const timelineTotalWithdrawn = document.getElementById("timelineTotalWithdrawn");
 const timelineCurrentGain = document.getElementById("timelineCurrentGain");
@@ -69,6 +68,7 @@ let pnlRows = [];
 let mtfRows = [];
 let ledgerRows = [];
 let otherCreditsDebitsValue = 0;
+let portfolioChart = null;
 let activeView = VIEW.CHARTS;
 let activePnlFilter = STOCK_FILTER.ALL;
 let activePnlBasis = PNL_BASIS.ALL_HOLDINGS;
@@ -146,7 +146,7 @@ async function loadDashboard() {
     renderCards(searchInput.value);
     refreshPnlView();
     refreshMtfView();
-    renderInvestmentTimeline(ledgerRows);
+    renderInvestmentTimeline(getCurrentPnlRows());
 
     if (allStocks.length === 0) {
       setStatus("The report has no chartable rows yet. Run python/fetch_yahoo_prices.py to refresh CSV reports.", false);
@@ -968,198 +968,133 @@ function updateMtfSummary(items) {
   mtfYourFunding.textContent = items.length > 0 ? formatCurrency(totalFundingBase) : "--";
 }
 
-function renderInvestmentTimeline(rows) {
-  const timeline = buildInvestmentTimeline(rows);
-  if (timeline.length === 0) {
+function renderInvestmentTimeline(filteredPnlRows) {
+  if (portfolioChart) {
+    portfolioChart.destroy();
+    portfolioChart = null;
+  }
+
+  if (!filteredPnlRows.length) {
     timelineTotalAdded.textContent = "--";
     timelineTotalWithdrawn.textContent = "--";
     timelineCurrentGain.textContent = "--";
     timelineCurrentGain.classList.remove("table-positive", "table-negative");
-    investmentTimelineChart.innerHTML = "";
     return;
   }
 
-  const latest = timeline[timeline.length - 1];
-  timelineTotalAdded.textContent = formatCurrency(latest.cumulativeAdded);
-  timelineTotalWithdrawn.textContent = formatCurrency(latest.cumulativeWithdrawn);
-  timelineCurrentGain.textContent = formatCurrency(latest.gainValue);
+  const totalInvested = filteredPnlRows.reduce((s, r) => s + r.buyValueRaw, 0);
+  const totalSold = filteredPnlRows.reduce((s, r) => s + r.sellValueRaw, 0);
+  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0);
+
+  timelineTotalAdded.textContent = formatCurrency(totalInvested);
+  timelineTotalWithdrawn.textContent = formatCurrency(totalSold);
   timelineCurrentGain.classList.remove("table-positive", "table-negative");
-  if (latest.gainValue > 0) {
+  timelineCurrentGain.textContent = formatCurrency(totalPnl);
+  if (totalPnl > 0) {
     timelineCurrentGain.classList.add("table-positive");
-  } else if (latest.gainValue < 0) {
+  } else if (totalPnl < 0) {
     timelineCurrentGain.classList.add("table-negative");
   }
 
-  drawInvestmentTimelineChart(investmentTimelineChart, timeline);
+  const timeline = buildPortfolioTimeline(filteredPnlRows);
+  if (timeline.length === 0) {
+    return;
+  }
+
+  const canvas = document.getElementById("investmentTimelineChart");
+  portfolioChart = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: timeline.map((p) => p.date),
+      datasets: [
+        {
+          label: "Input Capital",
+          data: timeline.map((p) => p.inputCapital),
+          borderColor: "#0d5d71",
+          backgroundColor: "rgba(13,93,113,0.08)",
+          borderWidth: 2.4,
+          borderDash: [7, 4],
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: false,
+        },
+        {
+          label: "Portfolio Value",
+          data: timeline.map((p) => p.portfolioValue),
+          borderColor: "#0d8c6d",
+          backgroundColor: "rgba(13,140,109,0.12)",
+          borderWidth: 3.2,
+          tension: 0.3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${formatCompactCurrency(ctx.parsed.y)}`,
+          },
+        },
+        legend: {
+          display: true,
+          position: "top",
+          labels: { font: { size: 12 }, color: "#57656c" },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { maxTicksLimit: 10, color: "#57656c", font: { size: 11 } },
+          grid: { display: false },
+        },
+        y: {
+          ticks: {
+            callback: (v) => formatCompactCurrency(v),
+            color: "#57656c",
+            font: { size: 11 },
+          },
+          grid: { color: "rgba(29,42,49,0.09)" },
+        },
+      },
+    },
+  });
 }
 
-function buildInvestmentTimeline(rows) {
-  const groupedByDate = {};
-  rows.forEach((row) => {
-    const date = (row.posting_date || "").trim();
+function buildPortfolioTimeline(filteredPnlRows) {
+  const byDate = {};
+  filteredPnlRows.forEach((row) => {
+    const date = (row.tradeDate || "").trim();
     if (!date) {
       return;
     }
-
-    if (!groupedByDate[date]) {
-      groupedByDate[date] = {
-        date,
-        added: 0,
-        withdrawn: 0,
-        accountBalance: 0,
-      };
+    if (!byDate[date]) {
+      byDate[date] = { inputCapital: 0, totalPnl: 0 };
     }
-
-    const particulars = String(row.particulars || "").toLowerCase();
-    const voucherType = String(row.voucher_type || "").toLowerCase();
-    const debit = parseNumber(row.debit);
-    const credit = parseNumber(row.credit);
-    const netBalance = parseNumber(row.net_balance);
-
-    if (credit > 0 && (particulars.includes("funds added") || voucherType.includes("bank receipts"))) {
-      groupedByDate[date].added += credit;
-    }
-
-    if (
-      debit > 0 &&
-      (particulars.includes("funds withdrawn") ||
-        particulars.includes("payout") ||
-        particulars.includes("withdraw") ||
-        voucherType.includes("bank payments"))
-    ) {
-      groupedByDate[date].withdrawn += debit;
-    }
-
-    groupedByDate[date].accountBalance = netBalance;
+    byDate[date].inputCapital += row.buyValueRaw;
+    byDate[date].totalPnl += row.totalPnlValue;
   });
 
-  const sorted = Object.values(groupedByDate).sort((left, right) => left.date.localeCompare(right.date));
-  let cumulativeAdded = 0;
-  let cumulativeWithdrawn = 0;
-  return sorted.map((entry) => {
-    cumulativeAdded += entry.added;
-    cumulativeWithdrawn += entry.withdrawn;
-    const netInvested = cumulativeAdded - cumulativeWithdrawn;
-    const gainValue = entry.accountBalance - netInvested;
+  const sorted = Object.keys(byDate).sort();
+  let cumCapital = 0;
+  let cumPnl = 0;
+  return sorted.map((date) => {
+    cumCapital += byDate[date].inputCapital;
+    cumPnl += byDate[date].totalPnl;
     return {
-      ...entry,
-      cumulativeAdded,
-      cumulativeWithdrawn,
-      netInvested,
-      gainValue,
+      date,
+      inputCapital: cumCapital,
+      portfolioValue: cumCapital + cumPnl,
     };
   });
-}
-
-function drawInvestmentTimelineChart(svg, timeline) {
-  const width = 900;
-  const height = 360;
-  const padding = { top: 38, right: 22, bottom: 46, left: 78 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
-  const flowPeak = Math.max(...timeline.map((item) => Math.max(item.added, item.withdrawn)), 0);
-  const flowScaleDenominator = flowPeak || 1;
-  const flowMaxHeight = Math.min(56, chartHeight * 0.22);
-  const values = timeline.flatMap((item) => [
-    item.netInvested,
-    item.accountBalance,
-  ]);
-  const minValue = Math.min(...values, 0);
-  const maxValue = Math.max(...values, 0);
-  const span = maxValue - minValue || 1;
-  const yTicks = 7;
-
-  const xForIndex = (index) =>
-    padding.left + (timeline.length === 1 ? chartWidth / 2 : (index / (timeline.length - 1)) * chartWidth);
-  const yForValue = (value) => padding.top + ((maxValue - value) / span) * chartHeight;
-  const pathForKey = (key) =>
-    timeline
-      .map((point, index) => `${index === 0 ? "M" : "L"} ${xForIndex(index).toFixed(2)} ${yForValue(point[key]).toFixed(2)}`)
-      .join(" ");
-  const gridLines = Array.from({ length: yTicks }, (_, tickIndex) => {
-    const ratio = tickIndex / (yTicks - 1);
-    const value = maxValue - ratio * span;
-    const y = yForValue(value);
-    return `
-      <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(29,42,49,0.12)" stroke-dasharray="4 6" />
-      <text x="${padding.left - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#57656c">${formatCompactCurrency(value)}</text>
-    `;
-  }).join("");
-  const xLabels = timeline
-    .map((item, index) => ({ item, index }))
-    .filter(({ index }) => {
-      if (timeline.length <= 5) {
-        return true;
-      }
-      if (index === 0 || index === timeline.length - 1) {
-        return true;
-      }
-      const stride = Math.max(2, Math.floor(timeline.length / 4));
-      return index % stride === 0;
-    })
-    .map(({ item, index }) => {
-      const x = xForIndex(index);
-      return `<text x="${x}" y="${height - 12}" text-anchor="middle" font-size="11" fill="#57656c">${item.date.slice(5)}</text>`;
-    })
-    .join("");
-  const zeroLineY = yForValue(0);
-  const netInvestedPath = pathForKey("netInvested");
-  const balancePath = pathForKey("accountBalance");
-  const pnlAreaPath = `
-    ${balancePath}
-    ${timeline
-      .slice()
-      .reverse()
-      .map((point, reverseIndex) => {
-        const index = timeline.length - 1 - reverseIndex;
-        return `L ${xForIndex(index).toFixed(2)} ${yForValue(point.netInvested).toFixed(2)}`;
-      })
-      .join(" ")}
-    Z
-  `;
-  const bars = timeline
-    .map((item, index) => {
-      const centerX = xForIndex(index);
-      const barGap = 7;
-      const barWidth = Math.min(14, Math.max(8, chartWidth / Math.max(timeline.length * 3.2, 24)));
-      const addedHeight = (item.added / flowScaleDenominator) * flowMaxHeight;
-      const withdrawnHeight = (item.withdrawn / flowScaleDenominator) * flowMaxHeight;
-      const baseY = padding.top + chartHeight + 2;
-      const addedX = centerX - barWidth - barGap / 2;
-      const withdrawnX = centerX + barGap / 2;
-      return `
-        <rect x="${addedX.toFixed(2)}" y="${(baseY - addedHeight).toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, addedHeight).toFixed(2)}" rx="3" fill="rgba(13,93,113,0.55)" />
-        <rect x="${withdrawnX.toFixed(2)}" y="${(baseY - withdrawnHeight).toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, withdrawnHeight).toFixed(2)}" rx="3" fill="rgba(194,75,68,0.55)" />
-      `;
-    })
-    .join("");
-  const latest = timeline[timeline.length - 1];
-  const latestX = xForIndex(timeline.length - 1);
-  const latestY = yForValue(latest.accountBalance);
-
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="timelinePnlArea" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="rgba(13, 140, 109, 0.24)" />
-        <stop offset="100%" stop-color="rgba(13, 140, 109, 0.04)" />
-      </linearGradient>
-    </defs>
-    ${gridLines}
-    <line x1="${padding.left}" y1="${zeroLineY}" x2="${width - padding.right}" y2="${zeroLineY}" stroke="rgba(29,42,49,0.24)" />
-    <path d="${pnlAreaPath}" fill="url(#timelinePnlArea)" />
-    <path d="${netInvestedPath}" fill="none" stroke="#0d5d71" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 4" />
-    <path d="${balancePath}" fill="none" stroke="#0d8c6d" stroke-width="3.2" stroke-linecap="round" />
-    ${bars}
-    <circle cx="${latestX.toFixed(2)}" cy="${latestY.toFixed(2)}" r="5.5" fill="#0d8c6d" />
-    <text x="${Math.min(width - 6, latestX + 8)}" y="${Math.max(16, latestY - 10)}" text-anchor="start" font-size="11" font-weight="700" fill="#0d8c6d">
-      ${formatCompactCurrency(latest.accountBalance)}
-    </text>
-    ${xLabels}
-    <text x="${padding.left}" y="18" font-size="11" fill="#0d8c6d" font-weight="700">Balance</text>
-    <text x="${padding.left + 72}" y="18" font-size="11" fill="#0d5d71" font-weight="700">Net Invested</text>
-    <text x="${padding.left + 180}" y="18" font-size="11" fill="#0d5d71">Daily Added Bars</text>
-    <text x="${padding.left + 294}" y="18" font-size="11" fill="#c24b44">Daily Withdrawn Bars</text>
-  `;
 }
 
 function formatCompactCurrency(value) {
@@ -1183,6 +1118,7 @@ function setPnlFilter(filter) {
     button.classList.toggle("active", (button.dataset.filter || STOCK_FILTER.ALL) === activePnlFilter);
   });
   refreshPnlView();
+  renderInvestmentTimeline(getCurrentPnlRows());
 }
 
 function setPnlBasis(basis) {
