@@ -725,6 +725,43 @@ def _apply_hit_targets(row: Dict[str, str]) -> None:
             )
 
 
+def resequence_date_slots(row: Dict[str, str], rec_date: date) -> None:
+    """Rewrite the Date/Day Price/Day Return slots so they are strictly increasing
+    by date. Drops any date before the recommendation date and de-dupes. Makes the
+    table correct regardless of the order prices were fetched or appended."""
+    triples: List[Tuple[date, str, str, str]] = []
+    seen: set = set()
+    for i in range(1, DAY_COUNT + 1):
+        d = (row.get(f"Date {i}") or "").strip()
+        if not d or d in seen:
+            continue
+        try:
+            parsed = date.fromisoformat(d)
+        except ValueError:
+            continue
+        if parsed < rec_date:
+            continue
+        seen.add(d)
+        triples.append((
+            parsed,
+            d,
+            (row.get(f"Day {i} Price") or "").strip(),
+            (row.get(f"Day {i} Return %") or "").strip(),
+        ))
+
+    triples.sort(key=lambda t: t[0])
+    for i in range(1, DAY_COUNT + 1):
+        if i <= len(triples):
+            _, d, price, ret = triples[i - 1]
+            row[f"Date {i}"] = d
+            row[f"Day {i} Price"] = price
+            row[f"Day {i} Return %"] = ret
+        else:
+            row[f"Date {i}"] = ""
+            row[f"Day {i} Price"] = ""
+            row[f"Day {i} Return %"] = ""
+
+
 def build_output_row(
     recommendation: Recommendation, existing_row: Optional[Dict[str, str]] = None
 ) -> Dict[str, str]:
@@ -742,9 +779,6 @@ def build_output_row(
             (d, p) for d, p in new_prices
             if d and d not in stored_dates and date.fromisoformat(d) >= rec_date
         ]
-
-        if not fresh_prices:
-            return existing_row
 
         merged_row = dict(existing_row)
 
@@ -779,6 +813,7 @@ def build_output_row(
                 merged_row[f"Day {next_slot} Return %"] = ""
             next_slot += 1
 
+        resequence_date_slots(merged_row, rec_date)
         _apply_hit_targets(merged_row)
         return merged_row
 

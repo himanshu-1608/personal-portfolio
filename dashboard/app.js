@@ -92,6 +92,7 @@ let ledgerRows = [];
 // realized only). Account-level charges (DDPI, bank, margin blocks) are out of scope.
 let otherCreditsBreakdown = { realizedCarrying: 0, unrealizedCarrying: 0, realizedDp: 0 };
 let portfolioChart = null;
+let cardCharts = [];
 let realPortfolioTimeline = [];
 let activeView = VIEW.CHARTS;
 let activePnlFilter = STOCK_FILTER.ALL;
@@ -313,6 +314,8 @@ function renderCards(filterText = "") {
       return left.stockCode.localeCompare(right.stockCode);
     });
 
+  cardCharts.forEach((chart) => chart.destroy());
+  cardCharts = [];
   cardsContainer.innerHTML = "";
 
   if (filtered.length === 0) {
@@ -377,11 +380,12 @@ function renderCards(filterText = "") {
       item.target4ReturnPct
     );
 
-    drawChart(fragment.querySelector(".chart"), item.points);
     fillTable(fragment.querySelector(".data-table-body"), item.points);
 
     card.style.animationDelay = `${index * 70}ms`;
     cardsContainer.appendChild(fragment);
+    // Chart.js must measure a canvas that is already in the DOM, so draw after append.
+    drawChart(card.querySelector(".chart"), item.points);
   });
 }
 
@@ -501,75 +505,132 @@ function fillTable(tableBody, points) {
   });
 }
 
-function drawChart(svg, points) {
-  const width = 640;
-  const height = 260;
-  const padding = { top: 18, right: 16, bottom: 34, left: 54 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
+// Interactive return-% chart for each recommendation card. Mirrors the portfolio
+// timeline's Chart.js interactivity: hover crosshair + tooltip (date / price /
+// return), sign-aware colouring, and a gradient area fill. Chart instances are
+// tracked in cardCharts and destroyed before each re-render.
+function drawChart(canvas, points) {
+  if (!canvas || typeof Chart === "undefined" || points.length === 0) {
+    return;
+  }
 
-  const minReturn = Math.min(...points.map((point) => point.returnValue), 0);
-  const maxReturn = Math.max(...points.map((point) => point.returnValue), 0);
-  const span = maxReturn - minReturn || 1;
-  const yTicks = 5;
+  const labels = points.map((point) => point.date.slice(5));
+  const values = points.map((point) => point.returnValue);
+  const positive = (values[values.length - 1] ?? 0) >= 0;
+  const lineColor = positive ? "#00e5a0" : "#ff4d6a";
+  const fillTop = positive ? "rgba(0,229,160,0.28)" : "rgba(255,77,106,0.26)";
 
-  const xForIndex = (index) =>
-    padding.left + (points.length === 1 ? chartWidth / 2 : (index / (points.length - 1)) * chartWidth);
-  const yForValue = (value) => padding.top + ((maxReturn - value) / span) * chartHeight;
+  // Dashed zero baseline + a vertical crosshair under the hovered point.
+  const zeroAndCrosshair = {
+    id: "zeroAndCrosshair",
+    afterDatasetsDraw(chart) {
+      const { ctx, chartArea, scales } = chart;
+      if (!chartArea) {
+        return;
+      }
+      if (scales.y.min < 0 && scales.y.max > 0) {
+        const y = scales.y.getPixelForValue(0);
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([4, 5]);
+        ctx.moveTo(chartArea.left, y);
+        ctx.lineTo(chartArea.right, y);
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+      const active = chart.tooltip ? chart.tooltip.getActiveElements() : [];
+      if (active.length) {
+        const x = active[0].element.x;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, chartArea.top);
+        ctx.lineTo(x, chartArea.bottom);
+        ctx.strokeStyle = "rgba(255,255,255,0.24)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+    },
+  };
 
-  const linePath = points
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${xForIndex(index).toFixed(2)} ${yForValue(point.returnValue).toFixed(2)}`)
-    .join(" ");
+  const chart = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          data: values,
+          borderColor: lineColor,
+          borderWidth: 2.6,
+          tension: 0.35,
+          fill: true,
+          backgroundColor: (context) => {
+            const { chart: c } = context;
+            if (!c.chartArea) {
+              return fillTop;
+            }
+            const gradient = c.ctx.createLinearGradient(0, c.chartArea.top, 0, c.chartArea.bottom);
+            gradient.addColorStop(0, fillTop);
+            gradient.addColorStop(1, "rgba(0,0,0,0)");
+            return gradient;
+          },
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: lineColor,
+          pointHoverBorderColor: "#0b1220",
+          pointHoverBorderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "rgba(10,16,28,0.94)",
+          borderColor: "rgba(255,255,255,0.1)",
+          borderWidth: 1,
+          padding: 11,
+          cornerRadius: 10,
+          titleColor: "#dde4f5",
+          bodyColor: "#aeb9d6",
+          displayColors: false,
+          callbacks: {
+            title: (items) => points[items[0].dataIndex].date,
+            label: (item) => {
+              const point = points[item.dataIndex];
+              return [`Price  ${point.price}`, `Return  ${point.returnText}`];
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          grid: { color: "rgba(255,255,255,0.06)" },
+          border: { display: false },
+          ticks: {
+            color: "#8d9bb8",
+            font: { size: 11 },
+            maxTicksLimit: 6,
+            callback: (value) => `${value}%`,
+          },
+        },
+        x: {
+          grid: { display: false },
+          border: { color: "rgba(255,255,255,0.1)" },
+          ticks: { color: "#8d9bb8", font: { size: 11 }, maxTicksLimit: 6, autoSkip: true },
+        },
+      },
+      animation: { duration: 520, easing: "easeOutCubic" },
+    },
+    plugins: [zeroAndCrosshair],
+  });
 
-  const areaPath = `
-    ${linePath}
-    L ${xForIndex(points.length - 1).toFixed(2)} ${(padding.top + chartHeight).toFixed(2)}
-    L ${xForIndex(0).toFixed(2)} ${(padding.top + chartHeight).toFixed(2)}
-    Z
-  `;
-
-  const gridLines = Array.from({ length: yTicks }, (_, tickIndex) => {
-    const ratio = tickIndex / (yTicks - 1);
-    const value = maxReturn - ratio * span;
-    const y = yForValue(value);
-    return `
-      <line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="4 6" />
-      <text x="${padding.left - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#5a6b8a">${formatPercent(value)}</text>
-    `;
-  }).join("");
-
-  const zeroLineY = yForValue(0);
-  const pointsMarkup = points
-    .map((point, index) => {
-      const x = xForIndex(index);
-      const y = yForValue(point.returnValue);
-      return `<circle cx="${x}" cy="${y}" r="4.5" fill="${point.returnValue >= 0 ? "#00e5a0" : "#ff4d6a"}" />`;
-    })
-    .join("");
-
-  const xLabels = points
-    .filter((_, index) => index === 0 || index === points.length - 1 || index === Math.floor((points.length - 1) / 2))
-    .map((point) => {
-      const x = xForIndex(point.dayIndex - 1);
-      return `<text x="${x}" y="${height - 10}" text-anchor="middle" font-size="11" fill="#5a6b8a">${point.date.slice(5)}</text>`;
-    })
-    .join("");
-
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="areaGradient" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="rgba(0,229,160,0.22)" />
-        <stop offset="100%" stop-color="rgba(0,229,160,0.03)" />
-      </linearGradient>
-    </defs>
-    <rect x="0" y="0" width="${width}" height="${height}" rx="18" fill="transparent" />
-    ${gridLines}
-    <line x1="${padding.left}" y1="${zeroLineY}" x2="${width - padding.right}" y2="${zeroLineY}" stroke="rgba(255,255,255,0.15)" />
-    <path d="${areaPath}" fill="url(#areaGradient)" />
-    <path d="${linePath}" fill="none" stroke="#00e5a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-    ${pointsMarkup}
-    ${xLabels}
-  `;
+  cardCharts.push(chart);
 }
 
 function transformRow(row) {
