@@ -1450,8 +1450,9 @@ def build_portfolio_timeline(report_rows: Sequence[Dict[str, str]]) -> List[Dict
         while trade_idx < n_trades and trades[trade_idx][0][:10] <= market_date:
             _, symbol, signed_qty, buy_price = trades[trade_idx]
             positions[symbol] = positions.get(symbol, 0.0) + signed_qty
-            if signed_qty > 0:
-                cumulative_invested += signed_qty * buy_price
+            cumulative_invested += signed_qty * buy_price  # buy: positive, sell: negative (subtracts sell proceeds)
+            if cumulative_invested < 0:
+                cumulative_invested = 0.0
             trade_idx += 1
 
         # Skip days before any position exists

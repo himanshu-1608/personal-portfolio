@@ -57,13 +57,11 @@ def export_stripped_ledger() -> None:
 
 def cleanup_old_data_files(keep: Path) -> None:
     removed = []
-    for old in DASHBOARD_DIR.glob("data.js"):
-        old.unlink()
-        removed.append(old.name)
-    for old in DASHBOARD_DIR.glob("data.2*.js"):
-        if old != keep:
-            old.unlink()
-            removed.append(old.name)
+    for pattern in ("data.js", "data.1*.js", "data.2*.js"):
+        for old in DASHBOARD_DIR.glob(pattern):
+            if old != keep:
+                old.unlink()
+                removed.append(old.name)
     if removed:
         print(f"Removed old data files: {', '.join(removed)}")
 
