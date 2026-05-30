@@ -83,8 +83,8 @@ def update_index_html(new_filename: str) -> None:
 def main() -> int:
     export_stripped_ledger()
 
-    today = date.today()
-    data_filename = f"data.{today.strftime('%Y%m%d')}.js"
+    now = datetime.now(timezone.utc).astimezone()
+    data_filename = f"data.{now.strftime('%Y%m%d-%H%M')}.js"
     data_file = DASHBOARD_DIR / data_filename
 
     payload = {
