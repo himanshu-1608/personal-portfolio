@@ -2,6 +2,7 @@ const REPORT_PATH = "../reports/stock_closing_prices.csv";
 const PNL_REPORT_PATH = "../reports/stock_pnl_summary.csv";
 const MTF_PNL_REPORT_PATH = "../reports/mtf_pnl_summary.csv";
 const LEDGER_PATH = "../reports/exported_all_ledger.csv";
+const PORTFOLIO_TIMELINE_PATH = "../reports/portfolio_timeline.csv";
 const DAY_COUNT = 252;
 const IS_FILE_PROTOCOL = window.location.protocol === "file:";
 const VIEW = {
@@ -213,11 +214,12 @@ function getEmbeddedCsvSources() {
 
 async function fetchCsvSources() {
   const cacheBuster = Date.now();
-  const [reportResponse, pnlResponse, mtfResponse, ledgerResponse] = await Promise.all([
+  const [reportResponse, pnlResponse, mtfResponse, ledgerResponse, timelineResponse] = await Promise.all([
     fetch(`${REPORT_PATH}?t=${cacheBuster}`),
     fetch(`${PNL_REPORT_PATH}?t=${cacheBuster}`),
     fetch(`${MTF_PNL_REPORT_PATH}?t=${cacheBuster}`),
     fetch(`${LEDGER_PATH}?t=${cacheBuster}`),
+    fetch(`${PORTFOLIO_TIMELINE_PATH}?t=${cacheBuster}`),
   ]);
   if (!reportResponse.ok || !pnlResponse.ok) {
     const failures = [];
@@ -233,7 +235,8 @@ async function fetchCsvSources() {
   const [reportCsvText, pnlCsvText] = await Promise.all([reportResponse.text(), pnlResponse.text()]);
   const mtfCsvText = mtfResponse.ok ? await mtfResponse.text() : "";
   const ledgerCsvText = ledgerResponse.ok ? await ledgerResponse.text() : "";
-  return { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText, portfolioTimelineCsvText: "" };
+  const portfolioTimelineCsvText = timelineResponse.ok ? await timelineResponse.text() : "";
+  return { reportCsvText, pnlCsvText, mtfCsvText, ledgerCsvText, portfolioTimelineCsvText };
 }
 
 function readEmbeddedData() {
