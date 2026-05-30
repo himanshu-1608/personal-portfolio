@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Return Dashboard</title>
-    <link rel="stylesheet" href="./styles.css?v=20260531-4" />
+    <link rel="stylesheet" href="./styles.css?v=20260531-5" />
   </head>
   <body>
     <div class="bg-mesh" aria-hidden="true"></div>
@@ -12,7 +12,7 @@
       <section class="top-toggle-shell">
         <div class="toggle-header">
           <p class="toggle-eyebrow">View Mode</p>
-          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L v/s MTF P&amp;L <span class="version-badge">v1.2.1</span></h2>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L v/s MTF P&amp;L <span class="version-badge">v1.3.0</span></h2>
         </div>
         <div class="view-switch" role="tablist" aria-label="Dashboard Views">
           <button id="chartViewButton" class="view-button active" type="button">
@@ -40,13 +40,13 @@
           <input id="searchInput" type="search" placeholder="Type stock code..." />
         </label>
         <div id="pnlFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Filters">
-          <button class="pnl-filter-button active" type="button" data-filter="all">All Stocks</button>
+          <button class="pnl-filter-button active" type="button" data-filter="all">All Stocks<span class="basis-note">realized + unrealized</span></button>
           <button class="pnl-filter-button" type="button" data-filter="realized">Realized P&amp;L</button>
           <button class="pnl-filter-button" type="button" data-filter="unrealized">Unrealized P&amp;L</button>
         </div>
         <div id="pnlBasisSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Basis">
-          <button class="pnl-basis-button pnl-filter-button active" type="button" data-basis="all_holdings">All Holdings</button>
-          <button class="pnl-basis-button pnl-filter-button" type="button" data-basis="personal_funding">Personal Funding</button>
+          <button class="pnl-basis-button pnl-filter-button active" type="button" data-basis="all_holdings">Total Investment<span class="basis-note">full position value (your cash + MTF loan)</span></button>
+          <button class="pnl-basis-button pnl-filter-button" type="button" data-basis="personal_funding">My Money<span class="basis-note">only the cash you put in</span></button>
         </div>
         <div id="mtfFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="MTF P&L Filters">
           <button class="mtf-filter-button pnl-filter-button active" type="button" data-filter="all">All Stocks</button>
@@ -273,6 +273,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.1780170159594.js"></script>
-    <script src="./app.js?v=20260531-3"></script>
+    <script src="./app.js?v=20260531-4"></script>
   </body>
 </html>

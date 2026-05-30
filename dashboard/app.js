@@ -23,6 +23,26 @@ const TABLE_KEYS = {
   MTF: "mtf",
 };
 
+// Shareable URL state. ?view=<tab>&filter=<realized|unrealized|all>&basis=<total|mymoney>
+const VIEW_TO_PARAM = {
+  [VIEW.CHARTS]: "recommendations",
+  [VIEW.PNL]: "portfolio",
+  [VIEW.MTF]: "mtf",
+};
+const PARAM_TO_VIEW = {
+  recommendations: VIEW.CHARTS,
+  portfolio: VIEW.PNL,
+  mtf: VIEW.MTF,
+};
+const BASIS_TO_PARAM = {
+  [PNL_BASIS.ALL_HOLDINGS]: "total",
+  [PNL_BASIS.PERSONAL_FUNDING]: "mymoney",
+};
+const PARAM_TO_BASIS = {
+  total: PNL_BASIS.ALL_HOLDINGS,
+  mymoney: PNL_BASIS.PERSONAL_FUNDING,
+};
+
 const searchInput = document.getElementById("searchInput");
 const statusBanner = document.getElementById("statusBanner");
 const cardsContainer = document.getElementById("cardsContainer");
@@ -65,7 +85,12 @@ let allStocks = [];
 let pnlRows = [];
 let mtfRows = [];
 let ledgerRows = [];
-let otherCreditsDebitsValue = 0;
+// "Other Credits & Debits" segregated so each filter combo only sees its share.
+// realizedCarrying / unrealizedCarrying: MTF interest + pledge costs (a leverage
+// cost, so they belong to "My Money" basis only), split by whether the symbol's
+// position is closed or still held. realizedDp: DP charges on sales (both bases,
+// realized only). Account-level charges (DDPI, bank, margin blocks) are out of scope.
+let otherCreditsBreakdown = { realizedCarrying: 0, unrealizedCarrying: 0, realizedDp: 0 };
 let portfolioChart = null;
 let realPortfolioTimeline = [];
 let activeView = VIEW.CHARTS;
@@ -139,14 +164,14 @@ async function loadDashboard() {
       mtfRows = [];
     }
     ledgerRows = ledgerCsvText ? parseCsv(ledgerCsvText) : [];
-    otherCreditsDebitsValue = computeOtherCreditsDebits(ledgerRows);
+    otherCreditsBreakdown = computeOtherCreditsBreakdown(ledgerRows, mtfRows);
     realPortfolioTimeline = portfolioTimelineCsvText ? parseCsv(portfolioTimelineCsvText) : [];
 
     updateSummary(allStocks);
     renderCards(searchInput.value);
     refreshPnlView();
     refreshMtfView();
-    renderInvestmentTimeline(getCurrentPnlRows());
+    applyStateFromUrl();
 
     if (allStocks.length === 0) {
       setStatus("The report has no chartable rows yet. Run python/fetch_yahoo_prices.py to refresh CSV reports.", false);
@@ -156,7 +181,7 @@ async function loadDashboard() {
     pnlRows = [];
     mtfRows = [];
     ledgerRows = [];
-    otherCreditsDebitsValue = 0;
+    otherCreditsBreakdown = { realizedCarrying: 0, unrealizedCarrying: 0, realizedDp: 0 };
     updateSummary([]);
     updatePnlSummary([]);
     updateMtfSummary([]);
@@ -889,40 +914,61 @@ function updatePnlSummary(items) {
   }
   setSummaryValue(netRealizedPnl, netRealized, investedBase, items.length > 0);
   setSummaryValue(totalUnrealizedPnl, unrealized, investedBase, items.length > 0);
+  const otherCredits = otherCreditsForFilters(activePnlFilter, activePnlBasis);
   totalOtherCreditsDebits.classList.remove("table-positive", "table-negative");
-  totalOtherCreditsDebits.textContent = items.length > 0 ? formatCurrency(otherCreditsDebitsValue) : "--";
+  totalOtherCreditsDebits.textContent = items.length > 0 ? formatCurrency(otherCredits) : "--";
   if (items.length > 0) {
-    if (otherCreditsDebitsValue > 0) {
+    if (otherCredits > 0) {
       totalOtherCreditsDebits.classList.add("table-positive");
-    } else if (otherCreditsDebitsValue < 0) {
+    } else if (otherCredits < 0) {
       totalOtherCreditsDebits.classList.add("table-negative");
     }
   }
-  setSummaryValue(netTotalPnl, total + otherCreditsDebitsValue, investedBase, items.length > 0);
+  setSummaryValue(netTotalPnl, total + otherCredits, investedBase, items.length > 0);
   totalAmountInvested.classList.remove("table-positive", "table-negative");
   totalAmountInvested.textContent = items.length > 0 ? formatCurrency(investedBase) : "--";
 }
 
-function computeOtherCreditsDebits(rows) {
-  return rows.reduce((sum, row) => {
+// Build the segregated breakdown from the MTF lots (carrying cost + open/closed
+// status) and the ledger (DP sale charges). Costs are stored as negatives.
+function computeOtherCreditsBreakdown(ledger, mtf) {
+  let realizedCarrying = 0;
+  let unrealizedCarrying = 0;
+  for (const lot of mtf) {
+    const carrying = Math.abs(lot.totalCarryingCostValue || 0);
+    if (carrying === 0) {
+      continue;
+    }
+    if (lot.netQuantityValue > 0) {
+      unrealizedCarrying -= carrying; // still held → unrealized
+    } else {
+      realizedCarrying -= carrying; // fully sold → realized
+    }
+  }
+
+  let realizedDp = 0;
+  for (const row of ledger) {
     const particulars = String(row.particulars || "").trim().toLowerCase();
-    if (!particulars || particulars === "opening balance" || particulars === "closing balance") {
-      return sum;
+    if (particulars.includes("dp charges for sale")) {
+      realizedDp -= parseNumber(row.debit); // sale event → realized, both bases
     }
-    if (
-      particulars.includes("funds added using upi") ||
-      particulars.includes("net settlement for equity") ||
-      particulars.includes("net obligation for equity") ||
-      particulars.includes("initial margin charged for mtf") ||
-      particulars.includes("mtm obligation blocked for mtf") ||
-      particulars.includes("mtm obligation reversed for mtf")
-    ) {
-      return sum;
-    }
-    const debit = parseNumber(row.debit);
-    const credit = parseNumber(row.credit);
-    return sum + (credit - debit);
-  }, 0);
+  }
+
+  return { realizedCarrying, unrealizedCarrying, realizedDp };
+}
+
+// Amount of "Other Credits & Debits" applicable to the active filter + basis.
+// Carrying costs (leverage costs) only count under "My Money" (personal_funding).
+function otherCreditsForFilters(filter, basis) {
+  const b = otherCreditsBreakdown;
+  const personal = basis === PNL_BASIS.PERSONAL_FUNDING;
+  if (filter === STOCK_FILTER.REALIZED) {
+    return b.realizedDp + (personal ? b.realizedCarrying : 0);
+  }
+  if (filter === STOCK_FILTER.UNREALIZED) {
+    return personal ? b.unrealizedCarrying : 0;
+  }
+  return b.realizedDp + (personal ? b.realizedCarrying + b.unrealizedCarrying : 0);
 }
 
 function getPnlRowBaseValue(item) {
@@ -1017,7 +1063,8 @@ function renderInvestmentTimeline(filteredPnlRows) {
   const capitalKey = activePnlBasis === PNL_BASIS.PERSONAL_FUNDING ? "myFundingRaw" : "buyValueRaw";
   const totalInvested = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
   const totalSold = filteredPnlRows.reduce((s, r) => s + r.sellValueRaw, 0);
-  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherCreditsDebitsValue;
+  const otherCredits = otherCreditsForFilters(activePnlFilter, activePnlBasis);
+  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherCredits;
 
   timelineTotalAdded.textContent = formatCurrency(totalInvested);
   timelineTotalWithdrawn.textContent = formatCurrency(totalSold);
@@ -1031,7 +1078,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
 
   const timeline = realPortfolioTimeline.length > 0
     ? realPortfolioTimeline.map((row) => timelinePointForFilters(row))
-    : buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCreditsDebitsValue);
+    : buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCredits);
 
   if (timeline.length === 0) {
     return;
@@ -1178,6 +1225,7 @@ function setPnlFilter(filter) {
   });
   refreshPnlView();
   renderInvestmentTimeline(getCurrentPnlRows());
+  updateUrlParams();
 }
 
 function setPnlBasis(basis) {
@@ -1187,6 +1235,7 @@ function setPnlBasis(basis) {
   });
   refreshPnlView();
   renderInvestmentTimeline(getCurrentPnlRows());
+  updateUrlParams();
 }
 
 function getPnlRowsByActiveFilter(items) {
@@ -1205,6 +1254,7 @@ function setMtfFilter(filter) {
     button.classList.toggle("active", (button.dataset.filter || STOCK_FILTER.ALL) === activeMtfFilter);
   });
   refreshMtfView();
+  updateUrlParams();
 }
 
 function getMtfRowsByActiveFilter(items) {
@@ -1215,6 +1265,43 @@ function getMtfRowsByActiveFilter(items) {
     return items.filter((item) => item.netQuantityValue > 0);
   }
   return items;
+}
+
+// Write the current tab + both filters into the URL (no reload) so the link is shareable.
+function updateUrlParams() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    params.set("view", VIEW_TO_PARAM[activeView] || "recommendations");
+    params.set("filter", activeView === VIEW.MTF ? activeMtfFilter : activePnlFilter);
+    params.set("basis", BASIS_TO_PARAM[activePnlBasis] || "total");
+    const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+    window.history.replaceState(null, "", newUrl);
+  } catch (error) {
+    /* file:// or unsupported history API — URL syncing is a no-op */
+  }
+}
+
+// On load, restore tab + filters from the URL so a shared link opens the same state.
+function applyStateFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const filterParam = (params.get("filter") || "").toLowerCase();
+  const basisParam = (params.get("basis") || "").toLowerCase();
+  const viewParam = (params.get("view") || "").toLowerCase();
+
+  if (Object.values(STOCK_FILTER).includes(filterParam)) {
+    activePnlFilter = filterParam;
+    activeMtfFilter = filterParam;
+  }
+  if (PARAM_TO_BASIS[basisParam]) {
+    activePnlBasis = PARAM_TO_BASIS[basisParam];
+  }
+
+  pnlFilterButtons.forEach((b) => b.classList.toggle("active", (b.dataset.filter || STOCK_FILTER.ALL) === activePnlFilter));
+  pnlBasisButtons.forEach((b) => b.classList.toggle("active", (b.dataset.basis || PNL_BASIS.ALL_HOLDINGS) === activePnlBasis));
+  mtfFilterButtons.forEach((b) => b.classList.toggle("active", (b.dataset.filter || STOCK_FILTER.ALL) === activeMtfFilter));
+
+  setView(PARAM_TO_VIEW[viewParam] || VIEW.CHARTS);
+  renderInvestmentTimeline(getCurrentPnlRows());
 }
 
 function setView(view) {
@@ -1234,15 +1321,13 @@ function setView(view) {
 
   if (showingCharts) {
     renderCards(searchInput.value);
-    return;
-  }
-
-  if (showingPnl) {
+  } else if (showingPnl) {
     refreshPnlView();
-    return;
+  } else {
+    refreshMtfView();
   }
 
-  refreshMtfView();
+  updateUrlParams();
 }
 
 function getTableByKey(tableKey) {

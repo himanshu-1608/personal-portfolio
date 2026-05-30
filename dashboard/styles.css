@@ -6,7 +6,7 @@
   --surface: rgba(255, 255, 255, 0.05);
   --surface-strong: rgba(255, 255, 255, 0.09);
   --ink: #dde4f5;
-  --muted: #5a6b8a;
+  --muted: #97a6c6;
   --line: rgba(255, 255, 255, 0.08);
   --accent: #00e5a0;
   --accent-soft: rgba(0, 229, 160, 0.13);
@@ -314,6 +314,22 @@ code {
   color: #07101f;
   background: var(--accent);
   font-weight: 700;
+}
+
+/* Any filter/basis button carrying a small explanatory second line */
+.pnl-filter-button:has(.basis-note) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  line-height: 1.15;
+}
+
+.basis-note {
+  font-size: 0.62rem;
+  font-weight: 500;
+  opacity: 0.82;
+  letter-spacing: 0.1px;
 }
 
 /* ─── Status banner ──────────────────────────────── */
