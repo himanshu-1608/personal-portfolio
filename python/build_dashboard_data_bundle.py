@@ -54,6 +54,20 @@ def export_stripped_ledger() -> None:
     print(f"Exported stripped ledger: {EXPORTED_LEDGER_FILE} ({len(rows)} rows)")
 
 
+def cleanup_old_data_files(keep: Path) -> None:
+    """Delete all data.<digits>.js files except the one just written."""
+    removed = []
+    for old in DASHBOARD_DIR.glob("data.*.js"):
+        if old == keep:
+            continue
+        if not old.stem.removeprefix("data.").isdigit():
+            continue  # not an epoch-millis file, skip
+        old.unlink()
+        removed.append(old.name)
+    if removed:
+        print(f"Removed old data files: {', '.join(removed)}")
+
+
 def update_index_html(new_filename: str) -> None:
     content = INDEX_HTML_FILE.read_text(encoding="utf-8")
     updated = re.sub(
@@ -85,6 +99,7 @@ def main() -> int:
     data_file.write_text(output, encoding="utf-8")
     print(f"Wrote dashboard data bundle: {data_file}")
 
+    cleanup_old_data_files(keep=data_file)
     update_index_html(data_filename)
 
     return 0
