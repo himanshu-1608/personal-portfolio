@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Fetch 30 trading-day closing prices from Yahoo Finance for stock recommendations.
+Fetch closing prices from Yahoo Finance for stock recommendations, from the
+recommendation date through the latest available trading day (no cap).
 
 Input:
   /input/recommendation.csv
@@ -13,7 +14,7 @@ Output:
   /reports/stock_closing_prices.csv
 
 The script refreshes all recommendations on each run so the latest trading days
-are appended automatically in the output report.
+are reflected automatically in the output report.
 """
 
 from __future__ import annotations
@@ -70,7 +71,7 @@ TARGET_2_COLUMN = "Target 2"
 TARGET_3_COLUMN = "Target 3"
 TARGET_4_COLUMN = "Target 4"
 BUY_PRICE_RECOMMENDATION_COLUMN = "Buy Price Recommendation"
-DAY_COUNT = 30
+DAY_COUNT = 252
 REQUEST_TIMEOUT_SECONDS = 30
 MAX_RETRIES = 5
 USER_AGENT = (
@@ -104,7 +105,7 @@ OUTPUT_HEADERS = [
     TARGET_3_COLUMN,
     TARGET_4_COLUMN,
     BUY_PRICE_RECOMMENDATION_COLUMN,
-    "Highest Price (30D)",
+    "Highest Price",
     "Hit Target 1",
     "Hit Target 2",
     "Hit Target 3",
@@ -541,7 +542,7 @@ def fetch_30_day_prices_with_yfinance(
         raise RuntimeError("yfinance is not installed.")
 
     start_date = parse_recommendation_date(recommendation_date)
-    end_date = start_date + timedelta(days=90)
+    end_date = date.today() + timedelta(days=1)
 
     ticker = yf.Ticker(stock_code)
     history = ticker.history(
@@ -609,7 +610,7 @@ def fetch_30_day_prices_with_yfinance(
 
 def fetch_30_day_prices(stock_code: str, recommendation_date: str) -> Tuple[List[Tuple[str, str]], str]:
     start_date = parse_recommendation_date(recommendation_date)
-    end_date = start_date + timedelta(days=90)
+    end_date = date.today() + timedelta(days=1)
 
     if yf is not None:
         try:
@@ -688,7 +689,7 @@ def build_output_row(recommendation: Recommendation) -> Dict[str, str]:
         TARGET_3_COLUMN: format_number(target_3) if target_3 is not None else "",
         TARGET_4_COLUMN: format_number(target_4) if target_4 is not None else "",
         BUY_PRICE_RECOMMENDATION_COLUMN: recommendation.buy_price_recommendation,
-        "Highest Price (30D)": highest_price,
+        "Highest Price": highest_price,
     }
     buy_price_recommendation = (
         parse_optional_float(recommendation.buy_price_recommendation)

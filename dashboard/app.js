@@ -2,7 +2,7 @@ const REPORT_PATH = "../reports/stock_closing_prices.csv";
 const PNL_REPORT_PATH = "../reports/stock_pnl_summary.csv";
 const MTF_PNL_REPORT_PATH = "../reports/mtf_pnl_summary.csv";
 const LEDGER_PATH = "../reports/exported_all_ledger.csv";
-const DAY_COUNT = 30;
+const DAY_COUNT = 252;
 const IS_FILE_PROTOCOL = window.location.protocol === "file:";
 const VIEW = {
   CHARTS: "charts",
@@ -563,7 +563,7 @@ function transformRow(row) {
     ? [inputTarget1, inputTarget2, inputTarget3, inputTarget4]
     : distributeTargets(inputTarget1, inputTarget2);
   const buyPriceRecommendationValue = parseNumber(row["Buy Price Recommendation"]);
-  const highestPriceValue = parseNumber(row["Highest Price (30D)"]);
+  const highestPriceValue = parseNumber(row["Highest Price"]);
 
   for (let index = 1; index <= DAY_COUNT; index += 1) {
     const date = row[`Date ${index}`];
@@ -591,7 +591,7 @@ function transformRow(row) {
     target3: formatTarget(splitTargets[2]),
     target4: formatTarget(splitTargets[3]),
     buyPriceRecommendation: row["Buy Price Recommendation"] || "",
-    highestPrice: row["Highest Price (30D)"] || "",
+    highestPrice: row["Highest Price"] || "",
     hitTarget1: classifyTargetHit(highestPriceValue, splitTargets[0]),
     hitTarget2: classifyTargetHit(highestPriceValue, splitTargets[1]),
     hitTarget3: classifyTargetHit(highestPriceValue, splitTargets[2]),
