@@ -488,7 +488,7 @@ def fetch_chart_payload(stock_code: str, start_date: date, end_date: date) -> di
     raise RuntimeError("Unable to fetch data from Yahoo Finance.")
 
 
-def extract_price_points(payload: dict, recommendation_date: date) -> List[Tuple[str, float, float]]:
+def extract_price_points(payload: dict, filter_from_date: date) -> List[Tuple[str, float, float]]:
     chart = payload.get("chart", {})
     error = chart.get("error")
     if error:
@@ -519,7 +519,7 @@ def extract_price_points(payload: dict, recommendation_date: date) -> List[Tuple
             continue
 
         trading_date = datetime.fromtimestamp(timestamp_value, tz=exchange_timezone).date()
-        if trading_date < recommendation_date:
+        if trading_date < filter_from_date:
             continue
 
         prices.append(
@@ -650,11 +650,100 @@ def fetch_30_day_prices(stock_code: str, recommendation_date: str) -> Tuple[List
     return merged_prices, (f"{highest_value:.4f}" if highest_value else "")
 
 
+INCREMENTAL_LOOKBACK_DAYS = 5
+
+
 def parse_optional_float(value: str) -> Optional[float]:
     stripped = value.strip()
     if not stripped:
         return None
     return float(stripped)
+
+
+def get_last_stored_date(row: Dict[str, str]) -> Optional[date]:
+    latest: Optional[date] = None
+    for index in range(1, DAY_COUNT + 1):
+        row_date = (row.get(f"Date {index}") or "").strip()
+        if row_date:
+            try:
+                d = date.fromisoformat(row_date)
+                if latest is None or d > latest:
+                    latest = d
+            except ValueError:
+                continue
+    return latest
+
+
+def get_next_empty_slot(row: Dict[str, str]) -> int:
+    for index in range(1, DAY_COUNT + 1):
+        if not (row.get(f"Date {index}") or "").strip():
+            return index
+    return DAY_COUNT + 1
+
+
+def fetch_prices_since(stock_code: str, since_date: date) -> Tuple[List[Tuple[str, str]], str]:
+    """Fetch closing prices from since_date to today. Returns only actual trading days (no padding)."""
+    end_date = date.today() + timedelta(days=1)
+
+    if yf is not None:
+        try:
+            ticker = yf.Ticker(stock_code)
+            history = ticker.history(
+                start=since_date.isoformat(),
+                end=end_date.isoformat(),
+                interval="1d",
+                auto_adjust=False,
+            )
+            if not history.empty:
+                close_series = history.get("Close")
+                high_series = history.get("High")
+                if close_series is not None and high_series is not None:
+                    if hasattr(close_series, "ndim") and close_series.ndim > 1:
+                        close_series = close_series.iloc[:, 0]
+                    if hasattr(high_series, "ndim") and high_series.ndim > 1:
+                        high_series = high_series.iloc[:, 0]
+
+                    prices: List[Tuple[str, str]] = []
+                    highest_price = 0.0
+                    for index_value, close_value in close_series.items():
+                        high_value = high_series.get(index_value)
+                        if close_value is None or high_value is None:
+                            continue
+                        if hasattr(close_value, "item") and getattr(close_value, "size", 1) == 1:
+                            close_value = close_value.item()
+                        if hasattr(high_value, "item") and getattr(high_value, "size", 1) == 1:
+                            high_value = high_value.item()
+                        if close_value != close_value or high_value != high_value:
+                            continue
+                        trading_date = index_value.date() if hasattr(index_value, "date") else index_value
+                        if trading_date < since_date:
+                            continue
+                        highest_price = max(highest_price, float(high_value))
+                        prices.append((trading_date.isoformat(), f"{float(close_value):.4f}"))
+
+                    merged_padded, fallback_high = merge_nse_fallback_prices(
+                        stock_code=stock_code, start_date=since_date, end_date=end_date, prices=prices
+                    )
+                    merged = [(d, p) for d, p in merged_padded if d]
+                    highest_value = max(highest_price, fallback_high)
+                    return merged, (f"{highest_value:.4f}" if highest_value else "")
+        except Exception as exc:
+            print(
+                f"Warning: yfinance incremental fetch failed for {stock_code}. "
+                f"Falling back to Yahoo API. Reason: {exc}",
+                file=sys.stderr,
+            )
+
+    payload = fetch_chart_payload(stock_code, since_date, end_date)
+    raw_prices = extract_price_points(payload, since_date)
+    highest_price = max((high for _, _, high in raw_prices), default=0.0)
+    padded_prices = [(d, f"{p:.4f}") for d, p, _ in raw_prices]
+    merged_padded, fallback_high = merge_nse_fallback_prices(
+        stock_code=stock_code, start_date=since_date, end_date=end_date, prices=padded_prices
+    )
+    merged = [(d, p) for d, p in merged_padded if d]
+    highest_value = max(highest_price, fallback_high)
+    return merged, (f"{highest_value:.4f}" if highest_value else "")
 
 
 def distribute_targets(
@@ -673,7 +762,72 @@ def distribute_targets(
     return target_1, target_2_split, target_3_split, target_2
 
 
-def build_output_row(recommendation: Recommendation) -> Dict[str, str]:
+def _apply_hit_targets(row: Dict[str, str]) -> None:
+    highest_price_val = parse_optional_float(row.get("Highest Price") or "")
+    for i, target_col in enumerate(["Target 1", "Target 2", "Target 3", "Target 4"], 1):
+        target_val = parse_optional_float(row.get(target_col) or "")
+        if target_val is None:
+            row[f"Hit Target {i}"] = ""
+        else:
+            row[f"Hit Target {i}"] = (
+                "TRUE" if highest_price_val is not None and highest_price_val >= target_val else "FALSE"
+            )
+
+
+def build_output_row(
+    recommendation: Recommendation, existing_row: Optional[Dict[str, str]] = None
+) -> Dict[str, str]:
+    # ── Incremental path: existing data present, only fetch last N days ──────
+    if existing_row is not None:
+        since_date = date.today() - timedelta(days=INCREMENTAL_LOOKBACK_DAYS)
+        new_prices, new_highest_str = fetch_prices_since(recommendation.stock_code, since_date)
+
+        stored_dates = {
+            (existing_row.get(f"Date {i}") or "").strip()
+            for i in range(1, DAY_COUNT + 1)
+        }
+        fresh_prices = [(d, p) for d, p in new_prices if d and d not in stored_dates]
+
+        if not fresh_prices:
+            return existing_row
+
+        merged_row = dict(existing_row)
+
+        old_high = parse_optional_float(existing_row.get("Highest Price") or "") or 0.0
+        new_high = parse_optional_float(new_highest_str) or 0.0
+        merged_high = max(old_high, new_high)
+        if merged_high:
+            merged_row["Highest Price"] = format_number(merged_high)
+
+        base_price = (
+            parse_optional_float(recommendation.buy_price_recommendation)
+            if recommendation.buy_price_recommendation
+            else None
+        )
+        if base_price is None:
+            for i in range(1, DAY_COUNT + 1):
+                day_price = (existing_row.get(f"Day {i} Price") or "").strip()
+                if day_price:
+                    base_price = parse_optional_float(day_price)
+                    break
+
+        next_slot = get_next_empty_slot(merged_row)
+        for trading_date, price in fresh_prices:
+            if next_slot > DAY_COUNT:
+                break
+            merged_row[f"Date {next_slot}"] = trading_date
+            merged_row[f"Day {next_slot} Price"] = price
+            if price and base_price not in (None, 0):
+                return_pct = ((float(price) / base_price) - 1) * 100
+                merged_row[f"Day {next_slot} Return %"] = f"{return_pct:.2f}%"
+            else:
+                merged_row[f"Day {next_slot} Return %"] = ""
+            next_slot += 1
+
+        _apply_hit_targets(merged_row)
+        return merged_row
+
+    # ── Full fetch path (first run / no existing data) ────────────────────────
     prices, highest_price = fetch_30_day_prices(
         recommendation.stock_code, recommendation.recommendation_date
     )
@@ -681,7 +835,14 @@ def build_output_row(recommendation: Recommendation) -> Dict[str, str]:
     input_target_2 = parse_optional_float(recommendation.target_2) if recommendation.target_2 else None
     target_1, target_2, target_3, target_4 = distribute_targets(input_target_1, input_target_2)
 
-    row = {
+    buy_price_recommendation = (
+        parse_optional_float(recommendation.buy_price_recommendation)
+        if recommendation.buy_price_recommendation
+        else None
+    )
+    highest_price_value = parse_optional_float(highest_price) if highest_price else None
+
+    row: Dict[str, str] = {
         STOCK_COLUMN: recommendation.stock_code,
         DATE_COLUMN: recommendation.recommendation_date,
         TARGET_1_COLUMN: format_number(target_1) if target_1 is not None else "",
@@ -690,47 +851,41 @@ def build_output_row(recommendation: Recommendation) -> Dict[str, str]:
         TARGET_4_COLUMN: format_number(target_4) if target_4 is not None else "",
         BUY_PRICE_RECOMMENDATION_COLUMN: recommendation.buy_price_recommendation,
         "Highest Price": highest_price,
+        "Hit Target 1": (
+            ("TRUE" if highest_price_value is not None and highest_price_value >= target_1 else "FALSE")
+            if target_1 is not None else ""
+        ),
+        "Hit Target 2": (
+            ("TRUE" if highest_price_value is not None and highest_price_value >= target_2 else "FALSE")
+            if target_2 is not None else ""
+        ),
+        "Hit Target 3": (
+            ("TRUE" if highest_price_value is not None and highest_price_value >= target_3 else "FALSE")
+            if target_3 is not None else ""
+        ),
+        "Hit Target 4": (
+            ("TRUE" if highest_price_value is not None and highest_price_value >= target_4 else "FALSE")
+            if target_4 is not None else ""
+        ),
+        "Target 1 Return %": (
+            f"{(((target_1 / buy_price_recommendation) - 1) * 100):.2f}%"
+            if target_1 is not None and buy_price_recommendation not in (None, 0) else ""
+        ),
+        "Target 2 Return %": (
+            f"{(((target_2 / buy_price_recommendation) - 1) * 100):.2f}%"
+            if target_2 is not None and buy_price_recommendation not in (None, 0) else ""
+        ),
+        "Target 3 Return %": (
+            f"{(((target_3 / buy_price_recommendation) - 1) * 100):.2f}%"
+            if target_3 is not None and buy_price_recommendation not in (None, 0) else ""
+        ),
+        "Target 4 Return %": (
+            f"{(((target_4 / buy_price_recommendation) - 1) * 100):.2f}%"
+            if target_4 is not None and buy_price_recommendation not in (None, 0) else ""
+        ),
     }
-    buy_price_recommendation = (
-        parse_optional_float(recommendation.buy_price_recommendation)
-        if recommendation.buy_price_recommendation
-        else None
-    )
-    highest_price_value = parse_optional_float(highest_price) if highest_price else None
-    row["Hit Target 1"] = (
-        "TRUE" if target_1 is not None and highest_price_value is not None and highest_price_value >= target_1 else "FALSE"
-    ) if target_1 is not None else ""
-    row["Hit Target 2"] = (
-        "TRUE" if target_2 is not None and highest_price_value is not None and highest_price_value >= target_2 else "FALSE"
-    ) if target_2 is not None else ""
-    row["Hit Target 3"] = (
-        "TRUE" if target_3 is not None and highest_price_value is not None and highest_price_value >= target_3 else "FALSE"
-    ) if target_3 is not None else ""
-    row["Hit Target 4"] = (
-        "TRUE" if target_4 is not None and highest_price_value is not None and highest_price_value >= target_4 else "FALSE"
-    ) if target_4 is not None else ""
-    row["Target 1 Return %"] = (
-        f"{(((target_1 / buy_price_recommendation) - 1) * 100):.2f}%"
-        if target_1 is not None and buy_price_recommendation not in (None, 0)
-        else ""
-    )
-    row["Target 2 Return %"] = (
-        f"{(((target_2 / buy_price_recommendation) - 1) * 100):.2f}%"
-        if target_2 is not None and buy_price_recommendation not in (None, 0)
-        else ""
-    )
-    row["Target 3 Return %"] = (
-        f"{(((target_3 / buy_price_recommendation) - 1) * 100):.2f}%"
-        if target_3 is not None and buy_price_recommendation not in (None, 0)
-        else ""
-    )
-    row["Target 4 Return %"] = (
-        f"{(((target_4 / buy_price_recommendation) - 1) * 100):.2f}%"
-        if target_4 is not None and buy_price_recommendation not in (None, 0)
-        else ""
-    )
-    # Return % should be measured versus the recommendation buy price when available.
-    # This avoids Day 1 being hardcoded to 0.00% for same-day recommendations.
+
+    # Return % measured vs buy recommendation price to avoid Day 1 being 0.00%.
     base_price = buy_price_recommendation if buy_price_recommendation not in (None, 0) else None
     if base_price is None:
         for _trading_date, price in prices:
@@ -1574,12 +1729,13 @@ def main() -> int:
                     refreshed_rows.append(existing_row)
                     continue
 
+                mode = "incremental" if existing_row is not None else "full"
                 print(
                     f"[{index}/{total}] Fetching Yahoo Finance data for "
-                    f"{recommendation.stock_code} ({recommendation.recommendation_date})"
+                    f"{recommendation.stock_code} ({recommendation.recommendation_date}) [{mode}]"
                 )
                 try:
-                    refreshed_rows.append(build_output_row(recommendation))
+                    refreshed_rows.append(build_output_row(recommendation, existing_row))
                     time.sleep(0.2)
                 except urllib.error.HTTPError as exc:
                     raise RuntimeError(

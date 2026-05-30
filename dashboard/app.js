@@ -28,8 +28,6 @@ const statusBanner = document.getElementById("statusBanner");
 const cardsContainer = document.getElementById("cardsContainer");
 const template = document.getElementById("stockCardTemplate");
 
-const stocksLoaded = document.getElementById("stocksLoaded");
-const stocksInvested = document.getElementById("stocksInvested");
 const pnlFilterSwitch = document.getElementById("pnlFilterSwitch");
 const pnlFilterButtons = Array.from(pnlFilterSwitch.querySelectorAll(".pnl-filter-button"));
 const pnlBasisSwitch = document.getElementById("pnlBasisSwitch");
@@ -269,13 +267,7 @@ function readEmbeddedData() {
   };
 }
 
-function updateSummary(items) {
-  stocksLoaded.textContent = String(items.length);
-  const investedCount = pnlRows.filter(
-    (item) => item.buyQuantityValue > 0 && item.sellQuantityValue === 0
-  ).length;
-  stocksInvested.textContent = String(investedCount);
-}
+function updateSummary(_items) {}
 
 function renderCards(filterText = "") {
   const normalizedFilter = filterText.trim().toLowerCase();
