@@ -966,6 +966,40 @@ function updateMtfSummary(items) {
   mtfYourFunding.textContent = items.length > 0 ? formatCurrency(totalFundingBase) : "--";
 }
 
+// Derive one {date, inputCapital, portfolioValue} point from a timeline CSV row,
+// honoring the two active filters:
+//   activePnlBasis  -> all_holdings (full value) | personal_funding (full - zerodha)
+//   activePnlFilter -> all | realized | unrealized (which bucket to include)
+function timelinePointForFilters(row) {
+  const rInvFull = parseNumber(row.r_invested);
+  const rValFull = parseNumber(row.r_value);
+  const rZerodha = parseNumber(row.r_zerodha);
+  const uInvFull = parseNumber(row.u_invested);
+  const uValFull = parseNumber(row.u_value);
+  const uZerodha = parseNumber(row.u_zerodha);
+
+  const personal = activePnlBasis === PNL_BASIS.PERSONAL_FUNDING;
+  const rInv = personal ? rInvFull - rZerodha : rInvFull;
+  const rVal = personal ? rValFull - rZerodha : rValFull;
+  const uInv = personal ? uInvFull - uZerodha : uInvFull;
+  const uVal = personal ? uValFull - uZerodha : uValFull;
+
+  let inputCapital;
+  let portfolioValue;
+  if (activePnlFilter === STOCK_FILTER.REALIZED) {
+    inputCapital = rInv;
+    portfolioValue = rVal;
+  } else if (activePnlFilter === STOCK_FILTER.UNREALIZED) {
+    inputCapital = uInv;
+    portfolioValue = uVal;
+  } else {
+    inputCapital = rInv + uInv;
+    portfolioValue = rVal + uVal;
+  }
+
+  return { date: row.date, inputCapital, portfolioValue };
+}
+
 function renderInvestmentTimeline(filteredPnlRows) {
   if (portfolioChart) {
     portfolioChart.destroy();
@@ -996,11 +1030,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
   }
 
   const timeline = realPortfolioTimeline.length > 0
-    ? realPortfolioTimeline.map((row) => ({
-        date: row.date,
-        inputCapital: parseNumber(row.invested_capital),
-        portfolioValue: parseNumber(row.portfolio_value),
-      }))
+    ? realPortfolioTimeline.map((row) => timelinePointForFilters(row))
     : buildPortfolioTimeline(filteredPnlRows, capitalKey, otherCreditsDebitsValue);
 
   if (timeline.length === 0) {

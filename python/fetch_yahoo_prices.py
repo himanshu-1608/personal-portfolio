@@ -64,7 +64,15 @@ OUTPUT_FILE = REPORTS_DIR / "stock_closing_prices.csv"
 PNL_OUTPUT_FILE = REPORTS_DIR / "stock_pnl_summary.csv"
 MTF_PNL_OUTPUT_FILE = REPORTS_DIR / "mtf_pnl_summary.csv"
 PORTFOLIO_TIMELINE_FILE = REPORTS_DIR / "portfolio_timeline.csv"
-PORTFOLIO_TIMELINE_HEADERS = ["date", "portfolio_value", "invested_capital"]
+PORTFOLIO_TIMELINE_HEADERS = [
+    "date",
+    "r_invested",   # realized lots: full buy value of qty sold by this date
+    "r_value",      # realized lots: actual sell proceeds locked in by this date
+    "r_zerodha",    # realized lots: zerodha (MTF) funding portion of sold qty
+    "u_invested",   # open lots: full buy value of qty still held on this date
+    "u_value",      # open lots: market value (qty x forward-filled price) on this date
+    "u_zerodha",    # open lots: zerodha (MTF) funding portion of held qty
+]
 
 STOCK_COLUMN = "Stock Code/Name"
 DATE_COLUMN = "Recommendation Date"
@@ -1376,11 +1384,24 @@ def build_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[str, s
 
 
 def build_portfolio_timeline(report_rows: Sequence[Dict[str, str]]) -> List[Dict[str, str]]:
-    """Compute real day-by-day portfolio value from stock prices x quantities held."""
+    """Compute real day-by-day portfolio components, split by realized/unrealized
+    and by full-value/MTF-funding, so the dashboard can render any filter combo.
+
+    Per date we emit, for both realized (sold-by-date) and unrealized (still-held)
+    buckets: full buy value, current value, and the zerodha (MTF) funding portion.
+    The frontend derives the 6 filter combinations:
+      - basis "all holdings"  -> use full value (r_invested / u_invested, r_value / u_value)
+      - basis "personal"      -> subtract zerodha funding (full - zerodha)
+      - filter realized/unrealized/all -> pick r_*, u_*, or their sum
+    """
     import bisect
 
     if not TRADEBOOK_FILE.exists():
         return []
+
+    # Per-buy-date MTF margin ratio. ratio = your_funding / buy_value.
+    # Cash (non-MTF) buy dates are absent -> treated as ratio 1.0 (zero zerodha funding).
+    margin_ratio_by_date = build_mtf_margin_ratio_by_date()
 
     # Build price lookup: {base_symbol: {iso_date: price}}
     price_by_symbol: Dict[str, Dict[str, float]] = {}
@@ -1402,8 +1423,8 @@ def build_portfolio_timeline(report_rows: Sequence[Dict[str, str]]) -> List[Dict
     if not price_by_symbol:
         return []
 
-    # Read tradebook into chronological trade events
-    trades: List[Tuple[str, str, float, float]] = []  # (sort_time, symbol, signed_qty, buy_price)
+    # Read tradebook into chronological trade events (mirror FIFO of build_pnl_summary).
+    trades: List[Tuple[str, str, float, float, str]] = []  # (sort_time, symbol, qty, price, trade_type)
     with TRADEBOOK_FILE.open("r", newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file)
         if reader.fieldnames is None:
@@ -1419,69 +1440,115 @@ def build_portfolio_timeline(report_rows: Sequence[Dict[str, str]]) -> List[Dict
             if quantity <= 0 or price <= 0:
                 continue
             sort_time = (row.get("order_execution_time") or "").strip() or trade_date
-            signed_qty = quantity if trade_type == "buy" else -quantity
-            trades.append((sort_time, symbol, signed_qty, price))
+            trades.append((sort_time, symbol, quantity, price, trade_type))
 
     if not trades:
         return []
 
     trades.sort(key=lambda t: t[0])
 
+    # Build lots aggregated by (symbol, buy_date). FIFO sells record per-lot sell events
+    # with their dates so we can reconstruct realized/unrealized split at any past date.
+    lots_by_symbol: Dict[str, List[Dict[str, object]]] = {}
+    for sort_time, symbol, quantity, price, trade_type in trades:
+        symbol_lots = lots_by_symbol.setdefault(symbol, [])
+        if trade_type == "buy":
+            trade_date = sort_time[:10]
+            lot = next((l for l in symbol_lots if l["trade_date"] == trade_date), None)
+            if lot is None:
+                lot = {
+                    "trade_date": trade_date,
+                    "buy_quantity": 0.0,
+                    "buy_value": 0.0,
+                    "zerodha_value": 0.0,
+                    "position_quantity": 0.0,
+                    "sells": [],  # list of (sell_date, qty, sell_price)
+                }
+                symbol_lots.append(lot)
+            ratio = margin_ratio_by_date.get(trade_date, 1.0)
+            buy_value = quantity * price
+            lot["buy_quantity"] = float(lot["buy_quantity"]) + quantity
+            lot["buy_value"] = float(lot["buy_value"]) + buy_value
+            lot["zerodha_value"] = float(lot["zerodha_value"]) + buy_value * (1.0 - ratio)
+            lot["position_quantity"] = float(lot["position_quantity"]) + quantity
+            continue
+
+        # sell: FIFO across this symbol's lots in chronological order
+        sell_date = sort_time[:10]
+        remaining = quantity
+        for lot in symbol_lots:
+            open_qty = float(lot["position_quantity"])
+            if open_qty <= 0:
+                continue
+            matched = min(remaining, open_qty)
+            lot["position_quantity"] = open_qty - matched
+            lot["sells"].append((sell_date, matched, price))
+            remaining -= matched
+            if remaining <= 0:
+                break
+
     # All market dates across all stocks in the price data
-    all_market_dates = sorted({
-        d for sym_prices in price_by_symbol.values() for d in sym_prices
-    })
+    all_market_dates = sorted({d for sym_prices in price_by_symbol.values() for d in sym_prices})
     if not all_market_dates:
         return []
 
-    # Pre-sort each symbol's known dates for efficient forward-fill lookup
     sorted_dates_by_symbol: Dict[str, List[str]] = {
         sym: sorted(dates.keys()) for sym, dates in price_by_symbol.items()
     }
 
-    positions: Dict[str, float] = {}  # symbol -> net qty
-    cumulative_invested = 0.0
-    trade_idx = 0
-    n_trades = len(trades)
+    def price_on(symbol: str, market_date: str, fallback: float) -> float:
+        sym_dates = sorted_dates_by_symbol.get(symbol)
+        sym_prices = price_by_symbol.get(symbol)
+        if not sym_dates or not sym_prices:
+            return fallback
+        pos = bisect.bisect_right(sym_dates, market_date)
+        if pos == 0:
+            return fallback
+        return sym_prices[sym_dates[pos - 1]]
+
     timeline: List[Dict[str, str]] = []
-
     for market_date in all_market_dates:
-        # Apply every trade whose execution datetime falls on or before market_date
-        while trade_idx < n_trades and trades[trade_idx][0][:10] <= market_date:
-            _, symbol, signed_qty, buy_price = trades[trade_idx]
-            positions[symbol] = positions.get(symbol, 0.0) + signed_qty
-            cumulative_invested += signed_qty * buy_price  # buy: positive, sell: negative (subtracts sell proceeds)
-            if cumulative_invested < 0:
-                cumulative_invested = 0.0
-            trade_idx += 1
+        r_invested = r_value = r_zerodha = 0.0
+        u_invested = u_value = u_zerodha = 0.0
 
-        # Skip days before any position exists
-        if not any(q > 0.0 for q in positions.values()):
-            continue
+        for symbol, symbol_lots in lots_by_symbol.items():
+            for lot in symbol_lots:
+                if lot["trade_date"] > market_date:
+                    continue  # lot not bought yet
+                buy_qty = float(lot["buy_quantity"])
+                if buy_qty <= 0:
+                    continue
+                buy_price_ps = float(lot["buy_value"]) / buy_qty
+                zerodha_ps = float(lot["zerodha_value"]) / buy_qty
 
-        # Sum market value of all held positions using forward-filled prices
-        portfolio_value = 0.0
-        for symbol, qty in positions.items():
-            if qty <= 0.0:
-                continue
-            sym_dates = sorted_dates_by_symbol.get(symbol)
-            sym_prices = price_by_symbol.get(symbol)
-            if not sym_dates or not sym_prices:
-                continue
-            # Forward-fill: find the latest known date <= market_date
-            pos = bisect.bisect_right(sym_dates, market_date)
-            if pos == 0:
-                continue  # no price data on or before this date for this symbol
-            price_on_date = sym_prices[sym_dates[pos - 1]]
-            portfolio_value += qty * price_on_date
+                sold_qty = 0.0
+                realized_value = 0.0
+                for sell_date, qty, sell_price in lot["sells"]:
+                    if sell_date <= market_date:
+                        sold_qty += qty
+                        realized_value += qty * sell_price
+                open_qty = buy_qty - sold_qty
 
-        if portfolio_value <= 0.0:
+                if sold_qty > 0:
+                    r_invested += sold_qty * buy_price_ps
+                    r_value += realized_value
+                    r_zerodha += sold_qty * zerodha_ps
+                if open_qty > 0:
+                    u_invested += open_qty * buy_price_ps
+                    u_value += open_qty * price_on(symbol, market_date, buy_price_ps)
+                    u_zerodha += open_qty * zerodha_ps
+
+        if r_invested <= 0 and u_invested <= 0:
             continue
 
         timeline.append({
             "date": market_date,
-            "portfolio_value": f"{portfolio_value:.2f}",
-            "invested_capital": f"{cumulative_invested:.2f}",
+            "r_invested": f"{r_invested:.2f}",
+            "r_value": f"{r_value:.2f}",
+            "r_zerodha": f"{r_zerodha:.2f}",
+            "u_invested": f"{u_invested:.2f}",
+            "u_value": f"{u_value:.2f}",
+            "u_zerodha": f"{u_zerodha:.2f}",
         })
 
     return timeline
