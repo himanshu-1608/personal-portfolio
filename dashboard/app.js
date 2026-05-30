@@ -982,7 +982,8 @@ function renderInvestmentTimeline(filteredPnlRows) {
     return;
   }
 
-  const totalInvested = filteredPnlRows.reduce((s, r) => s + r.buyValueRaw, 0);
+  const capitalKey = activePnlBasis === PNL_BASIS.PERSONAL_FUNDING ? "myFundingRaw" : "buyValueRaw";
+  const totalInvested = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
   const totalSold = filteredPnlRows.reduce((s, r) => s + r.sellValueRaw, 0);
   const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0);
 
@@ -996,7 +997,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
     timelineCurrentGain.classList.add("table-negative");
   }
 
-  const timeline = buildPortfolioTimeline(filteredPnlRows);
+  const timeline = buildPortfolioTimeline(filteredPnlRows, capitalKey);
   if (timeline.length === 0) {
     return;
   }
@@ -1069,7 +1070,7 @@ function renderInvestmentTimeline(filteredPnlRows) {
   });
 }
 
-function buildPortfolioTimeline(filteredPnlRows) {
+function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw") {
   const byDate = {};
   filteredPnlRows.forEach((row) => {
     const date = (row.tradeDate || "").trim();
@@ -1079,7 +1080,7 @@ function buildPortfolioTimeline(filteredPnlRows) {
     if (!byDate[date]) {
       byDate[date] = { inputCapital: 0, totalPnl: 0 };
     }
-    byDate[date].inputCapital += row.buyValueRaw;
+    byDate[date].inputCapital += row[capitalKey];
     byDate[date].totalPnl += row.totalPnlValue;
   });
 
@@ -1127,6 +1128,7 @@ function setPnlBasis(basis) {
     button.classList.toggle("active", (button.dataset.basis || PNL_BASIS.ALL_HOLDINGS) === activePnlBasis);
   });
   refreshPnlView();
+  renderInvestmentTimeline(getCurrentPnlRows());
 }
 
 function getPnlRowsByActiveFilter(items) {
