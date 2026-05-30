@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Input folder — raw broker CSVs (private/sensitive, never push)
+input/*.csv
+input/*.xlsx
+input/*.xls
+
+# Personal/local notes
+CLAUDE.md
+context.md

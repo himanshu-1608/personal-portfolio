@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Return Dashboard</title>
+    <link rel="stylesheet" href="./styles.css?v=20260425-5" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <section class="top-toggle-shell">
+        <div class="toggle-header">
+          <p class="toggle-eyebrow">View Mode</p>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L v/s MTF P&amp;L</h2>
+        </div>
+        <div class="view-switch" role="tablist" aria-label="Dashboard Views">
+          <button id="chartViewButton" class="view-button active" type="button">
+            <span class="view-button-kicker">Recommendations</span>
+            <span class="view-button-title">Performance of Recommendations</span>
+            <span class="view-button-copy">Track day-wise return movement for every recommended stock.</span>
+          </button>
+          <button id="pnlViewButton" class="view-button" type="button">
+            <span class="view-button-kicker">Portfolio</span>
+            <span class="view-button-title">Portfolio P&amp;L</span>
+            <span class="view-button-copy">Review realized, unrealized, and total P&amp;L from your tradebook.</span>
+          </button>
+          <button id="mtfViewButton" class="view-button" type="button">
+            <span class="view-button-kicker">Funding</span>
+            <span class="view-button-title">MTF P&amp;L</span>
+            <span class="view-button-copy">Compare holding returns vs your own funding returns for MTF lots.</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="summary-grid" id="summaryGrid">
+        <article class="summary-card">
+          <p class="summary-label">Stocks Loaded</p>
+          <p class="summary-value" id="stocksLoaded">0</p>
+        </article>
+        <article class="summary-card">
+          <p class="summary-label">Stocks Invested In</p>
+          <p class="summary-value" id="stocksInvested">0</p>
+        </article>
+      </section>
+
+      <section class="toolbar">
+        <label class="search-field">
+          <span>Filter Stocks</span>
+          <input id="searchInput" type="search" placeholder="Type stock code..." />
+        </label>
+        <div id="pnlFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Filters">
+          <button class="pnl-filter-button active" type="button" data-filter="all">All Stocks</button>
+          <button class="pnl-filter-button" type="button" data-filter="realized">Realized P&amp;L</button>
+          <button class="pnl-filter-button" type="button" data-filter="unrealized">Unrealized P&amp;L</button>
+        </div>
+        <div id="pnlBasisSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Basis">
+          <button class="pnl-basis-button pnl-filter-button active" type="button" data-basis="all_holdings">All Holdings</button>
+          <button class="pnl-basis-button pnl-filter-button" type="button" data-basis="personal_funding">Personal Funding</button>
+        </div>
+        <div id="mtfFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="MTF P&L Filters">
+          <button class="mtf-filter-button pnl-filter-button active" type="button" data-filter="all">All Stocks</button>
+          <button class="mtf-filter-button pnl-filter-button" type="button" data-filter="realized">Realized P&amp;L</button>
+          <button class="mtf-filter-button pnl-filter-button" type="button" data-filter="unrealized">Unrealized P&amp;L</button>
+        </div>
+      </section>
+
+      <section id="statusBanner" class="status-banner hidden" aria-live="polite"></section>
+      <section id="chartsPage" class="dashboard-page active">
+        <section id="cardsContainer" class="cards-grid"></section>
+      </section>
+      <section id="pnlPage" class="dashboard-page">
+        <section class="timeline-shell">
+          <div class="timeline-header">
+            <p class="timeline-eyebrow">Cashflow Timeline</p>
+            <h3 class="timeline-title">Date-wise Invested, Withdrawn, and Growth</h3>
+          </div>
+          <div class="timeline-summary">
+            <article class="summary-card">
+              <p class="summary-label">Total Added</p>
+              <p class="summary-value" id="timelineTotalAdded">--</p>
+            </article>
+            <article class="summary-card">
+              <p class="summary-label">Total Withdrawn</p>
+              <p class="summary-value" id="timelineTotalWithdrawn">--</p>
+            </article>
+            <article class="summary-card">
+              <p class="summary-label">Current Gain/Loss</p>
+              <p class="summary-value" id="timelineCurrentGain">--</p>
+            </article>
+          </div>
+          <div class="timeline-chart-panel">
+            <svg
+              id="investmentTimelineChart"
+              class="timeline-chart"
+              viewBox="0 0 900 320"
+              preserveAspectRatio="none"
+              aria-label="Investment timeline chart"
+            ></svg>
+          </div>
+        </section>
+        <div class="pnl-summary-grid">
+          <article class="summary-card">
+            <p class="summary-label">Total Amount Invested</p>
+            <p class="summary-value" id="totalAmountInvested">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Total Realized P&amp;L</p>
+            <p class="summary-value" id="totalRealizedPnl">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Charges, Taxes, Others</p>
+            <p class="summary-value" id="totalChargesTaxesOthers">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Net Realized P&amp;L</p>
+            <p class="summary-value" id="netRealizedPnl">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Total Unrealized P&amp;L</p>
+            <p class="summary-value" id="totalUnrealizedPnl">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Other Credits &amp; Debits</p>
+            <p class="summary-value" id="totalOtherCreditsDebits">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Net Total P&amp;L</p>
+            <p class="summary-value" id="netTotalPnl">--</p>
+          </article>
+        </div>
+
+        <div class="data-table-wrap pnl-table-wrap">
+          <table id="pnlTable" class="data-table">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Trade Date</th>
+                <th>Buy Qty</th>
+                <th>Buy Avg</th>
+                <th>Total Bought</th>
+                <th>Sell Qty</th>
+                <th>Sell Avg</th>
+                <th>Total Sold</th>
+                <th>Current Qty</th>
+                <th>Latest Price</th>
+                <th>Realized P&amp;L</th>
+                <th>Charges, Taxes, Others</th>
+                <th>Net Realized P&amp;L</th>
+                <th>Unrealized P&amp;L</th>
+                <th>Total P&amp;L</th>
+                <th>Return %</th>
+              </tr>
+            </thead>
+            <tbody id="pnlTableBody"></tbody>
+          </table>
+        </div>
+        <div class="excluded-columns-shell">
+          <p class="excluded-columns-title">Excluded Columns</p>
+          <div id="pnlExcludedColumns" class="excluded-columns-pills"></div>
+        </div>
+      </section>
+      <section id="mtfPage" class="dashboard-page">
+        <div class="pnl-summary-grid">
+          <article class="summary-card">
+            <p class="summary-label">Total Holding P&amp;L</p>
+            <p class="summary-value" id="mtfHoldingPnl">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Total Net Funding P&amp;L</p>
+            <p class="summary-value" id="mtfNetFundingPnl">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Total Personal Funding</p>
+            <p class="summary-value" id="mtfYourFunding">--</p>
+          </article>
+          <article class="summary-card">
+            <p class="summary-label">Total Carrying Cost</p>
+            <p class="summary-value" id="mtfTotalCarryingCost">--</p>
+          </article>
+        </div>
+
+        <div class="data-table-wrap pnl-table-wrap">
+          <table id="mtfTable" class="data-table">
+            <thead>
+              <tr>
+                <th>Stock</th>
+                <th>Trade Date</th>
+                <th>Buy Qty</th>
+                <th>Buy Value</th>
+                <th>Personal Funding</th>
+                <th>Zerodha Funding</th>
+                <th>Leverage</th>
+                <th>Sell Qty</th>
+                <th>Sell Value</th>
+                <th>Net Qty</th>
+                <th>Latest Price</th>
+                <th>Holding P&amp;L</th>
+                <th>Holding Return %</th>
+                <th>Funding Return %</th>
+                <th>Interest Cost</th>
+                <th>Pledge Charges</th>
+                <th>Total Carrying Cost</th>
+                <th>Net Funding P&amp;L</th>
+                <th>Net Funding Return %</th>
+              </tr>
+            </thead>
+            <tbody id="mtfTableBody"></tbody>
+          </table>
+        </div>
+        <div class="excluded-columns-shell">
+          <p class="excluded-columns-title">Excluded Columns</p>
+          <div id="mtfExcludedColumns" class="excluded-columns-pills"></div>
+        </div>
+      </section>
+    </div>
+
+    <template id="stockCardTemplate">
+      <article class="stock-card">
+        <div class="stock-card-header">
+          <div>
+            <p class="stock-code"></p>
+            <p class="stock-date"></p>
+          </div>
+            <div class="stock-side-panel">
+              <div class="stock-badges">
+                <span class="badge latest-badge"></span>
+                <span class="badge peak-badge"></span>
+              </div>
+              <div class="investment-summary">
+                <p class="investment-label">Total Invested Amount</p>
+                <p class="investment-value invested-amount"></p>
+                <p class="investment-label">Total Return %</p>
+                <p class="investment-value invested-return"></p>
+              </div>
+            </div>
+          </div>
+
+        <div class="chart-panel">
+          <svg class="chart" viewBox="0 0 640 260" preserveAspectRatio="none" aria-hidden="true"></svg>
+        </div>
+
+        <div class="stock-meta">
+          <div>
+            <p class="meta-label">Latest Price</p>
+            <p class="meta-value latest-price"></p>
+          </div>
+          <div>
+            <p class="meta-label">Position Status</p>
+            <p class="meta-value position-status"></p>
+          </div>
+          <div>
+            <p class="meta-label">Highest Price (30D)</p>
+            <p class="meta-value highest-price"></p>
+          </div>
+          <div>
+            <p class="meta-label target-label">Hit Target 1</p>
+            <p class="meta-value target-hit target-1-hit"></p>
+          </div>
+          <div>
+            <p class="meta-label target-label">Hit Target 2</p>
+            <p class="meta-value target-hit target-2-hit"></p>
+          </div>
+          <div>
+            <p class="meta-label target-label">Hit Target 3</p>
+            <p class="meta-value target-hit target-3-hit"></p>
+          </div>
+          <div>
+            <p class="meta-label target-label">Hit Target 4</p>
+            <p class="meta-value target-hit target-4-hit"></p>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Return %</th>
+              </tr>
+            </thead>
+            <tbody class="data-table-body"></tbody>
+          </table>
+        </div>
+      </article>
+    </template>
+
+    <script src="./data.js?v=20260425-1"></script>
+    <script src="./app.js?v=20260425-9"></script>
+  </body>
+</html>
