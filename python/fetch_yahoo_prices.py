@@ -782,11 +782,15 @@ def build_output_row(
         since_date = date.today() - timedelta(days=INCREMENTAL_LOOKBACK_DAYS)
         new_prices, new_highest_str = fetch_prices_since(recommendation.stock_code, since_date)
 
+        rec_date = parse_recommendation_date(recommendation.recommendation_date)
         stored_dates = {
             (existing_row.get(f"Date {i}") or "").strip()
             for i in range(1, DAY_COUNT + 1)
         }
-        fresh_prices = [(d, p) for d, p in new_prices if d and d not in stored_dates]
+        fresh_prices = [
+            (d, p) for d, p in new_prices
+            if d and d not in stored_dates and date.fromisoformat(d) >= rec_date
+        ]
 
         if not fresh_prices:
             return existing_row
@@ -934,7 +938,7 @@ def load_latest_market_data(rows: Sequence[Dict[str, str]]) -> Dict[str, Dict[st
         for index in range(1, DAY_COUNT + 1):
             row_date = (row.get(f"Date {index}") or "").strip()
             row_price = (row.get(f"Day {index} Price") or "").strip()
-            if row_date and row_price:
+            if row_date and row_price and row_date > latest_date:
                 latest_date = row_date
                 latest_price = row_price
 
