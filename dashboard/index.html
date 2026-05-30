@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Return Dashboard</title>
-    <link rel="stylesheet" href="./styles.css?v=20260531-7" />
+    <link rel="stylesheet" href="./styles.css?v=20260531-10" />
   </head>
   <body>
     <div class="bg-mesh" aria-hidden="true"></div>
@@ -12,7 +12,7 @@
       <section class="top-toggle-shell">
         <div class="toggle-header">
           <p class="toggle-eyebrow">View Mode</p>
-          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L v/s MTF P&amp;L <span class="version-badge">v1.4.1</span></h2>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.5.0</span></h2>
         </div>
         <div class="view-switch" role="tablist" aria-label="Dashboard Views">
           <button id="chartViewButton" class="view-button active" type="button">
@@ -24,11 +24,6 @@
             <span class="view-button-kicker">Portfolio</span>
             <span class="view-button-title">Portfolio P&amp;L</span>
             <span class="view-button-copy">Review realized, unrealized, and total P&amp;L from your tradebook.</span>
-          </button>
-          <button id="mtfViewButton" class="view-button" type="button">
-            <span class="view-button-kicker">Funding</span>
-            <span class="view-button-title">MTF P&amp;L</span>
-            <span class="view-button-copy">Compare holding returns vs your own funding returns for MTF lots.</span>
           </button>
         </div>
       </section>
@@ -47,11 +42,6 @@
         <div id="pnlBasisSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Basis">
           <button class="pnl-basis-button pnl-filter-button active" type="button" data-basis="all_holdings">Total Investment<span class="basis-note">full position value (your cash + MTF loan)</span></button>
           <button class="pnl-basis-button pnl-filter-button" type="button" data-basis="personal_funding">My Money<span class="basis-note">only the cash you put in</span></button>
-        </div>
-        <div id="mtfFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="MTF P&L Filters">
-          <button class="mtf-filter-button pnl-filter-button active" type="button" data-filter="all">All Stocks</button>
-          <button class="mtf-filter-button pnl-filter-button" type="button" data-filter="realized">Realized P&amp;L</button>
-          <button class="mtf-filter-button pnl-filter-button" type="button" data-filter="unrealized">Unrealized P&amp;L</button>
         </div>
       </section>
 
@@ -93,7 +83,7 @@
             <p class="summary-value" id="totalRealizedPnl">--</p>
           </article>
           <article class="summary-card">
-            <p class="summary-label">Charges, Taxes, Others</p>
+            <p class="summary-label">Charges, Taxes, Others<span class="label-note">(brokerage, STT, exchange / clearing / SEBI charges, GST, stamp duty)</span></p>
             <p class="summary-value" id="totalChargesTaxesOthers">--</p>
           </article>
           <article class="summary-card">
@@ -105,7 +95,7 @@
             <p class="summary-value" id="totalUnrealizedPnl">--</p>
           </article>
           <article class="summary-card">
-            <p class="summary-label">Other Credits &amp; Debits</p>
+            <p class="summary-label">Other Credits &amp; Debits<span class="label-note">(MTF interest, pledge charges, DP sale charges)</span></p>
             <p class="summary-value" id="totalOtherCreditsDebits">--</p>
           </article>
           <article class="summary-card">
@@ -142,59 +132,6 @@
         <div class="excluded-columns-shell">
           <p class="excluded-columns-title">Excluded Columns</p>
           <div id="pnlExcludedColumns" class="excluded-columns-pills"></div>
-        </div>
-      </section>
-      <section id="mtfPage" class="dashboard-page">
-        <div class="pnl-summary-grid">
-          <article class="summary-card">
-            <p class="summary-label">Total Holding P&amp;L</p>
-            <p class="summary-value" id="mtfHoldingPnl">--</p>
-          </article>
-          <article class="summary-card">
-            <p class="summary-label">Total Net Funding P&amp;L</p>
-            <p class="summary-value" id="mtfNetFundingPnl">--</p>
-          </article>
-          <article class="summary-card">
-            <p class="summary-label">Total Personal Funding</p>
-            <p class="summary-value" id="mtfYourFunding">--</p>
-          </article>
-          <article class="summary-card">
-            <p class="summary-label">Total Carrying Cost</p>
-            <p class="summary-value" id="mtfTotalCarryingCost">--</p>
-          </article>
-        </div>
-
-        <div class="data-table-wrap pnl-table-wrap">
-          <table id="mtfTable" class="data-table">
-            <thead>
-              <tr>
-                <th>Stock</th>
-                <th>Trade Date</th>
-                <th>Buy Qty</th>
-                <th>Buy Value</th>
-                <th>Personal Funding</th>
-                <th>Zerodha Funding</th>
-                <th>Leverage</th>
-                <th>Sell Qty</th>
-                <th>Sell Value</th>
-                <th>Net Qty</th>
-                <th>Latest Price</th>
-                <th>Holding P&amp;L</th>
-                <th>Holding Return %</th>
-                <th>Funding Return %</th>
-                <th>Interest Cost</th>
-                <th>Pledge Charges</th>
-                <th>Total Carrying Cost</th>
-                <th>Net Funding P&amp;L</th>
-                <th>Net Funding Return %</th>
-              </tr>
-            </thead>
-            <tbody id="mtfTableBody"></tbody>
-          </table>
-        </div>
-        <div class="excluded-columns-shell">
-          <p class="excluded-columns-title">Excluded Columns</p>
-          <div id="mtfExcludedColumns" class="excluded-columns-pills"></div>
         </div>
       </section>
     </div>
@@ -273,6 +210,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.1780172640139.js"></script>
-    <script src="./app.js?v=20260531-6"></script>
+    <script src="./app.js?v=20260531-7"></script>
   </body>
 </html>

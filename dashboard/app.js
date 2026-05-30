@@ -7,7 +7,6 @@ const IS_FILE_PROTOCOL = window.location.protocol === "file:";
 const VIEW = {
   CHARTS: "charts",
   PNL: "pnl",
-  MTF: "mtf",
 };
 const STOCK_FILTER = {
   ALL: "all",
@@ -20,19 +19,16 @@ const PNL_BASIS = {
 };
 const TABLE_KEYS = {
   PNL: "pnl",
-  MTF: "mtf",
 };
 
 // Shareable URL state. ?view=<tab>&filter=<realized|unrealized|all>&basis=<total|mymoney>
 const VIEW_TO_PARAM = {
   [VIEW.CHARTS]: "recommendations",
   [VIEW.PNL]: "portfolio",
-  [VIEW.MTF]: "mtf",
 };
 const PARAM_TO_VIEW = {
   recommendations: VIEW.CHARTS,
   portfolio: VIEW.PNL,
-  mtf: VIEW.MTF,
 };
 const BASIS_TO_PARAM = {
   [PNL_BASIS.ALL_HOLDINGS]: "total",
@@ -52,20 +48,13 @@ const pnlFilterSwitch = document.getElementById("pnlFilterSwitch");
 const pnlFilterButtons = Array.from(pnlFilterSwitch.querySelectorAll(".pnl-filter-button"));
 const pnlBasisSwitch = document.getElementById("pnlBasisSwitch");
 const pnlBasisButtons = Array.from(pnlBasisSwitch.querySelectorAll(".pnl-basis-button"));
-const mtfFilterSwitch = document.getElementById("mtfFilterSwitch");
-const mtfFilterButtons = Array.from(mtfFilterSwitch.querySelectorAll(".mtf-filter-button"));
 const chartViewButton = document.getElementById("chartViewButton");
 const pnlViewButton = document.getElementById("pnlViewButton");
-const mtfViewButton = document.getElementById("mtfViewButton");
 const chartsPage = document.getElementById("chartsPage");
 const pnlPage = document.getElementById("pnlPage");
-const mtfPage = document.getElementById("mtfPage");
 const pnlTable = document.getElementById("pnlTable");
-const mtfTable = document.getElementById("mtfTable");
 const pnlTableBody = document.getElementById("pnlTableBody");
-const mtfTableBody = document.getElementById("mtfTableBody");
 const pnlExcludedColumns = document.getElementById("pnlExcludedColumns");
-const mtfExcludedColumns = document.getElementById("mtfExcludedColumns");
 const totalRealizedPnl = document.getElementById("totalRealizedPnl");
 const totalChargesTaxesOthers = document.getElementById("totalChargesTaxesOthers");
 const netRealizedPnl = document.getElementById("netRealizedPnl");
@@ -73,10 +62,6 @@ const totalUnrealizedPnl = document.getElementById("totalUnrealizedPnl");
 const totalOtherCreditsDebits = document.getElementById("totalOtherCreditsDebits");
 const netTotalPnl = document.getElementById("netTotalPnl");
 const totalAmountInvested = document.getElementById("totalAmountInvested");
-const mtfHoldingPnl = document.getElementById("mtfHoldingPnl");
-const mtfNetFundingPnl = document.getElementById("mtfNetFundingPnl");
-const mtfYourFunding = document.getElementById("mtfYourFunding");
-const mtfTotalCarryingCost = document.getElementById("mtfTotalCarryingCost");
 const timelineTotalAdded = document.getElementById("timelineTotalAdded");
 const timelineTotalWithdrawn = document.getElementById("timelineTotalWithdrawn");
 const timelineCurrentGain = document.getElementById("timelineCurrentGain");
@@ -97,19 +82,15 @@ let realPortfolioTimeline = [];
 let activeView = VIEW.CHARTS;
 let activePnlFilter = STOCK_FILTER.ALL;
 let activePnlBasis = PNL_BASIS.ALL_HOLDINGS;
-let activeMtfFilter = STOCK_FILTER.ALL;
 const hiddenColumnsByTable = {
   [TABLE_KEYS.PNL]: new Set(),
-  [TABLE_KEYS.MTF]: new Set(),
 };
 
 searchInput.addEventListener("input", () => {
   if (activeView === VIEW.CHARTS) {
     renderCards(searchInput.value);
-  } else if (activeView === VIEW.PNL) {
-    refreshPnlView();
   } else {
-    refreshMtfView();
+    refreshPnlView();
   }
 });
 
@@ -121,10 +102,6 @@ pnlViewButton.addEventListener("click", () => {
   setView(VIEW.PNL);
 });
 
-mtfViewButton.addEventListener("click", () => {
-  setView(VIEW.MTF);
-});
-
 pnlFilterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     setPnlFilter(button.dataset.filter || STOCK_FILTER.ALL);
@@ -134,12 +111,6 @@ pnlFilterButtons.forEach((button) => {
 pnlBasisButtons.forEach((button) => {
   button.addEventListener("click", () => {
     setPnlBasis(button.dataset.basis || PNL_BASIS.ALL_HOLDINGS);
-  });
-});
-
-mtfFilterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    setMtfFilter(button.dataset.filter || STOCK_FILTER.ALL);
   });
 });
 
@@ -171,7 +142,6 @@ async function loadDashboard() {
     updateSummary(allStocks);
     renderCards(searchInput.value);
     refreshPnlView();
-    refreshMtfView();
     applyStateFromUrl();
 
     if (allStocks.length === 0) {
@@ -185,10 +155,8 @@ async function loadDashboard() {
     otherCreditsBreakdown = { realizedCarrying: 0, unrealizedCarrying: 0, realizedDp: 0 };
     updateSummary([]);
     updatePnlSummary([]);
-    updateMtfSummary([]);
     cardsContainer.innerHTML = "";
     pnlTableBody.innerHTML = "";
-    mtfTableBody.innerHTML = "";
     renderInvestmentTimeline([]);
     setStatus(
       `Unable to load report files. ${error.message || ""} Ensure reports are generated and committed, then open the dashboard URL.`,
@@ -202,18 +170,9 @@ function getCurrentPnlRows() {
   return getPnlRowsByActiveFilter(pnlRows);
 }
 
-function getCurrentMtfRows() {
-  return getMtfRowsByActiveFilter(mtfRows);
-}
-
 function refreshPnlView() {
   updatePnlSummary(getCurrentPnlRows());
   renderPnlTable(searchInput.value);
-}
-
-function refreshMtfView() {
-  updateMtfSummary(getCurrentMtfRows());
-  renderMtfTable(searchInput.value);
 }
 
 async function loadCsvSources() {
@@ -418,7 +377,7 @@ function renderPnlTable(filterText = "") {
     const returnPctText = returnPctValue === null ? "--" : `${returnPctValue.toFixed(2)}%`;
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${item.stockCode}</td>
+      <td>${item.stockCode}${item.hasMtfFunding ? ' <span class="mtf-tag">MTF</span>' : ""}</td>
       <td>${item.tradeDate || "--"}</td>
       <td>${item.buyQuantity}</td>
       <td>${item.averageBuyPrice || "--"}</td>
@@ -438,57 +397,6 @@ function renderPnlTable(filterText = "") {
     pnlTableBody.appendChild(row);
   });
   applyColumnVisibility(TABLE_KEYS.PNL);
-}
-
-function renderMtfTable(filterText = "") {
-  const normalizedFilter = filterText.trim().toLowerCase();
-  const filtered = getMtfRowsByActiveFilter(mtfRows)
-    .filter((item) => item.stockCode.toLowerCase().includes(normalizedFilter))
-    .sort((left, right) => {
-      const leftDate = left.tradeDate || "9999-12-31";
-      const rightDate = right.tradeDate || "9999-12-31";
-      const dateCompare = rightDate.localeCompare(leftDate);
-      if (dateCompare !== 0) {
-        return dateCompare;
-      }
-      return left.stockCode.localeCompare(right.stockCode);
-    });
-  mtfTableBody.innerHTML = "";
-
-  if (filtered.length === 0) {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td colspan="${getVisibleColumnCount(TABLE_KEYS.MTF)}">${normalizedFilter ? "No MTF rows match this filter." : "No MTF P&L data available yet."}</td>`;
-    mtfTableBody.appendChild(row);
-    applyColumnVisibility(TABLE_KEYS.MTF);
-    return;
-  }
-
-  filtered.forEach((item) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${item.stockCode}</td>
-      <td>${item.tradeDate || "--"}</td>
-      <td>${item.buyQuantity || "--"}</td>
-      <td>${item.buyValue || "--"}</td>
-      <td>${item.yourFunding || "--"}</td>
-      <td>${item.zerodhaFunding || "--"}</td>
-      <td>${item.leverage || "--"}</td>
-      <td>${item.sellQuantity || "--"}</td>
-      <td>${item.sellValue || "--"}</td>
-      <td>${item.netQuantity || "--"}</td>
-      <td>${item.latestMarketPrice || "--"}</td>
-      <td class="${item.holdingPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.holdingPnl}</td>
-      <td class="${item.holdingReturnPct ? (item.holdingReturnPctValue >= 0 ? "table-positive" : "table-negative") : ""}">${item.holdingReturnPct || "--"}</td>
-      <td class="${item.fundingReturnPct ? (item.fundingReturnPctValue >= 0 ? "table-positive" : "table-negative") : ""}">${item.fundingReturnPct || "--"}</td>
-      <td class="${item.mtfInterestCostValue > 0 ? "table-negative" : ""}">${item.mtfInterestCost}</td>
-      <td class="${item.mtfPledgeChargesValue > 0 ? "table-negative" : ""}">${item.mtfPledgeCharges}</td>
-      <td class="${item.totalCarryingCostValue > 0 ? "table-negative" : ""}">${item.totalCarryingCost}</td>
-      <td class="${item.netFundingPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.netFundingPnl}</td>
-      <td class="${item.netFundingReturnPct ? (item.netFundingReturnPctValue >= 0 ? "table-positive" : "table-negative") : ""}">${item.netFundingReturnPct || "--"}</td>
-    `;
-    mtfTableBody.appendChild(row);
-  });
-  applyColumnVisibility(TABLE_KEYS.MTF);
 }
 
 function fillTable(tableBody, points) {
@@ -988,6 +896,16 @@ function updatePnlSummary(items) {
   setSummaryValue(netTotalPnl, total + otherCredits, investedBase, items.length > 0);
   totalAmountInvested.classList.remove("table-positive", "table-negative");
   totalAmountInvested.textContent = items.length > 0 ? formatCurrency(investedBase) : "--";
+
+  // Hide the opposite summary card: Realized filter drops the Unrealized card and vice versa.
+  const realizedCard = totalRealizedPnl.closest(".summary-card");
+  const unrealizedCard = totalUnrealizedPnl.closest(".summary-card");
+  if (realizedCard) {
+    realizedCard.classList.toggle("hidden", activePnlFilter === STOCK_FILTER.UNREALIZED);
+  }
+  if (unrealizedCard) {
+    unrealizedCard.classList.toggle("hidden", activePnlFilter === STOCK_FILTER.REALIZED);
+  }
 }
 
 // Build the segregated breakdown from the MTF lots (carrying cost + open/closed
@@ -1059,19 +977,6 @@ function setSummaryValue(element, value, base, hasItems) {
   }
 }
 
-function updateMtfSummary(items) {
-  const totalHolding = items.reduce((sum, item) => sum + item.holdingPnlValue, 0);
-  const totalNetFundingPnl = items.reduce((sum, item) => sum + item.netFundingPnlValue, 0);
-  const totalFundingBase = items.reduce((sum, item) => sum + item.yourFundingRaw, 0);
-  const totalHoldingBase = items.reduce((sum, item) => sum + item.buyValueRaw, 0);
-  const totalCarryingCost = items.reduce((sum, item) => sum + item.totalCarryingCostValue, 0);
-
-  setSummaryValue(mtfHoldingPnl, totalHolding, totalHoldingBase, items.length > 0);
-  setSummaryValue(mtfNetFundingPnl, totalNetFundingPnl, totalFundingBase, items.length > 0);
-  setSummaryValue(mtfTotalCarryingCost, -totalCarryingCost, totalFundingBase, items.length > 0);
-  mtfYourFunding.classList.remove("table-positive", "table-negative");
-  mtfYourFunding.textContent = items.length > 0 ? formatCurrency(totalFundingBase) : "--";
-}
 
 // Derive one {date, inputCapital, portfolioValue} point from a timeline CSV row,
 // honoring the two active filters:
@@ -1311,31 +1216,12 @@ function getPnlRowsByActiveFilter(items) {
   return items;
 }
 
-function setMtfFilter(filter) {
-  activeMtfFilter = Object.values(STOCK_FILTER).includes(filter) ? filter : STOCK_FILTER.ALL;
-  mtfFilterButtons.forEach((button) => {
-    button.classList.toggle("active", (button.dataset.filter || STOCK_FILTER.ALL) === activeMtfFilter);
-  });
-  refreshMtfView();
-  updateUrlParams();
-}
-
-function getMtfRowsByActiveFilter(items) {
-  if (activeMtfFilter === STOCK_FILTER.REALIZED) {
-    return items.filter((item) => item.sellQuantityValue > 0);
-  }
-  if (activeMtfFilter === STOCK_FILTER.UNREALIZED) {
-    return items.filter((item) => item.netQuantityValue > 0);
-  }
-  return items;
-}
-
 // Write the current tab + both filters into the URL (no reload) so the link is shareable.
 function updateUrlParams() {
   try {
     const params = new URLSearchParams(window.location.search);
     params.set("view", VIEW_TO_PARAM[activeView] || "recommendations");
-    params.set("filter", activeView === VIEW.MTF ? activeMtfFilter : activePnlFilter);
+    params.set("filter", activePnlFilter);
     params.set("basis", BASIS_TO_PARAM[activePnlBasis] || "total");
     const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
     window.history.replaceState(null, "", newUrl);
@@ -1353,7 +1239,6 @@ function applyStateFromUrl() {
 
   if (Object.values(STOCK_FILTER).includes(filterParam)) {
     activePnlFilter = filterParam;
-    activeMtfFilter = filterParam;
   }
   if (PARAM_TO_BASIS[basisParam]) {
     activePnlBasis = PARAM_TO_BASIS[basisParam];
@@ -1361,7 +1246,6 @@ function applyStateFromUrl() {
 
   pnlFilterButtons.forEach((b) => b.classList.toggle("active", (b.dataset.filter || STOCK_FILTER.ALL) === activePnlFilter));
   pnlBasisButtons.forEach((b) => b.classList.toggle("active", (b.dataset.basis || PNL_BASIS.ALL_HOLDINGS) === activePnlBasis));
-  mtfFilterButtons.forEach((b) => b.classList.toggle("active", (b.dataset.filter || STOCK_FILTER.ALL) === activeMtfFilter));
 
   setView(PARAM_TO_VIEW[viewParam] || VIEW.CHARTS);
   renderInvestmentTimeline(getCurrentPnlRows());
@@ -1371,40 +1255,28 @@ function setView(view) {
   activeView = view;
   const showingCharts = view === VIEW.CHARTS;
   const showingPnl = view === VIEW.PNL;
-  const showingMtf = view === VIEW.MTF;
   chartViewButton.classList.toggle("active", showingCharts);
   pnlViewButton.classList.toggle("active", showingPnl);
-  mtfViewButton.classList.toggle("active", showingMtf);
   chartsPage.classList.toggle("active", showingCharts);
   pnlPage.classList.toggle("active", showingPnl);
-  mtfPage.classList.toggle("active", showingMtf);
   pnlFilterSwitch.classList.toggle("hidden", !showingPnl);
   pnlBasisSwitch.classList.toggle("hidden", !showingPnl);
-  mtfFilterSwitch.classList.toggle("hidden", !showingMtf);
 
   if (showingCharts) {
     renderCards(searchInput.value);
-  } else if (showingPnl) {
-    refreshPnlView();
   } else {
-    refreshMtfView();
+    refreshPnlView();
   }
 
   updateUrlParams();
 }
 
-function getTableByKey(tableKey) {
-  if (tableKey === TABLE_KEYS.PNL) {
-    return pnlTable;
-  }
-  return mtfTable;
+function getTableByKey(_tableKey) {
+  return pnlTable;
 }
 
-function getExcludedContainerByKey(tableKey) {
-  if (tableKey === TABLE_KEYS.PNL) {
-    return pnlExcludedColumns;
-  }
-  return mtfExcludedColumns;
+function getExcludedContainerByKey(_tableKey) {
+  return pnlExcludedColumns;
 }
 
 function getHeaderCells(tableKey) {
