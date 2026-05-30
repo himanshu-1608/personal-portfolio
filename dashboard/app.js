@@ -1076,6 +1076,14 @@ function renderInvestmentTimeline(filteredPnlRows) {
 }
 
 function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw", otherPnl = 0) {
+  const totalCapital = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
+  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherPnl;
+  const totalPortfolioValue = totalCapital + totalPnl;
+
+  if (totalCapital <= 0) {
+    return [];
+  }
+
   const byDate = {};
   filteredPnlRows.forEach((row) => {
     const date = (row.tradeDate || "").trim();
@@ -1088,14 +1096,20 @@ function buildPortfolioTimeline(filteredPnlRows, capitalKey = "buyValueRaw", oth
     byDate[date] += row[capitalKey];
   });
 
-  const totalCapital = filteredPnlRows.reduce((s, r) => s + r[capitalKey], 0);
-  const totalPnl = filteredPnlRows.reduce((s, r) => s + r.totalPnlValue, 0) + otherPnl;
-  const totalPortfolioValue = totalCapital + totalPnl;
-  // returnMultiplier: spread P&L proportionally to capital deployed at each date
-  // ensures final point matches summary exactly while intermediate points scale smoothly
-  const returnMultiplier = totalCapital > 0 ? totalPortfolioValue / totalCapital : 1;
-
   const sorted = Object.keys(byDate).sort();
+  if (sorted.length === 0) {
+    return [];
+  }
+
+  // rows with no tradeDate are excluded from byDate — add their capital to the last
+  // date so the chart's final inputCapital and portfolioValue match the summary stats exactly
+  const byDateTotal = Object.values(byDate).reduce((s, v) => s + v, 0);
+  const unattributed = totalCapital - byDateTotal;
+  if (unattributed !== 0) {
+    byDate[sorted[sorted.length - 1]] += unattributed;
+  }
+
+  const returnMultiplier = totalPortfolioValue / totalCapital;
   let cumCapital = 0;
   return sorted.map((date) => {
     cumCapital += byDate[date];
