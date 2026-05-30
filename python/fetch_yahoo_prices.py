@@ -670,20 +670,6 @@ def parse_optional_float(value: str) -> Optional[float]:
     return float(stripped)
 
 
-def get_last_stored_date(row: Dict[str, str]) -> Optional[date]:
-    latest: Optional[date] = None
-    for index in range(1, DAY_COUNT + 1):
-        row_date = (row.get(f"Date {index}") or "").strip()
-        if row_date:
-            try:
-                d = date.fromisoformat(row_date)
-                if latest is None or d > latest:
-                    latest = d
-            except ValueError:
-                continue
-    return latest
-
-
 def get_next_empty_slot(row: Dict[str, str]) -> int:
     for index in range(1, DAY_COUNT + 1):
         if not (row.get(f"Date {index}") or "").strip():
@@ -1745,13 +1731,18 @@ def build_mtf_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[st
             symbol_lots = lots_by_symbol.setdefault(symbol, [])
 
             if trade_type == "buy":
+                # Cash (non-MTF) buys still create a lot so FIFO sell-matching stays
+                # aligned with the P&L summary; they carry zero funding and are excluded
+                # from the final MTF rows via the is_mtf flag. Skipping them here would
+                # mis-assign sell prices to MTF lots for mixed cash+MTF symbols.
                 ratio = margin_ratio_by_date.get(trade_date)
-                if ratio is None:
-                    continue
+                is_mtf = ratio is not None
+                effective_ratio = ratio if ratio is not None else 1.0
                 lot = next((entry for entry in symbol_lots if str(entry["trade_date"]) == trade_date), None)
                 if lot is None:
                     lot = {
                         "trade_date": trade_date,
+                        "is_mtf": is_mtf,
                         "buy_quantity": 0.0,
                         "buy_value": 0.0,
                         "your_funding": 0.0,
@@ -1768,7 +1759,7 @@ def build_mtf_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[st
                     symbol_lots.append(lot)
 
                 buy_value = quantity * price
-                your_funding = buy_value * ratio
+                your_funding = buy_value * effective_ratio
                 zerodha_funding = buy_value - your_funding
                 lot["buy_quantity"] = float(lot["buy_quantity"]) + quantity
                 lot["buy_value"] = float(lot["buy_value"]) + buy_value
@@ -1837,6 +1828,8 @@ def build_mtf_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[st
 
             if buy_quantity <= 0:
                 continue
+            if not lot.get("is_mtf"):
+                continue  # cash lot — tracked only for FIFO alignment, not an MTF row
 
             market_entry = market_data.get(symbol, {})
             latest_market_price = float(market_entry.get("latest_market_price", "0") or 0.0)
