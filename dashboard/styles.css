@@ -144,6 +144,22 @@ code {
   font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
+.version-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 2px 7px;
+  vertical-align: middle;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  position: relative;
+  top: -2px;
+}
+
 /* ─── View switch buttons ────────────────────────── */
 .view-switch {
   display: grid;
