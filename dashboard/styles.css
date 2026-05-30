@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap");
 
 /* ─── Design tokens ─────────────────────────────── */
 :root {
@@ -24,7 +24,7 @@
 /* ─── Body ──────────────────────────────────────── */
 body {
   margin: 0;
-  font-family: "DM Sans", "Segoe UI", sans-serif;
+  font-family: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
   background-color: var(--bg);
   color: var(--ink);
   line-height: 1.5;
@@ -33,7 +33,7 @@ body {
 }
 
 code {
-  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  font-family: "SFMono-Regular", Consolas, monospace;
 }
 
 /* ─── Animated background mesh ──────────────────── */
@@ -103,7 +103,7 @@ code {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.03em;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 .summary-percent {
@@ -140,7 +140,7 @@ code {
   font-size: clamp(1.05rem, 2vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: -0.03em;
-  font-family: "Syne", sans-serif;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 /* ─── View switch buttons ────────────────────────── */
@@ -158,7 +158,7 @@ code {
   background: rgba(255, 255, 255, 0.04);
   color: var(--ink);
   font-weight: 600;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -186,7 +186,7 @@ code {
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  font-family: "Syne", sans-serif;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 .view-button-copy {
@@ -256,7 +256,7 @@ code {
   background: rgba(255, 255, 255, 0.05);
   font-size: 0.95rem;
   color: var(--ink);
-  font-family: "DM Sans", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -287,7 +287,7 @@ code {
   font-weight: 600;
   font-size: 0.84rem;
   cursor: pointer;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   transition: color 150ms ease, background 150ms ease;
 }
 
@@ -362,7 +362,7 @@ code {
   margin: 0;
   font-size: 1.1rem;
   letter-spacing: -0.02em;
-  font-family: "Syne", sans-serif;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 .timeline-summary {
@@ -410,7 +410,7 @@ code {
   font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  font-family: "Syne", sans-serif;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 .stock-date {
@@ -454,7 +454,7 @@ code {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 /* ─── Badges ─────────────────────────────────────── */
@@ -630,13 +630,13 @@ code {
 .table-positive {
   color: var(--accent);
   font-weight: 700;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 .table-negative {
   color: var(--danger);
   font-weight: 700;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
 }
 
 /* ─── Primary button ─────────────────────────────── */
@@ -649,7 +649,7 @@ code {
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
