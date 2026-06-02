@@ -1,5 +1,4 @@
 particulars,posting_date,voucher_type,debit,credit,net_balance
-Opening Balance,,,,,-0.000343
 Funds added using UPI from VG7860 with reference number 109505823516,2026-04-02,Bank Receipts,0.000000,50000.000000,49999.999657
 Bank Modification Charges,2026-04-02,Journal Entry,29.500000,0.000000,49970.499657
 Net settlement for Equity with settlement number: 2026062,2026-04-02,Book Voucher,49637.666345,0.000000,332.833312
@@ -175,4 +174,3 @@ Interest for MTF funded value on 2026-05-30,2026-06-01,Journal Entry,420.221000,
 Interest for MTF funded value on 2026-06-01,2026-06-01,Journal Entry,420.221000,0.000000,157141.848174
 MTF unpledge charges for KIRLOSENG,2026-06-01,Journal Entry,17.700000,0.000000,157124.148174
 Interest for MTF funded value on 2026-05-31,2026-06-01,Journal Entry,420.221000,0.000000,156703.927174
-Closing Balance,,,,,156703.927174

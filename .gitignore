@@ -12,3 +12,13 @@ input/*.xls
 CLAUDE.md
 context.md
 learnings.md
+
+# Zerodha automation — secrets, raw daily downloads, browser profile, logs
+python/*.env
+zerodha-daily-reports/
+.zerodha-browser/
+logs/
+
+# Local-only run scripts (contain absolute local paths / machine-specific) — never push
+shell/*.plist
+shell/nightly_sync.sh

@@ -29,7 +29,7 @@ From repo root:
 If you are not in repo root:
 
 ```bash
-cd /Users/hy/Documents/finance/personal-portfolio
+cd /path/to/personal-portfolio
 ./shell/update_data.sh
 ```
 
@@ -47,7 +47,7 @@ Commit these updated files and push to GitHub. GitHub Pages will reflect latest 
 `./shell/update_data.sh` internally does:
 
 ```bash
-cd /Users/hy/Documents/finance/personal-portfolio
+cd /path/to/personal-portfolio
 python3 python/fetch_yahoo_prices.py
 python3 python/build_dashboard_data_bundle.py
 ```
@@ -62,7 +62,7 @@ If Yahoo market fetch fails (network/SSL), the script now automatically falls ba
 From repo root:
 
 ```bash
-cd /Users/hy/Documents/finance/personal-portfolio
+cd /path/to/personal-portfolio
 open ./index.html
 ```
 
