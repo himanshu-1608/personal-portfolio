@@ -176,3 +176,8 @@ MTF unpledge charges for KIRLOSENG,2026-06-01,Journal Entry,17.700000,0.000000,1
 Interest for MTF funded value on 2026-05-31,2026-06-01,Journal Entry,420.221000,0.000000,156703.927174
 MTM obligation reversed for MTF,2026-06-02,MTF Delivery Voucher,0.000000,57517.850000,214221.777174
 MTM obligation blocked for MTF,2026-06-02,MTF Delivery Voucher,48768.100000,0.000000,165453.677174
+Interest for MTF funded value on 2026-06-02,2026-06-02,Journal Entry,383.440000,0.000000,165070.237174
+MTM obligation reversed for MTF,2026-06-03,MTF Delivery Voucher,0.000000,48768.100000,213838.337174
+MTM obligation blocked for MTF,2026-06-03,MTF Delivery Voucher,49916.350000,0.000000,163921.987174
+Initial margin charged for MTF,2026-06-03,Book Voucher,99264.919416,0.000000,64657.067758
+Net settlement for Equity with settlement number: 2026102,2026-06-03,Book Voucher,384.540580,0.000000,64272.527178
