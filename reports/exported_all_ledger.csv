@@ -186,3 +186,12 @@ MTM obligation reversed for MTF,2026-06-04,MTF Delivery Voucher,0.000000,49916.3
 MTM obligation blocked for MTF,2026-06-04,MTF Delivery Voucher,41257.750000,0.000000,72547.687178
 Initial margin charged for MTF,2026-06-04,Book Voucher,48638.157930,0.000000,23909.529248
 Net settlement for Equity with settlement number: 2026103,2026-06-04,Book Voucher,391.603351,0.000000,23517.925897
+Interest for MTF funded value on 2026-06-04,2026-06-04,Journal Entry,457.090000,0.000000,23060.835897
+MTF pledge charges for ACMESOLAR,2026-06-04,Journal Entry,17.700000,0.000000,23043.135897
+MTF pledge charges for SYRMA,2026-06-04,Journal Entry,17.700000,0.000000,23025.435897
+Kite Connect API Charges (2026-06-05),2026-06-05,Journal Entry,500.000220,0.000000,22525.435677
+MTM obligation reversed for MTF,2026-06-05,MTF Delivery Voucher,0.000000,41257.750000,63783.185677
+MTM obligation blocked for MTF,2026-06-05,MTF Delivery Voucher,43961.050000,0.000000,19822.135677
+Interest for MTF funded value on 2026-06-05,2026-06-05,Journal Entry,488.181000,0.000000,19333.954677
+MTF pledge charges for DATAPATTNS,2026-06-05,Journal Entry,17.700000,0.000000,19316.254677
+AMC for Demat Account for 30-01-2026 to 30-04-2026,2026-06-05,Journal Entry,88.500000,0.000000,19227.754677
