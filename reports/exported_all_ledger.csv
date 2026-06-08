@@ -195,3 +195,7 @@ MTM obligation blocked for MTF,2026-06-05,MTF Delivery Voucher,43961.050000,0.00
 Interest for MTF funded value on 2026-06-05,2026-06-05,Journal Entry,488.181000,0.000000,19333.954677
 MTF pledge charges for DATAPATTNS,2026-06-05,Journal Entry,17.700000,0.000000,19316.254677
 AMC for Demat Account for 30-01-2026 to 30-04-2026,2026-06-05,Journal Entry,88.500000,0.000000,19227.754677
+MTM obligation reversed for MTF,2026-06-08,MTF Delivery Voucher,0.000000,43961.050000,63188.804677
+MTM obligation blocked for MTF,2026-06-08,MTF Delivery Voucher,59674.500000,0.000000,3514.304677
+Interest for MTF funded value on 2026-06-06,2026-06-08,Journal Entry,488.181000,0.000000,3026.123677
+Interest for MTF funded value on 2026-06-07,2026-06-08,Journal Entry,488.181000,0.000000,2537.942677
