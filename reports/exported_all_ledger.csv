@@ -208,3 +208,9 @@ Funds added using UPI from VG7860 with reference number 103452324429,2026-06-09,
 Interest for MTF funded value on 2026-06-09,2026-06-09,Journal Entry,488.181000,0.000000,109059.588251
 MTF unpledge charges for INOXINDIA,2026-06-09,Journal Entry,17.700000,0.000000,109041.888251
 DP Charges for Sale of INOXINDIA on 09/06/2026,2026-06-09,Journal Entry,15.340000,0.000000,109026.548251
+MTM obligation reversed for MTF,2026-06-10,MTF Delivery Voucher,0.000000,43950.300000,152976.848251
+MTM obligation blocked for MTF,2026-06-10,MTF Delivery Voucher,58476.150000,0.000000,94500.698251
+Interest for MTF funded value on 2026-06-10,2026-06-10,Journal Entry,472.578000,0.000000,94028.120251
+MTF pledge charges for SANGHVIMOV,2026-06-10,Journal Entry,17.700000,0.000000,94010.420251
+MTM obligation reversed for MTF,2026-06-11,MTF Delivery Voucher,0.000000,58476.150000,152486.570251
+MTM obligation blocked for MTF,2026-06-11,MTF Delivery Voucher,64382.350000,0.000000,88104.220251
