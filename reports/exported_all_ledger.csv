@@ -218,3 +218,15 @@ Interest for MTF funded value on 2026-06-11,2026-06-11,Journal Entry,472.578000,
 MTM obligation reversed for MTF,2026-06-12,MTF Delivery Voucher,0.000000,64382.350000,152013.992251
 MTM obligation blocked for MTF,2026-06-12,MTF Delivery Voucher,36071.400000,0.000000,115942.592251
 Interest for MTF funded value on 2026-06-12,2026-06-12,Journal Entry,472.578000,0.000000,115470.014251
+DP Charges for Sale of GENUSPOWER on 15/06/2026,2026-06-15,Journal Entry,15.340000,0.000000,115454.674251
+DP Charges for Sale of SANGHVIMOV on 15/06/2026,2026-06-15,Journal Entry,15.340000,0.000000,115439.334251
+DP Charges for Sale of JSWENERGY on 15/06/2026,2026-06-15,Journal Entry,15.340000,0.000000,115423.994251
+MTM obligation reversed for MTF,2026-06-15,MTF Delivery Voucher,0.000000,36071.400000,151495.394251
+MTM obligation blocked for MTF,2026-06-15,MTF Delivery Voucher,32166.300000,0.000000,119329.094251
+Net settlement for Equity with settlement number: 2026110,2026-06-15,Book Voucher,0.000000,122413.487494,241742.581745
+Interest for MTF funded value on 2026-06-13,2026-06-15,Journal Entry,472.578000,0.000000,241270.003745
+Interest for MTF funded value on 2026-06-14,2026-06-15,Journal Entry,472.578000,0.000000,240797.425745
+Interest for MTF funded value on 2026-06-15,2026-06-15,Journal Entry,472.578000,0.000000,240324.847745
+MTF unpledge charges for GENUSPOWER,2026-06-15,Journal Entry,17.700000,0.000000,240307.147745
+MTF unpledge charges for JSWENERGY,2026-06-15,Journal Entry,17.700000,0.000000,240289.447745
+MTF unpledge charges for SANGHVIMOV,2026-06-15,Journal Entry,17.700000,0.000000,240271.747745
