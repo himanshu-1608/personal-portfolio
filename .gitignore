@@ -22,3 +22,5 @@ logs/
 # Local-only run scripts (contain absolute local paths / machine-specific) — never push
 shell/*.plist
 shell/nightly_sync.sh
+
+.claude/

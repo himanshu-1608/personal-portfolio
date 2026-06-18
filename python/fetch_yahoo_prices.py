@@ -945,14 +945,24 @@ def main() -> int:
                 try:
                     refreshed_rows.append(build_output_row(recommendation, existing_row))
                     time.sleep(0.2)
-                except urllib.error.HTTPError as exc:
-                    raise RuntimeError(
-                        f"Yahoo Finance request failed for {recommendation.stock_code}: HTTP {exc.code}"
-                    ) from exc
-                except urllib.error.URLError as exc:
-                    raise RuntimeError(
-                        f"Network error while fetching {recommendation.stock_code}: {exc.reason}"
-                    ) from exc
+                except Exception as exc:
+                    # One symbol failing (rate-limit/delisted/network) must NOT abort the
+                    # whole refresh. Keep any previously-stored row so the run still
+                    # completes and writes every symbol that did succeed.
+                    if isinstance(exc, urllib.error.HTTPError):
+                        reason = f"HTTP {exc.code}"
+                    elif isinstance(exc, urllib.error.URLError):
+                        reason = f"network error: {exc.reason}"
+                    else:
+                        reason = str(exc)
+                    print(
+                        f"[{index}/{total}] WARNING: fetch failed for "
+                        f"{recommendation.stock_code} ({reason}). "
+                        f"{'Keeping previously-stored data.' if existing_row is not None else 'Skipping this symbol.'}",
+                        file=sys.stderr,
+                    )
+                    if existing_row is not None:
+                        refreshed_rows.append(existing_row)
         else:
             print("No recommendations found in input. Nothing to refresh.")
 

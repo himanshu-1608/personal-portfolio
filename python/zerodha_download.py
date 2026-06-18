@@ -206,11 +206,27 @@ def pick_date_range(page: Page) -> None:
         pass
 
 
-def build_report_and_download(page: Page, save_path: Path) -> None:
-    """Submit the report form, wait for the export link to appear, then download."""
-    click_first(page, ['form button[type="submit"]', 'button.btn-blue', 'button[type="submit"]'])
-    page.locator('a:text-is("CSV")').first.wait_for(state="visible", timeout=20000)
-    capture_download(page, CSV_LINK_SELECTORS, save_path)
+def build_report_and_download(page: Page, save_path: Path, attempts: int = 3) -> None:
+    """Submit the report form, wait for the export link to appear, then download.
+
+    The console occasionally takes longer than 20s to render the export link (slow
+    backend), which used to fail the whole nightly run. Re-submit the form and wait
+    again a few times before giving up."""
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            click_first(page, ['form button[type="submit"]', 'button.btn-blue', 'button[type="submit"]'])
+            page.locator('a:text-is("CSV")').first.wait_for(state="visible", timeout=45000)
+            capture_download(page, CSV_LINK_SELECTORS, save_path)
+            return
+        except Exception as exc:  # noqa: BLE001 - retry any render/download flakiness
+            last_error = exc
+            print(f"build_report_and_download attempt {attempt}/{attempts} failed: {exc}")
+            if attempt < attempts:
+                page.wait_for_timeout(3000)
+    raise RuntimeError(
+        f"Could not produce/download report for {save_path} after {attempts} attempts"
+    ) from last_error
 
 
 def download_tradebook(page: Page, save_path: Path) -> None:
