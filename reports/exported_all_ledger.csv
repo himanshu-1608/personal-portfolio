@@ -237,3 +237,13 @@ Initial margin charged for MTF,2026-06-16,Book Voucher,49868.935160,0.000000,200
 Net settlement for Equity with settlement number: 2026111,2026-06-16,Book Voucher,0.000000,55888.716308,256800.238893
 Interest for MTF funded value on 2026-06-16,2026-06-16,Journal Entry,354.951000,0.000000,256445.287893
 MTF unpledge charges for TARIL,2026-06-16,Journal Entry,17.700000,0.000000,256427.587893
+DP Charges for Sale of AVALON on 17/06/2026,2026-06-17,Journal Entry,15.340000,0.000000,256412.247893
+MTM obligation reversed for MTF,2026-06-17,MTF Delivery Voucher,0.000000,21642.250000,278054.497893
+MTM obligation blocked for MTF,2026-06-17,MTF Delivery Voucher,13777.750000,0.000000,264276.747893
+Initial margin charged for MTF,2026-06-17,Book Voucher,51331.935000,0.000000,212944.812893
+Net settlement for Equity with settlement number: 2026112,2026-06-17,Book Voucher,0.000000,68921.156488,281865.969381
+Interest for MTF funded value on 2026-06-17,2026-06-17,Journal Entry,370.319000,0.000000,281495.650381
+MTF pledge charges for HSCL,2026-06-17,Journal Entry,17.700000,0.000000,281477.950381
+MTM obligation reversed for MTF,2026-06-18,MTF Delivery Voucher,0.000000,13777.750000,295255.700381
+MTM obligation blocked for MTF,2026-06-18,MTF Delivery Voucher,10806.300000,0.000000,284449.400381
+Initial margin charged for MTF,2026-06-18,Book Voucher,101093.758060,0.000000,183355.642321

@@ -287,10 +287,20 @@ def main() -> int:
     date_dir.mkdir(parents=True, exist_ok=True)
 
     with sync_playwright() as p:
-        context = p.chromium.launch_persistent_context(
-            str(USER_DATA_DIR),
+        # The default headless backend (chrome-headless-shell) makes Zerodha's
+        # funds/statement page error out to chrome-error://chromewebdata/ (blank
+        # page, CSV export never renders). Using the full Chromium build via
+        # channel="chromium" runs the modern --headless=new mode, which behaves
+        # like a real browser and loads the funds page correctly.
+        launch_kwargs = dict(
             headless=headless,
             accept_downloads=True,
+        )
+        if headless:
+            launch_kwargs["channel"] = "chromium"
+        context = p.chromium.launch_persistent_context(
+            str(USER_DATA_DIR),
+            **launch_kwargs,
         )
         page = context.pages[0] if context.pages else context.new_page()
         try:
