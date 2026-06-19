@@ -247,3 +247,11 @@ MTF pledge charges for HSCL,2026-06-17,Journal Entry,17.700000,0.000000,281477.9
 MTM obligation reversed for MTF,2026-06-18,MTF Delivery Voucher,0.000000,13777.750000,295255.700381
 MTM obligation blocked for MTF,2026-06-18,MTF Delivery Voucher,10806.300000,0.000000,284449.400381
 Initial margin charged for MTF,2026-06-18,Book Voucher,101093.758060,0.000000,183355.642321
+Net settlement for Equity with settlement number: 2026113,2026-06-18,Book Voucher,387.650757,0.000000,182967.991564
+Interest for MTF funded value on 2026-06-18,2026-06-18,Journal Entry,416.668000,0.000000,182551.323564
+MTF pledge charges for GNFC,2026-06-18,Journal Entry,17.700000,0.000000,182533.623564
+MTM obligation reversed for MTF,2026-06-19,MTF Delivery Voucher,0.000000,10806.300000,193339.923564
+MTM obligation blocked for MTF,2026-06-19,MTF Delivery Voucher,15437.700000,0.000000,177902.223564
+Interest for MTF funded value on 2026-06-19,2026-06-19,Journal Entry,491.194000,0.000000,177411.029564
+MTF pledge charges for KIRLOSENG,2026-06-19,Journal Entry,17.700000,0.000000,177393.329564
+MTF pledge charges for TITAGARH,2026-06-19,Journal Entry,17.700000,0.000000,177375.629564
