@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import re
 from datetime import date
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple
@@ -135,11 +136,32 @@ def merge_one(daily_path: Path, target_path: Path, key_fn: KeyFn) -> int:
     return len(new_rows)
 
 
+def latest_download_dir() -> Optional[Path]:
+    """Newest YYYY-MM-DD folder under zerodha-daily-reports/.
+
+    The downloader names its folder from date.today() when it *starts*; a slow
+    run that crosses midnight finishes after that date has rolled over. Picking
+    the latest existing dated folder (rather than today's) keeps merge aligned
+    with whatever the download step just produced."""
+    if not DAILY_REPORTS_DIR.is_dir():
+        return None
+    dated = [
+        child
+        for child in DAILY_REPORTS_DIR.iterdir()
+        if child.is_dir() and re.fullmatch(r"\d{4}-\d{2}-\d{2}", child.name)
+    ]
+    if not dated:
+        return None
+    return max(dated, key=lambda p: p.name)
+
+
 def resolve_date_dir(date_dir: Optional[str], day: Optional[str]) -> Path:
     if date_dir:
         return Path(date_dir).expanduser().resolve()
-    day = day or date.today().isoformat()
-    return DAILY_REPORTS_DIR / day
+    if day:
+        return DAILY_REPORTS_DIR / day
+    latest = latest_download_dir()
+    return latest if latest is not None else DAILY_REPORTS_DIR / date.today().isoformat()
 
 
 def main() -> int:
