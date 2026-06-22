@@ -146,6 +146,7 @@ async function loadDashboard() {
     realPortfolioTimeline = portfolioTimelineCsvText ? parseCsv(portfolioTimelineCsvText) : [];
 
     updateSummary(allStocks);
+    renderSyncBadge();
     renderCards(searchInput.value);
     refreshPnlView();
     applyStateFromUrl();
@@ -267,6 +268,31 @@ function readEmbeddedData() {
 
 function updateSummary(_items) {}
 
+// "Synced: D Month" badge = latest market date present in the recommendation
+// data (data-through date), which is stable regardless of when the refresh ran.
+function renderSyncBadge() {
+  const badge = document.getElementById("syncBadge");
+  if (!badge) {
+    return;
+  }
+  let latest = "";
+  allStocks.forEach((item) => {
+    item.points.forEach((point) => {
+      if (point.date && point.date > latest) {
+        latest = point.date;
+      }
+    });
+  });
+  const parsed = latest ? new Date(`${latest}T00:00:00`) : null;
+  if (!parsed || Number.isNaN(parsed.getTime())) {
+    badge.hidden = true;
+    return;
+  }
+  const formatted = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long" }).format(parsed);
+  badge.textContent = `Synced: ${formatted}`;
+  badge.hidden = false;
+}
+
 function renderCards(filterText = "") {
   const normalizedFilter = filterText.trim().toLowerCase();
   const filtered = allStocks
@@ -346,8 +372,6 @@ function renderCards(filterText = "") {
       item.target4,
       item.target4ReturnPct
     );
-
-    fillTable(fragment.querySelector(".data-table-body"), item.points);
 
     card.style.animationDelay = `${index * 70}ms`;
     cardsContainer.appendChild(fragment);
@@ -490,20 +514,6 @@ function exportPnlCsv() {
   anchor.click();
   document.body.removeChild(anchor);
   URL.revokeObjectURL(url);
-}
-
-function fillTable(tableBody, points) {
-  tableBody.innerHTML = "";
-  points.forEach((point) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>Day ${point.dayIndex}</td>
-      <td>${point.date}</td>
-      <td>${point.price}</td>
-      <td class="${point.returnValue >= 0 ? "table-positive" : "table-negative"}">${point.returnText}</td>
-    `;
-    tableBody.appendChild(row);
-  });
 }
 
 // Interactive return-% chart for each recommendation card. Mirrors the portfolio
