@@ -344,31 +344,15 @@ function renderCards(filterText = "") {
   filtered.forEach((item, index) => {
     const fragment = template.content.cloneNode(true);
     const card = fragment.querySelector(".stock-card");
-    const investment = findInvestment(item.stockCode);
     const positionStatus = findPositionStatus(item.stockCode);
     const stockBadges = fragment.querySelector(".stock-badges");
 
     fragment.querySelector(".stock-code").textContent = item.stockCode;
     fragment.querySelector(".stock-date").textContent = `Recommendation Date: ${item.recommendationDate}`;
 
-    const investmentSummary = fragment.querySelector(".investment-summary");
     stockBadges.remove();
 
-    if (investment) {
-      investmentSummary.classList.add("visible");
-      const investedReturn = fragment.querySelector(".invested-return");
-      investedReturn.textContent = investment.returnPct || "--";
-      const investedReturnClass =
-        investment.returnPctValue > 0 ? "table-positive" : investment.returnPctValue < 0 ? "table-negative" : null;
-      if (investedReturnClass) {
-        investedReturn.classList.add(investedReturnClass);
-      }
-    } else {
-      investmentSummary.remove();
-    }
-
     fragment.querySelector(".position-status").textContent = positionStatus;
-    fragment.querySelector(".highest-price").textContent = item.highestPrice || "--";
     fragment.querySelector(".target-1-hit").innerHTML = renderTargetStatus(
       item.hitTarget1,
       item.target1,
@@ -821,30 +805,6 @@ function buildRecommendationDateBySymbol(reportRows) {
     mapping[normalizeSymbol(stockCode)] = recommendationDate;
     return mapping;
   }, {});
-}
-
-function findInvestment(reportStockCode) {
-  const normalized = normalizeSymbol(reportStockCode);
-  const matching = pnlRows.filter(
-    (item) =>
-      (
-        normalizeSymbol(item.matchedReportSymbol) === normalized ||
-        normalizeSymbol(item.stockCode) === normalized
-      )
-  );
-  if (matching.length === 0) {
-    return null;
-  }
-
-  const totalBuyValue = matching.reduce((sum, item) => sum + item.buyValueRaw, 0);
-  const totalPnlValue = matching.reduce((sum, item) => sum + item.totalPnlValue, 0);
-  const totalReturnPctValue = totalBuyValue ? (totalPnlValue / totalBuyValue) * 100 : 0;
-
-  return {
-    buyValue: formatCurrency(totalBuyValue),
-    returnPct: `${totalReturnPctValue.toFixed(2)}%`,
-    returnPctValue: totalReturnPctValue,
-  };
 }
 
 function findPositionStatus(reportStockCode) {
