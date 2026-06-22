@@ -49,6 +49,10 @@ const pnlFilterSwitch = document.getElementById("pnlFilterSwitch");
 const pnlFilterButtons = Array.from(pnlFilterSwitch.querySelectorAll(".pnl-filter-button"));
 const pnlBasisSwitch = document.getElementById("pnlBasisSwitch");
 const pnlBasisButtons = Array.from(pnlBasisSwitch.querySelectorAll(".pnl-basis-button"));
+const positionFilterGroup = document.getElementById("positionFilterGroup");
+const showNoPositions = document.getElementById("showNoPositions");
+const showRealizedPositions = document.getElementById("showRealizedPositions");
+const showUnrealizedPositions = document.getElementById("showUnrealizedPositions");
 const chartViewButton = document.getElementById("chartViewButton");
 const pnlViewButton = document.getElementById("pnlViewButton");
 const chartsPage = document.getElementById("chartsPage");
@@ -102,6 +106,10 @@ chartViewButton.addEventListener("click", () => {
 
 pnlViewButton.addEventListener("click", () => {
   setView(VIEW.PNL);
+});
+
+[showNoPositions, showRealizedPositions, showUnrealizedPositions].forEach((checkbox) => {
+  checkbox.addEventListener("change", () => renderCards(searchInput.value));
 });
 
 pnlFilterButtons.forEach((button) => {
@@ -293,10 +301,22 @@ function renderSyncBadge() {
   badge.hidden = false;
 }
 
+// "Partially Realized" is treated as Unrealized per the position filters.
+function passesPositionFilter(status) {
+  if (status === "No Position") {
+    return showNoPositions.checked;
+  }
+  if (status === "Realized") {
+    return showRealizedPositions.checked;
+  }
+  return showUnrealizedPositions.checked;
+}
+
 function renderCards(filterText = "") {
   const normalizedFilter = filterText.trim().toLowerCase();
   const filtered = allStocks
     .filter((item) => item.stockCode.toLowerCase().includes(normalizedFilter))
+    .filter((item) => passesPositionFilter(findPositionStatus(item.stockCode)))
     .sort((left, right) => {
       const leftTime = Date.parse(left.recommendationDate || "") || 0;
       const rightTime = Date.parse(right.recommendationDate || "") || 0;
@@ -1324,6 +1344,7 @@ function setView(view) {
   pnlPage.classList.toggle("active", showingPnl);
   pnlFilterSwitch.classList.toggle("hidden", !showingPnl);
   pnlBasisSwitch.classList.toggle("hidden", !showingPnl);
+  positionFilterGroup.classList.toggle("hidden", !showingCharts);
 
   if (showingCharts) {
     renderCards(searchInput.value);

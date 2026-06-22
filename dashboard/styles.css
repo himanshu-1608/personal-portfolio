@@ -269,6 +269,33 @@ code {
 
 .hidden { display: none !important; }
 
+/* ─── Position status checkboxes ─────────────────── */
+.position-filter-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 4px;
+}
+
+.position-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.position-check input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent, #00e5a0);
+  cursor: pointer;
+}
+
 /* ─── Search field ───────────────────────────────── */
 .search-field {
   display: grid;

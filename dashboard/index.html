@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Return Dashboard</title>
-    <link rel="stylesheet" href="./styles.css?v=20260623-6" />
+    <link rel="stylesheet" href="./styles.css?v=20260623-7" />
   </head>
   <body>
     <div class="bg-mesh" aria-hidden="true"></div>
@@ -12,7 +12,7 @@
       <section class="top-toggle-shell">
         <div class="toggle-header">
           <p class="toggle-eyebrow">View Mode</p>
-          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.8.0</span> <span class="version-badge sync-badge" id="syncBadge" hidden></span></h2>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.9.0</span> <span class="version-badge sync-badge" id="syncBadge" hidden></span></h2>
         </div>
         <div class="view-switch" role="tablist" aria-label="Dashboard Views">
           <button id="chartViewButton" class="view-button active" type="button">
@@ -34,6 +34,11 @@
           <span>Filter Stocks</span>
           <input id="searchInput" type="search" placeholder="Type stock code..." />
         </label>
+        <div id="positionFilterGroup" class="position-filter-group" role="group" aria-label="Position Status Filters">
+          <label class="position-check"><input type="checkbox" id="showNoPositions" checked /> Show No Positions</label>
+          <label class="position-check"><input type="checkbox" id="showRealizedPositions" checked /> Show Realized Positions</label>
+          <label class="position-check"><input type="checkbox" id="showUnrealizedPositions" checked /> Show Unrealized Positions</label>
+        </div>
         <div id="pnlFilterSwitch" class="pnl-filter-switch hidden" role="group" aria-label="Portfolio P&L Filters">
           <button class="pnl-filter-button active" type="button" data-filter="all">All Stocks<span class="basis-note">realized + unrealized</span></button>
           <button class="pnl-filter-button" type="button" data-filter="realized">Realized P&amp;L</button>
@@ -193,6 +198,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.1782162064754.js"></script>
-    <script src="./app.js?v=20260623-6"></script>
+    <script src="./app.js?v=20260623-7"></script>
   </body>
 </html>
