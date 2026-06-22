@@ -336,7 +336,6 @@ function renderCards(filterText = "") {
 
     if (investment) {
       investmentSummary.classList.add("visible");
-      fragment.querySelector(".invested-amount").textContent = investment.buyValue;
       const investedReturn = fragment.querySelector(".invested-return");
       investedReturn.textContent = investment.returnPct || "--";
       const investedReturnClass =
