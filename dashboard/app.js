@@ -44,7 +44,6 @@ const searchInput = document.getElementById("searchInput");
 const statusBanner = document.getElementById("statusBanner");
 const cardsContainer = document.getElementById("cardsContainer");
 const template = document.getElementById("stockCardTemplate");
-const miniList = document.getElementById("miniList");
 
 const pnlFilterSwitch = document.getElementById("pnlFilterSwitch");
 const pnlFilterButtons = Array.from(pnlFilterSwitch.querySelectorAll(".pnl-filter-button"));
@@ -339,7 +338,6 @@ function renderCards(filterText = "") {
       ? "No stocks match this filter."
       : "No stock data available to chart yet.";
     cardsContainer.appendChild(emptyState);
-    renderMiniList([]);
     return;
   }
 
@@ -367,8 +365,6 @@ function renderCards(filterText = "") {
     // Chart.js must measure a canvas that is already in the DOM, so draw after append.
     drawChart(card.querySelector(".chart"), item.points);
   });
-
-  renderMiniList(filtered);
 }
 
 // "2026-06-17" -> "17 June"
@@ -381,54 +377,6 @@ function formatRecDate(iso) {
     return iso;
   }
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long" }).format(parsed);
-}
-
-// Compact sparkline-list mirror of the cards: stock name + mini return chart.
-// Static inline SVG (no Chart.js instances) keeps it cheap across many rows.
-function buildSparklineSvg(points) {
-  const values = points.map((point) => point.returnValue).filter((value) => Number.isFinite(value));
-  if (values.length === 0) {
-    return "";
-  }
-  const width = 130;
-  const height = 40;
-  const pad = 4;
-  const minValue = Math.min(...values, 0);
-  const maxValue = Math.max(...values, 0);
-  const range = maxValue - minValue || 1;
-  const stepX = (width - pad * 2) / Math.max(values.length - 1, 1);
-  const xAt = (index) => pad + index * stepX;
-  const yAt = (value) => height - pad - ((value - minValue) / range) * (height - pad * 2);
-  const path = values
-    .map((value, index) => `${index === 0 ? "M" : "L"}${xAt(index).toFixed(1)},${yAt(value).toFixed(1)}`)
-    .join(" ");
-  const positive = values[values.length - 1] >= 0;
-  const color = positive ? "#00e5a0" : "#ff4d6a";
-  const zeroY = yAt(0).toFixed(1);
-  return `
-    <svg class="sparkline" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
-      <line class="spark-zero" x1="${pad}" y1="${zeroY}" x2="${width - pad}" y2="${zeroY}" />
-      <path d="${path}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" />
-    </svg>`;
-}
-
-function renderMiniList(items) {
-  if (!miniList) {
-    return;
-  }
-  miniList.innerHTML = "";
-  items.forEach((item) => {
-    const lastReturn = item.points.length ? item.points[item.points.length - 1].returnText : "";
-    const row = document.createElement("li");
-    row.className = "mini-row";
-    row.innerHTML = `
-      <div class="mini-info">
-        <p class="mini-name">${normalizeSymbol(item.stockCode)}</p>
-        <p class="mini-sub">Recommended: ${formatRecDate(item.recommendationDate)}${lastReturn ? ` &bull; ${lastReturn}` : ""}</p>
-      </div>
-      <div class="mini-spark">${buildSparklineSvg(item.points)}</div>`;
-    miniList.appendChild(row);
-  });
 }
 
 // Rows for the Portfolio P&L table after the active filter + search box,
