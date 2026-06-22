@@ -367,8 +367,6 @@ function renderCards(filterText = "") {
       investmentSummary.remove();
     }
 
-    const latestPoint = item.points[item.points.length - 1];
-    fragment.querySelector(".latest-price").textContent = latestPoint.price;
     fragment.querySelector(".position-status").textContent = positionStatus;
     fragment.querySelector(".highest-price").textContent = item.highestPrice || "--";
     fragment.querySelector(".target-1-hit").innerHTML = renderTargetStatus(
