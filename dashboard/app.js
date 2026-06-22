@@ -361,16 +361,6 @@ function renderCards(filterText = "") {
       item.target2,
       item.target2ReturnPct
     );
-    fragment.querySelector(".target-3-hit").innerHTML = renderTargetStatus(
-      item.hitTarget3,
-      item.target3,
-      item.target3ReturnPct
-    );
-    fragment.querySelector(".target-4-hit").innerHTML = renderTargetStatus(
-      item.hitTarget4,
-      item.target4,
-      item.target4ReturnPct
-    );
 
     card.style.animationDelay = `${index * 70}ms`;
     cardsContainer.appendChild(fragment);
@@ -647,14 +637,8 @@ function transformRow(row) {
   const stockCode = row["Stock Code/Name"] || "";
   const recommendationDate = row["Recommendation Date"] || "";
   const points = [];
-  const inputTarget1 = parseOptionalNumber(row["Target 1"]);
-  const inputTarget2 = parseOptionalNumber(row["Target 2"]);
-  const inputTarget3 = parseOptionalNumber(row["Target 3"]);
-  const inputTarget4 = parseOptionalNumber(row["Target 4"]);
-  const hasFourTargets = inputTarget3 !== null && inputTarget4 !== null;
-  const splitTargets = hasFourTargets
-    ? [inputTarget1, inputTarget2, inputTarget3, inputTarget4]
-    : distributeTargets(inputTarget1, inputTarget2);
+  const target1 = parseOptionalNumber(row["Target 1"]);
+  const target2 = parseOptionalNumber(row["Target 2"]);
   const buyPriceRecommendationValue = parseNumber(row["Buy Price Recommendation"]);
   const highestPriceValue = parseNumber(row["Highest Price"]);
 
@@ -679,20 +663,14 @@ function transformRow(row) {
     stockCode,
     normalizedSymbol: normalizeSymbol(stockCode),
     recommendationDate,
-    target1: formatTarget(splitTargets[0]),
-    target2: formatTarget(splitTargets[1]),
-    target3: formatTarget(splitTargets[2]),
-    target4: formatTarget(splitTargets[3]),
+    target1: formatTarget(target1),
+    target2: formatTarget(target2),
     buyPriceRecommendation: row["Buy Price Recommendation"] || "",
     highestPrice: row["Highest Price"] || "",
-    hitTarget1: classifyTargetHit(highestPriceValue, splitTargets[0]),
-    hitTarget2: classifyTargetHit(highestPriceValue, splitTargets[1]),
-    hitTarget3: classifyTargetHit(highestPriceValue, splitTargets[2]),
-    hitTarget4: classifyTargetHit(highestPriceValue, splitTargets[3]),
-    target1ReturnPct: formatTargetReturnPct(splitTargets[0], buyPriceRecommendationValue),
-    target2ReturnPct: formatTargetReturnPct(splitTargets[1], buyPriceRecommendationValue),
-    target3ReturnPct: formatTargetReturnPct(splitTargets[2], buyPriceRecommendationValue),
-    target4ReturnPct: formatTargetReturnPct(splitTargets[3], buyPriceRecommendationValue),
+    hitTarget1: classifyTargetHit(highestPriceValue, target1),
+    hitTarget2: classifyTargetHit(highestPriceValue, target2),
+    target1ReturnPct: formatTargetReturnPct(target1, buyPriceRecommendationValue),
+    target2ReturnPct: formatTargetReturnPct(target2, buyPriceRecommendationValue),
     points,
   };
 }
@@ -897,23 +875,6 @@ function normalizeSymbol(value) {
   return String(value).trim().toUpperCase().replace(/\.NS$|\.BO$/g, "");
 }
 
-function distributeTargets(firstTarget, secondTarget) {
-  if (firstTarget === null && secondTarget === null) {
-    return [null, null, null, null];
-  }
-  if (firstTarget === null) {
-    return [secondTarget, secondTarget, secondTarget, secondTarget];
-  }
-  if (secondTarget === null) {
-    return [firstTarget, firstTarget, firstTarget, firstTarget];
-  }
-
-  const step = (secondTarget - firstTarget) / 3;
-  const target2 = Math.round(firstTarget + step);
-  const target3 = Math.round(firstTarget + (2 * step));
-  return [firstTarget, target2, target3, secondTarget];
-}
-
 function classifyTargetHit(highestPrice, target) {
   if (!Number.isFinite(target)) {
     return "";
@@ -959,10 +920,10 @@ function renderTargetStatus(hitValue, amount, returnPct) {
   const klass = isHit ? "hit" : "miss";
   const detailParts = [];
   if (amount) {
-    detailParts.push(`Amount: ${amount}`);
+    detailParts.push(amount);
   }
   if (returnPct) {
-    detailParts.push(`% return: ${returnPct}`);
+    detailParts.push(returnPct);
   }
   const detail = detailParts.length ? ` <span class="target-subdetail">(${detailParts.join(", ")})</span>` : "";
 

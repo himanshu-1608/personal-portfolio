@@ -79,8 +79,6 @@ OUTPUT_FILE = REPORTS_DIR / "stock_closing_prices.csv"
 
 TARGET_1_COLUMN = "Target 1"
 TARGET_2_COLUMN = "Target 2"
-TARGET_3_COLUMN = "Target 3"
-TARGET_4_COLUMN = "Target 4"
 BUY_PRICE_RECOMMENDATION_COLUMN = "Buy Price Recommendation"
 REQUEST_TIMEOUT_SECONDS = 30
 MAX_RETRIES = 5
@@ -112,18 +110,12 @@ OUTPUT_HEADERS = [
     DATE_COLUMN,
     TARGET_1_COLUMN,
     TARGET_2_COLUMN,
-    TARGET_3_COLUMN,
-    TARGET_4_COLUMN,
     BUY_PRICE_RECOMMENDATION_COLUMN,
     "Highest Price",
     "Hit Target 1",
     "Hit Target 2",
-    "Hit Target 3",
-    "Hit Target 4",
     "Target 1 Return %",
     "Target 2 Return %",
-    "Target 3 Return %",
-    "Target 4 Return %",
     *[
         column_name
         for index in range(1, DAY_COUNT + 1)
@@ -236,8 +228,8 @@ def read_existing_output() -> Tuple[List[Dict[str, str]], set]:
     return rows, existing_keys
 
 
-def has_all_four_targets_hit(row: Dict[str, str]) -> bool:
-    return all((row.get(f"Hit Target {index}") or "").strip().upper() == "TRUE" for index in range(1, 5))
+def has_all_targets_hit(row: Dict[str, str]) -> bool:
+    return all((row.get(f"Hit Target {index}") or "").strip().upper() == "TRUE" for index in range(1, 3))
 
 
 def get_missing_recommendations(
@@ -697,25 +689,9 @@ def fetch_prices_since(stock_code: str, since_date: date) -> Tuple[List[Tuple[st
     return merged, (f"{highest_value:.4f}" if highest_value else "")
 
 
-def distribute_targets(
-    target_1: Optional[float], target_2: Optional[float]
-) -> Tuple[Optional[float], Optional[float], Optional[float], Optional[float]]:
-    if target_1 is None and target_2 is None:
-        return None, None, None, None
-    if target_1 is None:
-        return target_2, target_2, target_2, target_2
-    if target_2 is None:
-        return target_1, target_1, target_1, target_1
-
-    step = (target_2 - target_1) / 3
-    target_2_split = float(round(target_1 + step))
-    target_3_split = float(round(target_1 + (2 * step)))
-    return target_1, target_2_split, target_3_split, target_2
-
-
 def _apply_hit_targets(row: Dict[str, str]) -> None:
     highest_price_val = parse_optional_float(row.get("Highest Price") or "")
-    for i, target_col in enumerate(["Target 1", "Target 2", "Target 3", "Target 4"], 1):
+    for i, target_col in enumerate(["Target 1", "Target 2"], 1):
         target_val = parse_optional_float(row.get(target_col) or "")
         if target_val is None:
             row[f"Hit Target {i}"] = ""
@@ -821,9 +797,8 @@ def build_output_row(
     prices, highest_price = fetch_30_day_prices(
         recommendation.stock_code, recommendation.recommendation_date
     )
-    input_target_1 = parse_optional_float(recommendation.target_1) if recommendation.target_1 else None
-    input_target_2 = parse_optional_float(recommendation.target_2) if recommendation.target_2 else None
-    target_1, target_2, target_3, target_4 = distribute_targets(input_target_1, input_target_2)
+    target_1 = parse_optional_float(recommendation.target_1) if recommendation.target_1 else None
+    target_2 = parse_optional_float(recommendation.target_2) if recommendation.target_2 else None
 
     buy_price_recommendation = (
         parse_optional_float(recommendation.buy_price_recommendation)
@@ -837,8 +812,6 @@ def build_output_row(
         DATE_COLUMN: recommendation.recommendation_date,
         TARGET_1_COLUMN: format_number(target_1) if target_1 is not None else "",
         TARGET_2_COLUMN: format_number(target_2) if target_2 is not None else "",
-        TARGET_3_COLUMN: format_number(target_3) if target_3 is not None else "",
-        TARGET_4_COLUMN: format_number(target_4) if target_4 is not None else "",
         BUY_PRICE_RECOMMENDATION_COLUMN: recommendation.buy_price_recommendation,
         "Highest Price": highest_price,
         "Hit Target 1": (
@@ -849,14 +822,6 @@ def build_output_row(
             ("TRUE" if highest_price_value is not None and highest_price_value >= target_2 else "FALSE")
             if target_2 is not None else ""
         ),
-        "Hit Target 3": (
-            ("TRUE" if highest_price_value is not None and highest_price_value >= target_3 else "FALSE")
-            if target_3 is not None else ""
-        ),
-        "Hit Target 4": (
-            ("TRUE" if highest_price_value is not None and highest_price_value >= target_4 else "FALSE")
-            if target_4 is not None else ""
-        ),
         "Target 1 Return %": (
             f"{(((target_1 / buy_price_recommendation) - 1) * 100):.2f}%"
             if target_1 is not None and buy_price_recommendation not in (None, 0) else ""
@@ -864,14 +829,6 @@ def build_output_row(
         "Target 2 Return %": (
             f"{(((target_2 / buy_price_recommendation) - 1) * 100):.2f}%"
             if target_2 is not None and buy_price_recommendation not in (None, 0) else ""
-        ),
-        "Target 3 Return %": (
-            f"{(((target_3 / buy_price_recommendation) - 1) * 100):.2f}%"
-            if target_3 is not None and buy_price_recommendation not in (None, 0) else ""
-        ),
-        "Target 4 Return %": (
-            f"{(((target_4 / buy_price_recommendation) - 1) * 100):.2f}%"
-            if target_4 is not None and buy_price_recommendation not in (None, 0) else ""
         ),
     }
 
@@ -904,7 +861,9 @@ def write_output(rows: Iterable[Dict[str, str]]) -> None:
     )
 
     with OUTPUT_FILE.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=OUTPUT_HEADERS)
+        # extrasaction="ignore" drops any legacy columns (e.g. the old Target 3/4
+        # carried in incremental rows from a previously-written CSV) instead of raising.
+        writer = csv.DictWriter(file, fieldnames=OUTPUT_HEADERS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(sorted_rows)
 
@@ -929,10 +888,10 @@ def main() -> int:
             total = len(recommendations)
             for index, recommendation in enumerate(recommendations, start=1):
                 existing_row = existing_by_key.get(recommendation.key)
-                if existing_row is not None and has_all_four_targets_hit(existing_row):
+                if existing_row is not None and has_all_targets_hit(existing_row):
                     print(
                         f"[{index}/{total}] Skipping API fetch for "
-                        f"{recommendation.stock_code} ({recommendation.recommendation_date}) - all 4 targets already hit."
+                        f"{recommendation.stock_code} ({recommendation.recommendation_date}) - all targets already hit."
                     )
                     refreshed_rows.append(existing_row)
                     continue
