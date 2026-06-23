@@ -260,3 +260,10 @@ MTM obligation blocked for MTF,2026-06-22,MTF Delivery Voucher,17151.950000,0.00
 Interest for MTF funded value on 2026-06-20,2026-06-22,Journal Entry,491.194000,0.000000,175170.185564
 Interest for MTF funded value on 2026-06-21,2026-06-22,Journal Entry,491.194000,0.000000,174678.991564
 Interest for MTF funded value on 2026-06-22,2026-06-22,Journal Entry,491.194000,0.000000,174187.797564
+DP Charges for Sale of SYRMA on 23/06/2026,2026-06-23,Journal Entry,15.340000,0.000000,174172.457564
+MTM obligation reversed for MTF,2026-06-23,MTF Delivery Voucher,0.000000,17151.950000,191324.407564
+MTM obligation blocked for MTF,2026-06-23,MTF Delivery Voucher,23745.350000,0.000000,167579.057564
+Initial margin charged for MTF,2026-06-23,Book Voucher,50656.072320,0.000000,116922.985244
+Net settlement for Equity with settlement number: 2026116,2026-06-23,Book Voucher,0.000000,71247.001875,188169.987119
+Interest for MTF funded value on 2026-06-23,2026-06-23,Journal Entry,491.194000,0.000000,187678.793119
+MTF unpledge charges for SYRMA,2026-06-23,Journal Entry,17.700000,0.000000,187661.093119
