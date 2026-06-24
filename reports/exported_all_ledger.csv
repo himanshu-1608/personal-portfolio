@@ -267,3 +267,9 @@ Initial margin charged for MTF,2026-06-23,Book Voucher,50656.072320,0.000000,116
 Net settlement for Equity with settlement number: 2026116,2026-06-23,Book Voucher,0.000000,71247.001875,188169.987119
 Interest for MTF funded value on 2026-06-23,2026-06-23,Journal Entry,491.194000,0.000000,187678.793119
 MTF unpledge charges for SYRMA,2026-06-23,Journal Entry,17.700000,0.000000,187661.093119
+MTM obligation reversed for MTF,2026-06-24,MTF Delivery Voucher,0.000000,23745.350000,211406.443119
+MTM obligation blocked for MTF,2026-06-24,MTF Delivery Voucher,21877.700000,0.000000,189528.743119
+Initial margin charged for MTF,2026-06-24,Book Voucher,50249.940000,0.000000,139278.803119
+Net settlement for Equity with settlement number: 2026117,2026-06-24,Book Voucher,282.772388,0.000000,138996.030731
+Interest for MTF funded value on 2026-06-24,2026-06-24,Journal Entry,487.820000,0.000000,138508.210731
+MTF pledge charges for PGIL,2026-06-24,Journal Entry,17.700000,0.000000,138490.510731
