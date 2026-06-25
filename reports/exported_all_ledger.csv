@@ -273,3 +273,7 @@ Initial margin charged for MTF,2026-06-24,Book Voucher,50249.940000,0.000000,139
 Net settlement for Equity with settlement number: 2026117,2026-06-24,Book Voucher,282.772388,0.000000,138996.030731
 Interest for MTF funded value on 2026-06-24,2026-06-24,Journal Entry,487.820000,0.000000,138508.210731
 MTF pledge charges for PGIL,2026-06-24,Journal Entry,17.700000,0.000000,138490.510731
+MTM obligation reversed for MTF,2026-06-25,MTF Delivery Voucher,0.000000,21877.700000,160368.210731
+MTM obligation blocked for MTF,2026-06-25,MTF Delivery Voucher,27670.450000,0.000000,132697.760731
+Interest for MTF funded value on 2026-06-25,2026-06-25,Journal Entry,555.111000,0.000000,132142.649731
+MTF pledge charges for ZYDUSLIFE,2026-06-25,Journal Entry,17.700000,0.000000,132124.949731
