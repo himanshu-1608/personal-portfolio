@@ -277,3 +277,11 @@ MTM obligation reversed for MTF,2026-06-25,MTF Delivery Voucher,0.000000,21877.7
 MTM obligation blocked for MTF,2026-06-25,MTF Delivery Voucher,27670.450000,0.000000,132697.760731
 Interest for MTF funded value on 2026-06-25,2026-06-25,Journal Entry,555.111000,0.000000,132142.649731
 MTF pledge charges for ZYDUSLIFE,2026-06-25,Journal Entry,17.700000,0.000000,132124.949731
+MTM obligation reversed for MTF,2026-06-29,MTF Delivery Voucher,0.000000,27670.450000,159795.399731
+MTM obligation blocked for MTF,2026-06-29,MTF Delivery Voucher,33862.200000,0.000000,125933.199731
+Initial margin charged for MTF,2026-06-29,Book Voucher,49997.067575,0.000000,75936.132156
+Net settlement for Equity with settlement number: 2026119,2026-06-29,Book Voucher,178.476637,0.000000,75757.655519
+Interest for MTF funded value on 2026-06-26,2026-06-29,Journal Entry,555.111000,0.000000,75202.544519
+Interest for MTF funded value on 2026-06-27,2026-06-29,Journal Entry,555.111000,0.000000,74647.433519
+Interest for MTF funded value on 2026-06-28,2026-06-29,Journal Entry,555.111000,0.000000,74092.322519
+Interest for MTF funded value on 2026-06-29,2026-06-29,Journal Entry,555.111000,0.000000,73537.211519
