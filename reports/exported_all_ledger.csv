@@ -285,3 +285,16 @@ Interest for MTF funded value on 2026-06-26,2026-06-29,Journal Entry,555.111000,
 Interest for MTF funded value on 2026-06-27,2026-06-29,Journal Entry,555.111000,0.000000,74647.433519
 Interest for MTF funded value on 2026-06-28,2026-06-29,Journal Entry,555.111000,0.000000,74092.322519
 Interest for MTF funded value on 2026-06-29,2026-06-29,Journal Entry,555.111000,0.000000,73537.211519
+MTM obligation reversed for MTF,2026-06-30,MTF Delivery Voucher,0.000000,33862.200000,107399.411519
+MTM obligation blocked for MTF,2026-06-30,MTF Delivery Voucher,33211.000000,0.000000,74188.411519
+Initial margin charged for MTF,2026-06-30,Book Voucher,49754.908125,0.000000,24433.503394
+Net settlement for Equity with settlement number: 2026120,2026-06-30,Book Voucher,172.277387,0.000000,24261.226007
+Interest for MTF funded value on 2026-06-30,2026-06-30,Journal Entry,587.260000,0.000000,23673.966007
+MTF pledge charges for EIEL,2026-06-30,Journal Entry,17.700000,0.000000,23656.266007
+MTM obligation reversed for MTF,2026-07-01,MTF Delivery Voucher,0.000000,33211.000000,56867.266007
+MTM obligation blocked for MTF,2026-07-01,MTF Delivery Voucher,50617.000000,0.000000,6250.266007
+Interest for MTF funded value on 2026-07-01,2026-07-01,Journal Entry,617.376000,0.000000,5632.890007
+MTF pledge charges for SANGHVIMOV,2026-07-01,Journal Entry,17.700000,0.000000,5615.190007
+MTM obligation reversed for MTF,2026-07-02,MTF Delivery Voucher,0.000000,50617.000000,56232.190007
+MTM obligation blocked for MTF,2026-07-02,MTF Delivery Voucher,43867.250000,0.000000,12364.940007
+Interest for MTF funded value on 2026-07-02,2026-07-02,Journal Entry,617.376000,0.000000,11747.564007
