@@ -22,7 +22,6 @@ from portfolio_core import (
     CONTRACT_NOTES_FILE,
     DATE_COLUMN,
     DAY_COUNT,
-    MTF_LEDGER_FILE,
     MTF_PNL_HEADERS,
     MTF_PNL_OUTPUT_FILE,
     PNL_HEADERS,
@@ -704,37 +703,18 @@ def build_mtf_margin_ratio_by_date() -> Dict[str, float]:
                 row.get("debit") or ""
             )
 
-    # Gross MTF obligation (total buy value) per date. Zerodha used to emit an
-    # explicit "Gross obligation for MTF" row, but has stopped, and even the
-    # historical rows it did emit were sometimes partial (e.g. SANGHVIMOV 2026-06-09
-    # showed a 10,363 obligation against a 124,328 buy, producing an impossible
-    # margin ratio > 1 and negative broker funding). The tradebook buy value
-    # (qty x price for the pledged MTF symbols) is the true obligation, so use
-    # that as the primary source. The ledger row is only a last-resort fallback
-    # for a date where the tradebook somehow has no matching MTF buy.
+    # Gross MTF obligation (total buy value) per date, from the tradebook.
+    # Zerodha used to emit an explicit "Gross obligation for MTF" ledger row but
+    # has stopped, and the rows it did emit were sometimes partial (e.g.
+    # SANGHVIMOV 2026-06-09 showed a 10,363 obligation against a 124,328 buy,
+    # producing an impossible margin ratio > 1 and negative broker funding). The
+    # tradebook buy value (qty x price for the pledged MTF symbols) is the true
+    # obligation.
     buy_value_by_date = _mtf_buy_value_by_date(_mtf_symbols_from_ledger())
-
-    ledger_gross_by_date: Dict[str, float] = {}
-    if MTF_LEDGER_FILE.exists():
-        with MTF_LEDGER_FILE.open("r", newline="", encoding="utf-8-sig") as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                particulars = (row.get("particulars") or "").strip().lower()
-                posting_date = (row.get("posting_date") or "").strip()
-                if not posting_date:
-                    continue
-                if particulars != "gross obligation for mtf":
-                    continue
-                debit_value = parse_amount(row.get("debit") or "")
-                if debit_value <= 0:
-                    continue
-                ledger_gross_by_date[posting_date] = ledger_gross_by_date.get(posting_date, 0.0) + debit_value
 
     ratios: Dict[str, float] = {}
     for posting_date, margin_value in initial_margin_by_date.items():
         gross_value = buy_value_by_date.get(posting_date, 0.0)
-        if gross_value <= 0:
-            gross_value = ledger_gross_by_date.get(posting_date, 0.0)
         if gross_value <= 0:
             continue
         # Margin can't exceed the buy value; clamp so a lagging/partial margin

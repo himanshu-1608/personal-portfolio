@@ -23,7 +23,6 @@ import csv
 import io
 import json
 import random
-import re
 import sys
 import time
 import http.cookiejar
@@ -33,7 +32,6 @@ import urllib.request
 import zipfile
 from dataclasses import dataclass
 from datetime import date, datetime, time as dt_time, timedelta, timezone
-from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 try:
@@ -53,7 +51,6 @@ except ImportError:  # pragma: no cover
 
 
 from portfolio_core import (
-    BASE_DIR,
     INPUT_DIR,
     REPORTS_DIR,
     STOCK_COLUMN,
