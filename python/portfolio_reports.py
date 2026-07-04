@@ -638,10 +638,58 @@ def write_pnl_output(rows: Sequence[Dict[str, str]]) -> None:
         writer.writerows(rows)
 
 
+def _mtf_symbols_from_ledger() -> set:
+    """Symbols that were pledged/unpledged = the ones actually bought on MTF.
+
+    Zerodha names the symbol directly in "MTF pledge charges for <SYMBOL>" /
+    "MTF unpledge charges for <SYMBOL>" rows, so this is a reliable per-symbol
+    MTF signal independent of the (now-missing) gross-obligation rows."""
+    symbols: set = set()
+    if not ALL_LEDGER_FILE.exists():
+        return symbols
+    with ALL_LEDGER_FILE.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            particulars = (row.get("particulars") or "").strip()
+            lower = particulars.lower()
+            if "mtf pledge charges for " not in lower and "mtf unpledge charges for " not in lower:
+                continue
+            matched = re.search(r"charges for\s+([A-Za-z0-9._-]+)", particulars, flags=re.IGNORECASE)
+            if matched:
+                symbols.add(normalize_symbol(matched.group(1)))
+    return symbols
+
+
+def _mtf_buy_value_by_date(mtf_symbols: set) -> Dict[str, float]:
+    """Total MTF buy value (qty x price) per trade date, from the tradebook,
+    restricted to the pledged (MTF) symbols. This reconstructs the gross MTF
+    obligation now that Zerodha no longer emits "Gross obligation for MTF" rows."""
+    buy_value_by_date: Dict[str, float] = {}
+    if not TRADEBOOK_FILE.exists() or not mtf_symbols:
+        return buy_value_by_date
+    with TRADEBOOK_FILE.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if (row.get("trade_type") or "").strip().lower() != "buy":
+                continue
+            symbol = normalize_symbol((row.get("symbol") or "").strip())
+            trade_date = (row.get("trade_date") or "").strip()
+            if not symbol or not trade_date or symbol not in mtf_symbols:
+                continue
+            quantity = parse_amount(row.get("quantity") or "")
+            price = parse_amount(row.get("price") or "")
+            if quantity <= 0 or price <= 0:
+                continue
+            buy_value_by_date[trade_date] = buy_value_by_date.get(trade_date, 0.0) + quantity * price
+    return buy_value_by_date
+
+
 def build_mtf_margin_ratio_by_date() -> Dict[str, float]:
-    if not ALL_LEDGER_FILE.exists() or not MTF_LEDGER_FILE.exists():
+    if not ALL_LEDGER_FILE.exists():
         return {}
 
+    # "Initial margin charged for MTF" posts on the trade date and marks which
+    # dates had MTF buys (value = your-money portion of the buy).
     initial_margin_by_date: Dict[str, float] = {}
     with ALL_LEDGER_FILE.open("r", newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file)
@@ -656,27 +704,42 @@ def build_mtf_margin_ratio_by_date() -> Dict[str, float]:
                 row.get("debit") or ""
             )
 
-    gross_obligation_by_date: Dict[str, float] = {}
-    with MTF_LEDGER_FILE.open("r", newline="", encoding="utf-8-sig") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            particulars = (row.get("particulars") or "").strip().lower()
-            posting_date = (row.get("posting_date") or "").strip()
-            if not posting_date:
-                continue
-            if particulars != "gross obligation for mtf":
-                continue
-            debit_value = parse_amount(row.get("debit") or "")
-            if debit_value <= 0:
-                continue
-            gross_obligation_by_date[posting_date] = gross_obligation_by_date.get(posting_date, 0.0) + debit_value
+    # Gross MTF obligation (total buy value) per date. Zerodha used to emit an
+    # explicit "Gross obligation for MTF" row, but has stopped, and even the
+    # historical rows it did emit were sometimes partial (e.g. SANGHVIMOV 2026-06-09
+    # showed a 10,363 obligation against a 124,328 buy, producing an impossible
+    # margin ratio > 1 and negative broker funding). The tradebook buy value
+    # (qty x price for the pledged MTF symbols) is the true obligation, so use
+    # that as the primary source. The ledger row is only a last-resort fallback
+    # for a date where the tradebook somehow has no matching MTF buy.
+    buy_value_by_date = _mtf_buy_value_by_date(_mtf_symbols_from_ledger())
+
+    ledger_gross_by_date: Dict[str, float] = {}
+    if MTF_LEDGER_FILE.exists():
+        with MTF_LEDGER_FILE.open("r", newline="", encoding="utf-8-sig") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                particulars = (row.get("particulars") or "").strip().lower()
+                posting_date = (row.get("posting_date") or "").strip()
+                if not posting_date:
+                    continue
+                if particulars != "gross obligation for mtf":
+                    continue
+                debit_value = parse_amount(row.get("debit") or "")
+                if debit_value <= 0:
+                    continue
+                ledger_gross_by_date[posting_date] = ledger_gross_by_date.get(posting_date, 0.0) + debit_value
 
     ratios: Dict[str, float] = {}
     for posting_date, margin_value in initial_margin_by_date.items():
-        gross_value = gross_obligation_by_date.get(posting_date, 0.0)
+        gross_value = buy_value_by_date.get(posting_date, 0.0)
+        if gross_value <= 0:
+            gross_value = ledger_gross_by_date.get(posting_date, 0.0)
         if gross_value <= 0:
             continue
-        ratios[posting_date] = margin_value / gross_value
+        # Margin can't exceed the buy value; clamp so a lagging/partial margin
+        # row never produces a >1 ratio (which would flip funding negative).
+        ratios[posting_date] = min(margin_value / gross_value, 1.0)
     return ratios
 
 
@@ -687,6 +750,11 @@ def build_mtf_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[st
     margin_ratio_by_date = build_mtf_margin_ratio_by_date()
     if not margin_ratio_by_date:
         return []
+
+    # A buy is MTF only if its symbol was actually pledged on MTF. Sharing a
+    # trade date with an MTF buy is not enough (cash buys can land the same day),
+    # so gate the is_mtf flag on this per-symbol set rather than the date alone.
+    mtf_symbols = _mtf_symbols_from_ledger()
 
     market_data = load_latest_market_data(report_rows)
     lots_by_symbol: Dict[str, List[Dict[str, float | str]]] = {}
@@ -810,7 +878,7 @@ def build_mtf_pnl_summary(report_rows: Sequence[Dict[str, str]]) -> List[Dict[st
                 # from the final MTF rows via the is_mtf flag. Skipping them here would
                 # mis-assign sell prices to MTF lots for mixed cash+MTF symbols.
                 ratio = margin_ratio_by_date.get(trade_date)
-                is_mtf = ratio is not None
+                is_mtf = symbol in mtf_symbols and ratio is not None
                 effective_ratio = ratio if ratio is not None else 1.0
                 lot = next((entry for entry in symbol_lots if str(entry["trade_date"]) == trade_date), None)
                 if lot is None:

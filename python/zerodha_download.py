@@ -24,7 +24,7 @@ from __future__ import annotations
 import os
 import time
 import traceback
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import List
 
@@ -178,32 +178,63 @@ def goto_console(page: Page, url: str) -> None:
         pass
 
 
-# mx-datepicker shortcut used for daily runs (same picker on tradebook + funds).
-# Options: "last 7 days", "last 30 days", "prev. FY", "current FY". Daily
-# incremental only needs recent rows (merge dedups; history is already in input/),
-# so a short window is plenty.
-RANGE_SHORTCUT = "last 7 days"
+# Download window. MTF settlement rows (pledge/unpledge, obligation, interest)
+# post ~T+1..T+2, and a run that misses a couple of nights must still recover
+# them, so a 25-day lookback is used instead of the old "last 7 days". The
+# merge dedups, so a wider window only ever re-fetches rows we already have.
+# The mx-datepicker has no 25-day shortcut, so a custom start~end range is typed
+# into the input; if that fails we fall back to the "last 30 days" shortcut.
+LOOKBACK_DAYS = 25
+FALLBACK_SHORTCUT = "last 30 days"
 
 
 def pick_date_range(page: Page) -> None:
-    """Open the mx-datepicker and pick RANGE_SHORTCUT, then Apply. Used by both
-    the tradebook and funds-statement pages (identical component)."""
+    """Open the mx-datepicker and set a LOOKBACK_DAYS window, then Apply. Used by
+    both the tradebook and funds-statement pages (identical component)."""
     if not click_first(page, ['input.mx-input[name="date"]', 'input.mx-input']):
         raise RuntimeError("Could not open date picker")
     page.wait_for_timeout(300)
-    shortcut = page.locator("button.mx-shortcuts", has_text=RANGE_SHORTCUT).first
+
+    if _type_custom_range(page):
+        return
+
+    # Fallback: nearest preset shortcut that still covers the lookback window.
+    shortcut = page.locator("button.mx-shortcuts", has_text=FALLBACK_SHORTCUT).first
     try:
         shortcut.wait_for(state="visible", timeout=4000)
         shortcut.click()
     except Exception:
-        raise RuntimeError(f"Could not click '{RANGE_SHORTCUT}' shortcut")
-    # Apply confirms the range and closes the popup.
+        raise RuntimeError(f"Could not set date range (custom type + '{FALLBACK_SHORTCUT}' both failed)")
     apply_btn = page.locator("button.mx-apply").first
     try:
         if apply_btn.is_visible():
             apply_btn.click()
     except Exception:
         pass
+
+
+def _type_custom_range(page: Page) -> bool:
+    """Type a "start ~ end" range covering the last LOOKBACK_DAYS into the
+    mx-datepicker input. Returns True if the field accepted the value."""
+    end = date.today()
+    start = end - timedelta(days=LOOKBACK_DAYS)
+    value = f"{start.isoformat()} ~ {end.isoformat()}"
+    try:
+        field = page.locator('input.mx-input[name="date"], input.mx-input').first
+        field.fill("")
+        field.type(value, delay=10)
+        field.press("Enter")
+        page.wait_for_timeout(300)
+        apply_btn = page.locator("button.mx-apply").first
+        try:
+            if apply_btn.is_visible():
+                apply_btn.click()
+        except Exception:
+            pass
+        # Confirm the input actually holds a range (contains "~").
+        return "~" in (field.input_value() or "")
+    except Exception:
+        return False
 
 
 def build_report_and_download(page: Page, save_path: Path, attempts: int = 3) -> None:

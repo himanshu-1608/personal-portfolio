@@ -298,3 +298,10 @@ MTF pledge charges for SANGHVIMOV,2026-07-01,Journal Entry,17.700000,0.000000,56
 MTM obligation reversed for MTF,2026-07-02,MTF Delivery Voucher,0.000000,50617.000000,56232.190007
 MTM obligation blocked for MTF,2026-07-02,MTF Delivery Voucher,43867.250000,0.000000,12364.940007
 Interest for MTF funded value on 2026-07-02,2026-07-02,Journal Entry,617.376000,0.000000,11747.564007
+DP Charges for Sale of KIRLOSENG on 03/07/2026,2026-07-03,Journal Entry,15.340000,0.000000,11732.224007
+MTM obligation reversed for MTF,2026-07-03,MTF Delivery Voucher,0.000000,43867.250000,55599.474007
+MTM obligation blocked for MTF,2026-07-03,MTF Delivery Voucher,40407.750000,0.000000,15191.724007
+Net settlement for Equity with settlement number: 2026123,2026-07-03,Book Voucher,0.000000,73690.175690,88881.899697
+Interest for MTF funded value on 2026-07-03,2026-07-03,Journal Entry,617.376000,0.000000,88264.523697
+MTF unpledge charges for KIRLOSENG,2026-07-03,Journal Entry,17.700000,0.000000,88246.823697
+Funds auto-settled to the primary bank account  with reference number dd9a349e22108b8f2a18e9,2026-07-03,Bank Payments,14556.650000,0.000000,73690.173697
