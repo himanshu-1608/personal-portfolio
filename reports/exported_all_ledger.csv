@@ -305,3 +305,11 @@ Net settlement for Equity with settlement number: 2026123,2026-07-03,Book Vouche
 Interest for MTF funded value on 2026-07-03,2026-07-03,Journal Entry,617.376000,0.000000,88264.523697
 MTF unpledge charges for KIRLOSENG,2026-07-03,Journal Entry,17.700000,0.000000,88246.823697
 Funds auto-settled to the primary bank account  with reference number dd9a349e22108b8f2a18e9,2026-07-03,Bank Payments,14556.650000,0.000000,73690.173697
+Kite Connect API Charges (2026-07-06),2026-07-06,Journal Entry,500.000220,0.000000,73190.173477
+MTM obligation reversed for MTF,2026-07-06,MTF Delivery Voucher,0.000000,40407.750000,113597.923477
+MTM obligation blocked for MTF,2026-07-06,MTF Delivery Voucher,46995.100000,0.000000,66602.823477
+Initial margin charged for MTF,2026-07-06,Book Voucher,49633.144750,0.000000,16969.678727
+Net settlement for Equity with settlement number: 2026124,2026-07-06,Book Voucher,221.990602,0.000000,16747.688125
+Interest for MTF funded value on 2026-07-04,2026-07-06,Journal Entry,579.704000,0.000000,16167.984125
+Interest for MTF funded value on 2026-07-05,2026-07-06,Journal Entry,579.704000,0.000000,15588.280125
+Interest for MTF funded value on 2026-07-06,2026-07-06,Journal Entry,579.704000,0.000000,15008.576125
