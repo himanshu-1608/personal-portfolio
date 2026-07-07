@@ -313,3 +313,5 @@ Net settlement for Equity with settlement number: 2026124,2026-07-06,Book Vouche
 Interest for MTF funded value on 2026-07-04,2026-07-06,Journal Entry,579.704000,0.000000,16167.984125
 Interest for MTF funded value on 2026-07-05,2026-07-06,Journal Entry,579.704000,0.000000,15588.280125
 Interest for MTF funded value on 2026-07-06,2026-07-06,Journal Entry,579.704000,0.000000,15008.576125
+MTM obligation reversed for MTF,2026-07-07,MTF Delivery Voucher,0.000000,46995.100000,62003.676125
+MTM obligation blocked for MTF,2026-07-07,MTF Delivery Voucher,65214.600000,0.000000,-3210.923875
