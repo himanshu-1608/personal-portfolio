@@ -315,3 +315,17 @@ Interest for MTF funded value on 2026-07-05,2026-07-06,Journal Entry,579.704000,
 Interest for MTF funded value on 2026-07-06,2026-07-06,Journal Entry,579.704000,0.000000,15008.576125
 MTM obligation reversed for MTF,2026-07-07,MTF Delivery Voucher,0.000000,46995.100000,62003.676125
 MTM obligation blocked for MTF,2026-07-07,MTF Delivery Voucher,65214.600000,0.000000,-3210.923875
+Interest for MTF funded value on 2026-07-07,2026-07-07,Journal Entry,626.584000,0.000000,-3837.507875
+MTF pledge charges for METROPOLIS,2026-07-07,Journal Entry,17.700000,0.000000,-3855.207875
+Funds added using UPI from VG7860 with reference number 103630822652,2026-07-08,Bank Receipts,0.000000,15000.000000,11144.792125
+MTM obligation reversed for MTF,2026-07-08,MTF Delivery Voucher,0.000000,65214.600000,76359.392125
+MTM obligation blocked for MTF,2026-07-08,MTF Delivery Voucher,90221.350000,0.000000,-13861.957875
+Interest for MTF funded value on 2026-07-08,2026-07-08,Journal Entry,626.584000,0.000000,-14488.541875
+Funds added using UPI from VG7860 with reference number 627617811906,2026-07-09,Bank Receipts,0.000000,50000.000000,35511.458125
+Funds added using UPI from VG7860 with reference number 103636952023,2026-07-09,Bank Receipts,0.000000,70000.000000,105511.458125
+Funds added using UPI from VG7860 with reference number 103638596118,2026-07-09,Bank Receipts,0.000000,150000.000000,255511.458125
+MTM obligation reversed for MTF,2026-07-09,MTF Delivery Voucher,0.000000,90221.350000,345732.808125
+MTM obligation blocked for MTF,2026-07-09,MTF Delivery Voucher,76830.980000,0.000000,268901.828125
+Initial margin charged for MTF,2026-07-09,Book Voucher,251051.960182,0.000000,17849.867943
+Net settlement for Equity with settlement number: 2026127,2026-07-09,Book Voucher,2417.650710,0.000000,15432.217233
+Interest for MTF funded value on 2026-07-09,2026-07-09,Journal Entry,626.584000,0.000000,14805.633233
