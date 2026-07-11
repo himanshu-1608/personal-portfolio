@@ -329,3 +329,11 @@ MTM obligation blocked for MTF,2026-07-09,MTF Delivery Voucher,76830.980000,0.00
 Initial margin charged for MTF,2026-07-09,Book Voucher,251051.960182,0.000000,17849.867943
 Net settlement for Equity with settlement number: 2026127,2026-07-09,Book Voucher,2417.650710,0.000000,15432.217233
 Interest for MTF funded value on 2026-07-09,2026-07-09,Journal Entry,626.584000,0.000000,14805.633233
+MTM obligation reversed for MTF,2026-07-10,MTF Delivery Voucher,0.000000,76830.980000,91636.613233
+MTM obligation blocked for MTF,2026-07-10,MTF Delivery Voucher,68522.180000,0.000000,23114.433233
+Interest for MTF funded value on 2026-07-10,2026-07-10,Journal Entry,817.121000,0.000000,22297.312233
+MTF pledge charges for CEATLTD,2026-07-10,Journal Entry,17.700000,0.000000,22279.612233
+MTF pledge charges for ATHERENERG,2026-07-10,Journal Entry,17.700000,0.000000,22261.912233
+MTF pledge charges for ADANIENSOL,2026-07-10,Journal Entry,17.700000,0.000000,22244.212233
+MTF pledge charges for SPARC,2026-07-10,Journal Entry,17.700000,0.000000,22226.512233
+MTF pledge charges for AZAD,2026-07-10,Journal Entry,17.700000,0.000000,22208.812233
