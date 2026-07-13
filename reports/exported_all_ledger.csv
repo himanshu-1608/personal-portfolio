@@ -337,3 +337,8 @@ MTF pledge charges for ATHERENERG,2026-07-10,Journal Entry,17.700000,0.000000,22
 MTF pledge charges for ADANIENSOL,2026-07-10,Journal Entry,17.700000,0.000000,22244.212233
 MTF pledge charges for SPARC,2026-07-10,Journal Entry,17.700000,0.000000,22226.512233
 MTF pledge charges for AZAD,2026-07-10,Journal Entry,17.700000,0.000000,22208.812233
+MTM obligation reversed for MTF,2026-07-13,MTF Delivery Voucher,0.000000,68522.180000,90730.992233
+MTM obligation blocked for MTF,2026-07-13,MTF Delivery Voucher,77609.380000,0.000000,13121.612233
+Interest for MTF funded value on 2026-07-11,2026-07-13,Journal Entry,817.121000,0.000000,12304.491233
+Interest for MTF funded value on 2026-07-12,2026-07-13,Journal Entry,817.121000,0.000000,11487.370233
+Interest for MTF funded value on 2026-07-13,2026-07-13,Journal Entry,817.121000,0.000000,10670.249233
