@@ -696,6 +696,21 @@ code {
   gap: 6px;
 }
 
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  transition: color 140ms ease;
+}
+
+.sortable-header:hover {
+  color: var(--accent);
+}
+
+.sort-indicator {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
 .column-hide-button {
   border: 0;
   border-radius: var(--radius-pill);

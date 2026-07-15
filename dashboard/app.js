@@ -88,6 +88,9 @@ let realPortfolioTimeline = [];
 let activeView = VIEW.CHARTS;
 let activePnlFilter = STOCK_FILTER.ALL;
 let activePnlBasis = PNL_BASIS.ALL_HOLDINGS;
+// Active P&L table sort. key null = default (newest trade date first). Otherwise
+// "stock" (lexicographic) or "tradeDate" (chronological), dir "asc" | "desc".
+let pnlSort = { key: null, dir: "asc" };
 const hiddenColumnsByTable = {
   [TABLE_KEYS.PNL]: new Set(),
 };
@@ -379,21 +382,37 @@ function formatRecDate(iso) {
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long" }).format(parsed);
 }
 
-// Rows for the Portfolio P&L table after the active filter + search box,
-// sorted newest trade date first. Shared by the table render and CSV export.
+// Rows for the Portfolio P&L table after the active filter + search box.
+// Default sort is newest trade date first; clicking the Stock or Trade Date
+// header switches to that column's ascending/descending sort (pnlSort).
+// Shared by the table render and CSV export.
 function getFilteredSortedPnlRows(filterText = "") {
   const normalizedFilter = filterText.trim().toLowerCase();
-  return getPnlRowsByActiveFilter(pnlRows)
-    .filter((item) => item.stockCode.toLowerCase().includes(normalizedFilter))
-    .sort((left, right) => {
-      const leftDate = left.tradeDate || "9999-12-31";
-      const rightDate = right.tradeDate || "9999-12-31";
-      const dateCompare = rightDate.localeCompare(leftDate);
-      if (dateCompare !== 0) {
-        return dateCompare;
-      }
-      return left.stockCode.localeCompare(right.stockCode);
+  const rows = getPnlRowsByActiveFilter(pnlRows).filter((item) =>
+    item.stockCode.toLowerCase().includes(normalizedFilter)
+  );
+
+  const factor = pnlSort.dir === "desc" ? -1 : 1;
+  if (pnlSort.key === "stock") {
+    return rows.sort(
+      (left, right) => factor * left.stockCode.localeCompare(right.stockCode)
+    );
+  }
+  if (pnlSort.key === "tradeDate") {
+    return rows.sort((left, right) => {
+      const leftDate = left.tradeDate || "";
+      const rightDate = right.tradeDate || "";
+      const cmp = leftDate.localeCompare(rightDate);
+      return cmp !== 0 ? factor * cmp : left.stockCode.localeCompare(right.stockCode);
     });
+  }
+  // Default: newest trade date first, then stock name.
+  return rows.sort((left, right) => {
+    const leftDate = left.tradeDate || "9999-12-31";
+    const rightDate = right.tradeDate || "9999-12-31";
+    const dateCompare = rightDate.localeCompare(leftDate);
+    return dateCompare !== 0 ? dateCompare : left.stockCode.localeCompare(right.stockCode);
+  });
 }
 
 function renderPnlTable(filterText = "") {
@@ -416,6 +435,12 @@ function renderPnlTable(filterText = "") {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${item.stockCode}${item.hasMtfFunding ? ' <span class="mtf-tag">MTF</span>' : ""}</td>
+      <td class="${item.realizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.realizedPnl}</td>
+      <td class="${item.chargesTaxesOthersValue > 0 ? "table-negative" : ""}">${item.chargesTaxesOthers}</td>
+      <td class="${item.netRealizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.netRealizedPnl}</td>
+      <td class="${item.unrealizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.unrealizedPnl}</td>
+      <td class="${item.totalPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.totalPnl}</td>
+      <td class="${returnPctValue === null ? "" : returnPctValue >= 0 ? "table-positive" : "table-negative"}">${returnPctText}</td>
       <td>${item.tradeDate || "--"}</td>
       <td>${item.buyQuantity}</td>
       <td>${item.averageBuyPrice || "--"}</td>
@@ -425,12 +450,6 @@ function renderPnlTable(filterText = "") {
       <td>${item.sellValue || "--"}</td>
       <td>${item.netQuantity}</td>
       <td>${item.latestMarketPrice || "--"}</td>
-      <td class="${item.realizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.realizedPnl}</td>
-      <td class="${item.chargesTaxesOthersValue > 0 ? "table-negative" : ""}">${item.chargesTaxesOthers}</td>
-      <td class="${item.netRealizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.netRealizedPnl}</td>
-      <td class="${item.unrealizedPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.unrealizedPnl}</td>
-      <td class="${item.totalPnlValue >= 0 ? "table-positive" : "table-negative"}">${item.totalPnl}</td>
-      <td class="${returnPctValue === null ? "" : returnPctValue >= 0 ? "table-positive" : "table-negative"}">${returnPctText}</td>
     `;
     pnlTableBody.appendChild(row);
   });
@@ -455,6 +474,12 @@ function exportPnlCsv() {
 
   const headers = [
     "Stock",
+    "Realized P&L",
+    "Charges, Taxes, Others",
+    "Net Realized P&L",
+    "Unrealized P&L",
+    "Total P&L",
+    "Return %",
     "Trade Date",
     "Buy Qty",
     "Buy Avg",
@@ -464,12 +489,6 @@ function exportPnlCsv() {
     "Total Sold",
     "Current Qty",
     "Latest Price",
-    "Realized P&L",
-    "Charges, Taxes, Others",
-    "Net Realized P&L",
-    "Unrealized P&L",
-    "Total P&L",
-    "Return %",
   ];
 
   const money = (value) => (Number.isFinite(value) ? value.toFixed(2) : "");
@@ -480,6 +499,12 @@ function exportPnlCsv() {
     lines.push(
       [
         item.stockCode,
+        money(item.realizedPnlValue),
+        money(item.chargesTaxesOthersValue),
+        money(item.netRealizedPnlValue),
+        money(item.unrealizedPnlValue),
+        money(item.totalPnlValue),
+        returnPct === null ? "" : returnPct.toFixed(2),
         item.tradeDate || "",
         item.buyQuantity,
         item.averageBuyPrice || "",
@@ -489,12 +514,6 @@ function exportPnlCsv() {
         money(item.sellValueRaw),
         item.netQuantity,
         item.latestMarketPrice || "",
-        money(item.realizedPnlValue),
-        money(item.chargesTaxesOthersValue),
-        money(item.netRealizedPnlValue),
-        money(item.unrealizedPnlValue),
-        money(item.totalPnlValue),
-        returnPct === null ? "" : returnPct.toFixed(2),
       ]
         .map(toCsvField)
         .join(",")
@@ -1342,6 +1361,8 @@ function getVisibleColumnCount(tableKey) {
 function initializeColumnControls() {
   Object.values(TABLE_KEYS).forEach((tableKey) => {
     const headers = getHeaderCells(tableKey);
+    // Columns that support click-to-sort, mapped to their pnlSort key.
+    const sortableColumns = { "Stock": "stock", "Trade Date": "tradeDate" };
     headers.forEach((th, index) => {
       const label = th.textContent.trim();
       th.dataset.columnLabel = label;
@@ -1350,6 +1371,23 @@ function initializeColumnControls() {
 
       const labelNode = document.createElement("span");
       labelNode.textContent = label;
+      const sortKey = tableKey === TABLE_KEYS.PNL ? sortableColumns[label] : undefined;
+      if (sortKey) {
+        labelNode.classList.add("sortable-header");
+        const indicator = document.createElement("span");
+        indicator.className = "sort-indicator";
+        indicator.dataset.sortKey = sortKey;
+        labelNode.appendChild(indicator);
+        labelNode.addEventListener("click", () => {
+          if (pnlSort.key === sortKey) {
+            pnlSort.dir = pnlSort.dir === "asc" ? "desc" : "asc";
+          } else {
+            pnlSort = { key: sortKey, dir: "asc" };
+          }
+          renderPnlTable(searchInput.value);
+          updateSortIndicators();
+        });
+      }
       wrapper.appendChild(labelNode);
 
       const button = document.createElement("button");
@@ -1369,6 +1407,20 @@ function initializeColumnControls() {
     });
     applyColumnVisibility(tableKey);
     renderExcludedColumnPills(tableKey);
+  });
+  updateSortIndicators();
+}
+
+// Reflect the active sort in the header arrows: ▲ ascending, ▼ descending,
+// and a neutral ⇅ hint on the other sortable column.
+function updateSortIndicators() {
+  document.querySelectorAll(".sort-indicator").forEach((node) => {
+    const key = node.dataset.sortKey;
+    if (pnlSort.key === key) {
+      node.textContent = pnlSort.dir === "asc" ? " ▲" : " ▼";
+    } else {
+      node.textContent = " ⇅";
+    }
   });
 }
 

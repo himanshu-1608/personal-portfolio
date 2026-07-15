@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stock Return Dashboard</title>
-    <link rel="stylesheet" href="./styles.css?v=20260716-3" />
+    <link rel="stylesheet" href="./styles.css?v=20260716-4" />
   </head>
   <body>
     <div class="bg-mesh" aria-hidden="true"></div>
@@ -12,7 +12,7 @@
       <section class="top-toggle-shell">
         <div class="toggle-header">
           <p class="toggle-eyebrow">View Mode</p>
-          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.11.4</span> <span class="version-badge sync-badge" id="syncBadge" hidden></span></h2>
+          <h2 class="toggle-title">Performance of Recommendations v/s Portfolio P&amp;L <span class="version-badge">v1.12.0</span> <span class="version-badge sync-badge" id="syncBadge" hidden></span></h2>
         </div>
         <div class="view-switch" role="tablist" aria-label="Dashboard Views">
           <button id="chartViewButton" class="view-button active" type="button">
@@ -120,6 +120,12 @@
             <thead>
               <tr>
                 <th>Stock</th>
+                <th>Realized P&amp;L</th>
+                <th>Charges, Taxes, Others</th>
+                <th>Net Realized P&amp;L</th>
+                <th>Unrealized P&amp;L</th>
+                <th>Total P&amp;L</th>
+                <th>Return %</th>
                 <th>Trade Date</th>
                 <th>Buy Qty</th>
                 <th>Buy Avg</th>
@@ -129,12 +135,6 @@
                 <th>Total Sold</th>
                 <th>Current Qty</th>
                 <th>Latest Price</th>
-                <th>Realized P&amp;L</th>
-                <th>Charges, Taxes, Others</th>
-                <th>Net Realized P&amp;L</th>
-                <th>Unrealized P&amp;L</th>
-                <th>Total P&amp;L</th>
-                <th>Return %</th>
               </tr>
             </thead>
             <tbody id="pnlTableBody"></tbody>
@@ -177,6 +177,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="./data.1784143888468.js"></script>
-    <script src="./app.js?v=20260716-3"></script>
+    <script src="./app.js?v=20260716-4"></script>
   </body>
 </html>
