@@ -350,3 +350,6 @@ Net settlement for Equity with settlement number: 2026130,2026-07-14,Book Vouche
 Interest for MTF funded value on 2026-07-14,2026-07-14,Journal Entry,817.121000,0.000000,-1078.417080
 Funds added using UPI from VG7860 with reference number 103671274831,2026-07-15,Bank Receipts,0.000000,10000.000000,8921.582920
 MTM obligation reversed for MTF,2026-07-15,MTF Delivery Voucher,0.000000,93492.710000,102414.292920
+MTM obligation blocked for MTF,2026-07-15,MTF Delivery Voucher,77095.560000,0.000000,25318.732920
+Interest for MTF funded value on 2026-07-15,2026-07-15,Journal Entry,854.598000,0.000000,24464.134920
+MTF pledge charges for SENORES,2026-07-15,Journal Entry,17.700000,0.000000,24446.434920
