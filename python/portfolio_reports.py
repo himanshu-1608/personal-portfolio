@@ -683,6 +683,27 @@ def _mtf_buy_value_by_date(mtf_symbols: set) -> Dict[str, float]:
     return buy_value_by_date
 
 
+def held_symbols() -> set:
+    """Normalized symbols with a net open position (total buys > total sells)
+    in the tradebook. Used to keep fetching current prices for stocks that are
+    still held even after their recommendation has hit all targets."""
+    net_by_symbol: Dict[str, float] = {}
+    if not TRADEBOOK_FILE.exists():
+        return set()
+    with TRADEBOOK_FILE.open("r", newline="", encoding="utf-8-sig") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            trade_type = (row.get("trade_type") or "").strip().lower()
+            symbol = normalize_symbol((row.get("symbol") or "").strip())
+            if not symbol or trade_type not in {"buy", "sell"}:
+                continue
+            quantity = parse_amount(row.get("quantity") or "")
+            if quantity <= 0:
+                continue
+            net_by_symbol[symbol] = net_by_symbol.get(symbol, 0.0) + (quantity if trade_type == "buy" else -quantity)
+    return {symbol for symbol, net in net_by_symbol.items() if net > 0}
+
+
 def build_mtf_margin_ratio_by_date() -> Dict[str, float]:
     if not ALL_LEDGER_FILE.exists():
         return {}

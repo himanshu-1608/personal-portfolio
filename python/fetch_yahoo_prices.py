@@ -66,6 +66,7 @@ from portfolio_reports import (
     build_pnl_summary,
     build_mtf_pnl_summary,
     build_portfolio_timeline,
+    held_symbols,
     write_pnl_output,
     write_mtf_pnl_output,
     write_portfolio_timeline_output,
@@ -883,12 +884,22 @@ def main() -> int:
         if recommendations:
             print(f"Refreshing price data for {len(recommendations)} recommendation(s).")
             total = len(recommendations)
+            # Stocks still held need a current price for the P&L / unrealized math,
+            # even if the recommendation has already hit all targets. Only skip the
+            # (price-freezing) fetch for target-hit recommendations that are fully
+            # exited, so a held winner never keeps a stale target-era price.
+            currently_held = held_symbols()
             for index, recommendation in enumerate(recommendations, start=1):
                 existing_row = existing_by_key.get(recommendation.key)
-                if existing_row is not None and has_all_targets_hit(existing_row):
+                base_symbol = normalize_symbol(recommendation.stock_code.split(".")[0])
+                if (
+                    existing_row is not None
+                    and has_all_targets_hit(existing_row)
+                    and base_symbol not in currently_held
+                ):
                     print(
                         f"[{index}/{total}] Skipping API fetch for "
-                        f"{recommendation.stock_code} ({recommendation.recommendation_date}) - all targets already hit."
+                        f"{recommendation.stock_code} ({recommendation.recommendation_date}) - all targets hit, not held."
                     )
                     refreshed_rows.append(existing_row)
                     continue
