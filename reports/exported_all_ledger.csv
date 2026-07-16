@@ -353,3 +353,9 @@ MTM obligation reversed for MTF,2026-07-15,MTF Delivery Voucher,0.000000,93492.7
 MTM obligation blocked for MTF,2026-07-15,MTF Delivery Voucher,77095.560000,0.000000,25318.732920
 Interest for MTF funded value on 2026-07-15,2026-07-15,Journal Entry,854.598000,0.000000,24464.134920
 MTF pledge charges for SENORES,2026-07-15,Journal Entry,17.700000,0.000000,24446.434920
+DP Charges for Sale of CGPOWER on 16/07/2026,2026-07-16,Journal Entry,15.340000,0.000000,24431.094920
+MTM obligation reversed for MTF,2026-07-16,MTF Delivery Voucher,0.000000,77095.560000,101526.654920
+MTM obligation blocked for MTF,2026-07-16,MTF Delivery Voucher,70535.360000,0.000000,30991.294920
+Net settlement for Equity with settlement number: 2026132,2026-07-16,Book Voucher,0.000000,65517.957694,96509.252614
+Interest for MTF funded value on 2026-07-16,2026-07-16,Journal Entry,854.598000,0.000000,95654.654614
+MTF unpledge charges for CGPOWER,2026-07-16,Journal Entry,17.700000,0.000000,95636.954614
