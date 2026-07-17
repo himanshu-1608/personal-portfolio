@@ -359,3 +359,5 @@ MTM obligation blocked for MTF,2026-07-16,MTF Delivery Voucher,70535.360000,0.00
 Net settlement for Equity with settlement number: 2026132,2026-07-16,Book Voucher,0.000000,65517.957694,96509.252614
 Interest for MTF funded value on 2026-07-16,2026-07-16,Journal Entry,854.598000,0.000000,95654.654614
 MTF unpledge charges for CGPOWER,2026-07-16,Journal Entry,17.700000,0.000000,95636.954614
+MTM obligation reversed for MTF,2026-07-17,MTF Delivery Voucher,0.000000,70535.360000,166172.314614
+MTM obligation blocked for MTF,2026-07-17,MTF Delivery Voucher,116189.460000,0.000000,49982.854614
