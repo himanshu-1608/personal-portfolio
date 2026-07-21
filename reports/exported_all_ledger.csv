@@ -367,3 +367,9 @@ MTM obligation blocked for MTF,2026-07-20,MTF Delivery Voucher,114415.760000,0.0
 Interest for MTF funded value on 2026-07-18,2026-07-20,Journal Entry,799.031000,0.000000,50158.492614
 Interest for MTF funded value on 2026-07-19,2026-07-20,Journal Entry,799.031000,0.000000,49359.461614
 Interest for MTF funded value on 2026-07-20,2026-07-20,Journal Entry,799.031000,0.000000,48560.430614
+DP Charges for Sale of HSCL on 21/07/2026,2026-07-21,Journal Entry,15.340000,0.000000,48545.090614
+MTM obligation reversed for MTF,2026-07-21,MTF Delivery Voucher,0.000000,114415.760000,162960.850614
+MTM obligation blocked for MTF,2026-07-21,MTF Delivery Voucher,111553.560000,0.000000,51407.290614
+Net settlement for Equity with settlement number: 2026135,2026-07-21,Book Voucher,0.000000,73505.952624,124913.243238
+Interest for MTF funded value on 2026-07-21,2026-07-21,Journal Entry,799.031000,0.000000,124114.212238
+MTF unpledge charges for HSCL,2026-07-21,Journal Entry,17.700000,0.000000,124096.512238
