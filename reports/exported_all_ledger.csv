@@ -373,3 +373,9 @@ MTM obligation blocked for MTF,2026-07-21,MTF Delivery Voucher,111553.560000,0.0
 Net settlement for Equity with settlement number: 2026135,2026-07-21,Book Voucher,0.000000,73505.952624,124913.243238
 Interest for MTF funded value on 2026-07-21,2026-07-21,Journal Entry,799.031000,0.000000,124114.212238
 MTF unpledge charges for HSCL,2026-07-21,Journal Entry,17.700000,0.000000,124096.512238
+DP Charges for Sale of PGEL on 22/07/2026,2026-07-22,Journal Entry,15.340000,0.000000,124081.172238
+MTM obligation reversed for MTF,2026-07-22,MTF Delivery Voucher,0.000000,111553.560000,235634.732238
+MTM obligation blocked for MTF,2026-07-22,MTF Delivery Voucher,136983.610000,0.000000,98651.122238
+Net settlement for Equity with settlement number: 2026136,2026-07-22,Book Voucher,0.000000,50397.971114,149049.093352
+Interest for MTF funded value on 2026-07-22,2026-07-22,Journal Entry,758.126000,0.000000,148290.967352
+MTF unpledge charges for PGEL,2026-07-22,Journal Entry,17.700000,0.000000,148273.267352
