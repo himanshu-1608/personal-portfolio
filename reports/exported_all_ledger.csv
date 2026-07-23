@@ -386,3 +386,6 @@ MTM obligation reversed for MTF,2026-07-23,MTF Delivery Voucher,0.000000,136983.
 MTM obligation blocked for MTF,2026-07-23,MTF Delivery Voucher,153788.070000,0.000000,151438.127352
 Initial margin charged for MTF,2026-07-23,Book Voucher,149454.472500,0.000000,1983.654852
 Net settlement for Equity with settlement number: 2026137,2026-07-23,Book Voucher,0.000000,114407.544741,116391.199593
+Interest for MTF funded value on 2026-07-23,2026-07-23,Journal Entry,720.869000,0.000000,115670.330593
+MTF unpledge charges for PGIL,2026-07-23,Journal Entry,17.700000,0.000000,115652.630593
+MTF unpledge charges for DATAPATTNS,2026-07-23,Journal Entry,17.700000,0.000000,115634.930593
