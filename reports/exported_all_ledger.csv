@@ -379,3 +379,10 @@ MTM obligation blocked for MTF,2026-07-22,MTF Delivery Voucher,136983.610000,0.0
 Net settlement for Equity with settlement number: 2026136,2026-07-22,Book Voucher,0.000000,50397.971114,149049.093352
 Interest for MTF funded value on 2026-07-22,2026-07-22,Journal Entry,758.126000,0.000000,148290.967352
 MTF unpledge charges for PGEL,2026-07-22,Journal Entry,17.700000,0.000000,148273.267352
+Funds added using UPI from VG7860 with reference number 103711225285,2026-07-23,Bank Receipts,0.000000,20000.000000,168273.267352
+DP Charges for Sale of PGIL on 23/07/2026,2026-07-23,Journal Entry,15.340000,0.000000,168257.927352
+DP Charges for Sale of DATAPATTNS on 23/07/2026,2026-07-23,Journal Entry,15.340000,0.000000,168242.587352
+MTM obligation reversed for MTF,2026-07-23,MTF Delivery Voucher,0.000000,136983.610000,305226.197352
+MTM obligation blocked for MTF,2026-07-23,MTF Delivery Voucher,153788.070000,0.000000,151438.127352
+Initial margin charged for MTF,2026-07-23,Book Voucher,149454.472500,0.000000,1983.654852
+Net settlement for Equity with settlement number: 2026137,2026-07-23,Book Voucher,0.000000,114407.544741,116391.199593
