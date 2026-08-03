@@ -415,3 +415,13 @@ Interest for MTF funded value on 2026-07-30,2026-07-30,Journal Entry,734.415000,
 MTM obligation reversed for MTF,2026-07-31,MTF Delivery Voucher,0.000000,173747.960000,321446.867067
 MTM obligation blocked for MTF,2026-07-31,MTF Delivery Voucher,175248.860000,0.000000,146198.007067
 Interest for MTF funded value on 2026-07-31,2026-07-31,Journal Entry,734.415000,0.000000,145463.592067
+DP Charges for Sale of AEROFLEX on 03/08/2026,2026-08-03,Journal Entry,15.340000,0.000000,145448.252067
+DP Charges for Sale of ACMESOLAR on 03/08/2026,2026-08-03,Journal Entry,15.340000,0.000000,145432.912067
+MTM obligation reversed for MTF,2026-08-03,MTF Delivery Voucher,0.000000,175248.860000,320681.772067
+MTM obligation blocked for MTF,2026-08-03,MTF Delivery Voucher,141891.930000,0.000000,178789.842067
+Net settlement for Equity with settlement number: 2026144,2026-08-03,Book Voucher,0.000000,124834.725011,303624.567078
+Interest for MTF funded value on 2026-08-01,2026-08-03,Journal Entry,734.415000,0.000000,302890.152078
+Interest for MTF funded value on 2026-08-02,2026-08-03,Journal Entry,734.415000,0.000000,302155.737078
+Interest for MTF funded value on 2026-08-03,2026-08-03,Journal Entry,734.415000,0.000000,301421.322078
+MTF unpledge charges for ACMESOLAR,2026-08-03,Journal Entry,17.700000,0.000000,301403.622078
+MTF unpledge charges for AEROFLEX,2026-08-03,Journal Entry,17.700000,0.000000,301385.922078
