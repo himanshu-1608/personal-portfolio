@@ -425,3 +425,8 @@ Interest for MTF funded value on 2026-08-02,2026-08-03,Journal Entry,734.415000,
 Interest for MTF funded value on 2026-08-03,2026-08-03,Journal Entry,734.415000,0.000000,301421.322078
 MTF unpledge charges for ACMESOLAR,2026-08-03,Journal Entry,17.700000,0.000000,301403.622078
 MTF unpledge charges for AEROFLEX,2026-08-03,Journal Entry,17.700000,0.000000,301385.922078
+DP Charges for Sale of ATHERENERG on 04/08/2026,2026-08-04,Journal Entry,15.340000,0.000000,301370.582078
+MTM obligation reversed for MTF,2026-08-04,MTF Delivery Voucher,0.000000,141891.930000,443262.512078
+MTM obligation blocked for MTF,2026-08-04,MTF Delivery Voucher,140100.140000,0.000000,303162.372078
+Initial margin charged for MTF,2026-08-04,Book Voucher,49963.407120,0.000000,253198.964958
+Net settlement for Equity with settlement number: 2026145,2026-08-04,Book Voucher,0.000000,76373.344634,329572.309592
