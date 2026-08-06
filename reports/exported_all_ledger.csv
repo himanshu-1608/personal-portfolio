@@ -430,3 +430,14 @@ MTM obligation reversed for MTF,2026-08-04,MTF Delivery Voucher,0.000000,141891.
 MTM obligation blocked for MTF,2026-08-04,MTF Delivery Voucher,140100.140000,0.000000,303162.372078
 Initial margin charged for MTF,2026-08-04,Book Voucher,49963.407120,0.000000,253198.964958
 Net settlement for Equity with settlement number: 2026145,2026-08-04,Book Voucher,0.000000,76373.344634,329572.309592
+Interest for MTF funded value on 2026-08-04,2026-08-04,Journal Entry,667.058000,0.000000,328905.251592
+MTF unpledge charges for ATHERENERG,2026-08-04,Journal Entry,17.700000,0.000000,328887.551592
+Delayed payment charges for July - 2026,2026-08-05,Journal Entry,9.710000,0.000000,328877.841592
+MTM obligation reversed for MTF,2026-08-05,MTF Delivery Voucher,0.000000,140100.140000,468977.981592
+MTM obligation blocked for MTF,2026-08-05,MTF Delivery Voucher,136122.890000,0.000000,332855.091592
+Interest for MTF funded value on 2026-08-05,2026-08-05,Journal Entry,675.875000,0.000000,332179.216592
+MTF pledge charges for INDGN,2026-08-05,Journal Entry,17.700000,0.000000,332161.516592
+Kite Connect API Charges (2026-08-06),2026-08-06,Journal Entry,500.000220,0.000000,331661.516372
+MTM obligation reversed for MTF,2026-08-06,MTF Delivery Voucher,0.000000,136122.890000,467784.406372
+MTM obligation blocked for MTF,2026-08-06,MTF Delivery Voucher,136032.390000,0.000000,331752.016372
+Interest for MTF funded value on 2026-08-06,2026-08-06,Journal Entry,675.875000,0.000000,331076.141372
