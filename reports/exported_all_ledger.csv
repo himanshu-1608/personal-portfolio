@@ -441,3 +441,8 @@ Kite Connect API Charges (2026-08-06),2026-08-06,Journal Entry,500.000220,0.0000
 MTM obligation reversed for MTF,2026-08-06,MTF Delivery Voucher,0.000000,136122.890000,467784.406372
 MTM obligation blocked for MTF,2026-08-06,MTF Delivery Voucher,136032.390000,0.000000,331752.016372
 Interest for MTF funded value on 2026-08-06,2026-08-06,Journal Entry,675.875000,0.000000,331076.141372
+MTM obligation reversed for MTF,2026-08-07,MTF Delivery Voucher,0.000000,136032.390000,467108.531372
+MTM obligation blocked for MTF,2026-08-07,MTF Delivery Voucher,171266.020000,0.000000,295842.511372
+Initial margin charged for MTF,2026-08-07,Book Voucher,201526.680412,0.000000,94315.830960
+Net settlement for Equity with settlement number: 2026148,2026-08-07,Book Voucher,807.789359,0.000000,93508.041601
+Interest for MTF funded value on 2026-08-07,2026-08-07,Journal Entry,675.875000,0.000000,92832.166601
