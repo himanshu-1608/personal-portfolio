@@ -446,3 +446,12 @@ MTM obligation blocked for MTF,2026-08-07,MTF Delivery Voucher,171266.020000,0.0
 Initial margin charged for MTF,2026-08-07,Book Voucher,201526.680412,0.000000,94315.830960
 Net settlement for Equity with settlement number: 2026148,2026-08-07,Book Voucher,807.789359,0.000000,93508.041601
 Interest for MTF funded value on 2026-08-07,2026-08-07,Journal Entry,675.875000,0.000000,92832.166601
+MTM obligation reversed for MTF,2026-08-10,MTF Delivery Voucher,0.000000,171266.020000,264098.186601
+MTM obligation blocked for MTF,2026-08-10,MTF Delivery Voucher,165686.510000,0.000000,98411.676601
+Initial margin charged for MTF,2026-08-10,Book Voucher,50706.973800,0.000000,47704.702801
+Net settlement for Equity with settlement number: 2026149,2026-08-10,Book Voucher,192.051709,0.000000,47512.651092
+Interest for MTF funded value on 2026-08-08,2026-08-10,Journal Entry,817.894000,0.000000,46694.757092
+Interest for MTF funded value on 2026-08-09,2026-08-10,Journal Entry,817.894000,0.000000,45876.863092
+Interest for MTF funded value on 2026-08-10,2026-08-10,Journal Entry,817.894000,0.000000,45058.969092
+MTF pledge charges for KIRLOSENG,2026-08-10,Journal Entry,17.700000,0.000000,45041.269092
+MTF pledge charges for GULPOLY,2026-08-10,Journal Entry,17.700000,0.000000,45023.569092
