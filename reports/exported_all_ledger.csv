@@ -455,3 +455,12 @@ Interest for MTF funded value on 2026-08-09,2026-08-10,Journal Entry,817.894000,
 Interest for MTF funded value on 2026-08-10,2026-08-10,Journal Entry,817.894000,0.000000,45058.969092
 MTF pledge charges for KIRLOSENG,2026-08-10,Journal Entry,17.700000,0.000000,45041.269092
 MTF pledge charges for GULPOLY,2026-08-10,Journal Entry,17.700000,0.000000,45023.569092
+MTM obligation reversed for MTF,2026-08-11,MTF Delivery Voucher,0.000000,165686.510000,210710.079092
+MTM obligation blocked for MTF,2026-08-11,MTF Delivery Voucher,181613.560000,0.000000,29096.519092
+Net settlement for Equity with settlement number: 2026150,2026-08-11,Book Voucher,0.000000,136227.306054,165323.825146
+DP Charges for Sale of ZYDUSLIFE on 11/08/2026,2026-08-11,Journal Entry,15.340000,0.000000,165308.485146
+DP Charges for Sale of SANGHVIMOV on 11/08/2026,2026-08-11,Journal Entry,15.340000,0.000000,165293.145146
+Interest for MTF funded value on 2026-08-11,2026-08-11,Journal Entry,853.983000,0.000000,164439.162146
+MTF pledge charges for GULPOLY,2026-08-11,Journal Entry,17.700000,0.000000,164421.462146
+MTF unpledge charges for SANGHVIMOV,2026-08-11,Journal Entry,17.700000,0.000000,164403.762146
+MTF unpledge charges for ZYDUSLIFE,2026-08-11,Journal Entry,17.700000,0.000000,164386.062146
