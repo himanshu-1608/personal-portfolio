@@ -464,3 +464,8 @@ Interest for MTF funded value on 2026-08-11,2026-08-11,Journal Entry,853.983000,
 MTF pledge charges for GULPOLY,2026-08-11,Journal Entry,17.700000,0.000000,164421.462146
 MTF unpledge charges for SANGHVIMOV,2026-08-11,Journal Entry,17.700000,0.000000,164403.762146
 MTF unpledge charges for ZYDUSLIFE,2026-08-11,Journal Entry,17.700000,0.000000,164386.062146
+Funds added using UPI from VG7860 with reference number 103842755473,2026-08-12,Bank Receipts,0.000000,40000.000000,204386.062146
+MTM obligation reversed for MTF,2026-08-12,MTF Delivery Voucher,0.000000,181613.560000,385999.622146
+MTM obligation blocked for MTF,2026-08-12,MTF Delivery Voucher,228816.810000,0.000000,157182.812146
+Initial margin charged for MTF,2026-08-12,Book Voucher,49735.556640,0.000000,107447.255506
+Net settlement for Equity with settlement number: 2026151,2026-08-12,Book Voucher,134377.673738,0.000000,-26930.418232
