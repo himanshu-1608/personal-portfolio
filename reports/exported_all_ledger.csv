@@ -470,3 +470,15 @@ MTM obligation blocked for MTF,2026-08-12,MTF Delivery Voucher,228816.810000,0.0
 Initial margin charged for MTF,2026-08-12,Book Voucher,49735.556640,0.000000,107447.255506
 Net settlement for Equity with settlement number: 2026151,2026-08-12,Book Voucher,134377.673738,0.000000,-26930.418232
 Interest for MTF funded value on 2026-08-12,2026-08-12,Journal Entry,756.577000,0.000000,-27686.995232
+Funds added using UPI from VG7860 with reference number 405507522256,2026-08-13,Bank Receipts,0.000000,30000.000000,2313.004768
+MTM obligation reversed for MTF,2026-08-13,MTF Delivery Voucher,0.000000,228816.810000,231129.814768
+MTM obligation blocked for MTF,2026-08-13,MTF Delivery Voucher,226269.860000,0.000000,4859.954768
+Interest for MTF funded value on 2026-08-13,2026-08-13,Journal Entry,796.317000,0.000000,4063.637768
+MTF pledge charges for ENTERO,2026-08-13,Journal Entry,17.700000,0.000000,4045.937768
+AMC for Demat Account for 01-05-2026 to 30-07-2026,2026-08-14,Journal Entry,88.500000,0.000000,3957.437768
+DP Charges for Sale of AZAD on 14/08/2026,2026-08-14,Journal Entry,15.340000,0.000000,3942.097768
+MTM obligation reversed for MTF,2026-08-14,MTF Delivery Voucher,0.000000,226269.860000,230211.957768
+MTM obligation blocked for MTF,2026-08-14,MTF Delivery Voucher,246193.420000,0.000000,-15981.462232
+Net settlement for Equity with settlement number: 2026153,2026-08-14,Book Voucher,0.000000,68426.221401,52444.759169
+MTF unpledge charges for AZAD,2026-08-14,Journal Entry,17.700000,0.000000,52427.059169
+Interest for MTF funded value on 2026-08-14,2026-08-14,Journal Entry,796.317000,0.000000,51630.742169
