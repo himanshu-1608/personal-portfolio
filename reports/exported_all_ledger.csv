@@ -482,3 +482,7 @@ MTM obligation blocked for MTF,2026-08-14,MTF Delivery Voucher,246193.420000,0.0
 Net settlement for Equity with settlement number: 2026153,2026-08-14,Book Voucher,0.000000,68426.221401,52444.759169
 MTF unpledge charges for AZAD,2026-08-14,Journal Entry,17.700000,0.000000,52427.059169
 Interest for MTF funded value on 2026-08-14,2026-08-14,Journal Entry,796.317000,0.000000,51630.742169
+MTM obligation reversed for MTF,2026-08-17,MTF Delivery Voucher,0.000000,246193.420000,297824.162169
+MTM obligation blocked for MTF,2026-08-17,MTF Delivery Voucher,236594.970000,0.000000,61229.192169
+Interest for MTF funded value on 2026-08-15,2026-08-17,Journal Entry,758.891000,0.000000,60470.301169
+Interest for MTF funded value on 2026-08-16,2026-08-17,Journal Entry,758.891000,0.000000,59711.410169
