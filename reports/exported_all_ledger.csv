@@ -486,3 +486,9 @@ MTM obligation reversed for MTF,2026-08-17,MTF Delivery Voucher,0.000000,246193.
 MTM obligation blocked for MTF,2026-08-17,MTF Delivery Voucher,236594.970000,0.000000,61229.192169
 Interest for MTF funded value on 2026-08-15,2026-08-17,Journal Entry,758.891000,0.000000,60470.301169
 Interest for MTF funded value on 2026-08-16,2026-08-17,Journal Entry,758.891000,0.000000,59711.410169
+Interest for MTF funded value on 2026-08-17,2026-08-17,Journal Entry,758.891000,0.000000,58952.519169
+MTM obligation reversed for MTF,2026-08-18,MTF Delivery Voucher,0.000000,236594.970000,295547.489169
+MTM obligation blocked for MTF,2026-08-18,MTF Delivery Voucher,243060.360000,0.000000,52487.129169
+Initial margin charged for MTF,2026-08-18,Book Voucher,49770.967400,0.000000,2716.161769
+Net settlement for Equity with settlement number: 2026155,2026-08-18,Book Voucher,200.779181,0.000000,2515.382588
+Interest for MTF funded value on 2026-08-18,2026-08-18,Journal Entry,758.891000,0.000000,1756.491588
