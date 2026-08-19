@@ -492,3 +492,7 @@ MTM obligation blocked for MTF,2026-08-18,MTF Delivery Voucher,243060.360000,0.0
 Initial margin charged for MTF,2026-08-18,Book Voucher,49770.967400,0.000000,2716.161769
 Net settlement for Equity with settlement number: 2026155,2026-08-18,Book Voucher,200.779181,0.000000,2515.382588
 Interest for MTF funded value on 2026-08-18,2026-08-18,Journal Entry,758.891000,0.000000,1756.491588
+MTM obligation reversed for MTF,2026-08-19,MTF Delivery Voucher,0.000000,243060.360000,244816.851588
+MTM obligation blocked for MTF,2026-08-19,MTF Delivery Voucher,281752.130000,0.000000,-36935.278412
+Interest for MTF funded value on 2026-08-19,2026-08-19,Journal Entry,798.858000,0.000000,-37734.136412
+MTF pledge charges for TBOTEK,2026-08-19,Journal Entry,17.700000,0.000000,-37751.836412
