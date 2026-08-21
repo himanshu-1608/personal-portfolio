@@ -499,3 +499,7 @@ MTF pledge charges for TBOTEK,2026-08-19,Journal Entry,17.700000,0.000000,-37751
 Funds added using UPI from VG7860 with reference number 293050902326,2026-08-20,Bank Receipts,0.000000,35000.000000,-2751.836412
 MTM obligation reversed for MTF,2026-08-20,MTF Delivery Voucher,0.000000,281752.130000,279000.293588
 MTM obligation blocked for MTF,2026-08-20,MTF Delivery Voucher,234977.960000,0.000000,44022.333588
+Interest for MTF funded value on 2026-08-20,2026-08-20,Journal Entry,798.858000,0.000000,43223.475588
+MTM obligation reversed for MTF,2026-08-21,MTF Delivery Voucher,0.000000,234977.960000,278201.435588
+MTM obligation blocked for MTF,2026-08-21,MTF Delivery Voucher,237975.030000,0.000000,40226.405588
+Interest for MTF funded value on 2026-08-21,2026-08-21,Journal Entry,798.858000,0.000000,39427.547588
