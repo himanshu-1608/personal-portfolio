@@ -514,3 +514,14 @@ MTM obligation reversed for MTF,2026-08-25,MTF Delivery Voucher,0.000000,236363.
 MTM obligation blocked for MTF,2026-08-25,MTF Delivery Voucher,229893.820000,0.000000,43237.785594
 Initial margin charged for MTF,2026-08-25,Book Voucher,100066.939715,0.000000,-56829.154121
 Net settlement for Equity with settlement number: 2026160,2026-08-25,Book Voucher,0.000000,273490.379172,216661.225051
+DP Charges for Sale of GNFC on 25/08/2026,2026-08-25,Journal Entry,15.340000,0.000000,216645.885051
+DP Charges for Sale of KRN on 25/08/2026,2026-08-25,Journal Entry,15.340000,0.000000,216630.545051
+Interest for MTF funded value on 2026-08-25,2026-08-25,Journal Entry,798.858000,0.000000,215831.687051
+MTF unpledge charges for GNFC,2026-08-25,Journal Entry,17.700000,0.000000,215813.987051
+MTM obligation reversed for MTF,2026-08-26,MTF Delivery Voucher,0.000000,229893.820000,445707.807051
+MTM obligation blocked for MTF,2026-08-26,MTF Delivery Voucher,239914.760000,0.000000,205793.047051
+Initial margin charged for MTF,2026-08-26,Book Voucher,49721.096970,0.000000,156071.950081
+Net settlement for Equity with settlement number: 2026161,2026-08-26,Book Voucher,175.451153,0.000000,155896.498928
+Interest for MTF funded value on 2026-08-26,2026-08-26,Journal Entry,831.110000,0.000000,155065.388928
+MTF pledge charges for GROWW,2026-08-26,Journal Entry,17.700000,0.000000,155047.688928
+MTF pledge charges for WELCORP,2026-08-26,Journal Entry,17.700000,0.000000,155029.988928
