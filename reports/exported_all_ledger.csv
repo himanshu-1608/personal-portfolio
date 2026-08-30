@@ -525,3 +525,17 @@ Net settlement for Equity with settlement number: 2026161,2026-08-26,Book Vouche
 Interest for MTF funded value on 2026-08-26,2026-08-26,Journal Entry,831.110000,0.000000,155065.388928
 MTF pledge charges for GROWW,2026-08-26,Journal Entry,17.700000,0.000000,155047.688928
 MTF pledge charges for WELCORP,2026-08-26,Journal Entry,17.700000,0.000000,155029.988928
+DP Charges for Sale of SENORES on 27/08/2026,2026-08-27,Journal Entry,15.340000,0.000000,155014.648928
+DP Charges for Sale of ENTERO on 27/08/2026,2026-08-27,Journal Entry,15.340000,0.000000,154999.308928
+MTM obligation reversed for MTF,2026-08-27,MTF Delivery Voucher,0.000000,239914.760000,394914.068928
+MTM obligation blocked for MTF,2026-08-27,MTF Delivery Voucher,228933.860000,0.000000,165980.208928
+Net settlement for Equity with settlement number: 2026162,2026-08-27,Book Voucher,0.000000,129124.537181,295104.746109
+Interest for MTF funded value on 2026-08-27,2026-08-27,Journal Entry,862.348000,0.000000,294242.398109
+MTF pledge charges for DATAPATTNS,2026-08-27,Journal Entry,17.700000,0.000000,294224.698109
+MTF unpledge charges for SENORES,2026-08-27,Journal Entry,17.700000,0.000000,294206.998109
+MTF unpledge charges for ENTERO,2026-08-27,Journal Entry,17.700000,0.000000,294189.298109
+MTM obligation reversed for MTF,2026-08-28,MTF Delivery Voucher,0.000000,228933.860000,523123.158109
+MTM obligation blocked for MTF,2026-08-28,MTF Delivery Voucher,230840.760000,0.000000,292282.398109
+Initial margin charged for MTF,2026-08-28,Book Voucher,49463.302000,0.000000,242819.096109
+Net settlement for Equity with settlement number: 2026163,2026-08-28,Book Voucher,228.046774,0.000000,242591.049335
+Interest for MTF funded value on 2026-08-28,2026-08-28,Journal Entry,785.131000,0.000000,241805.918335
