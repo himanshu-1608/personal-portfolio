@@ -539,3 +539,36 @@ MTM obligation blocked for MTF,2026-08-28,MTF Delivery Voucher,230840.760000,0.0
 Initial margin charged for MTF,2026-08-28,Book Voucher,49463.302000,0.000000,242819.096109
 Net settlement for Equity with settlement number: 2026163,2026-08-28,Book Voucher,228.046774,0.000000,242591.049335
 Interest for MTF funded value on 2026-08-28,2026-08-28,Journal Entry,785.131000,0.000000,241805.918335
+MTM obligation reversed for MTF,2026-08-31,MTF Delivery Voucher,0.000000,230840.760000,472646.678335
+MTM obligation blocked for MTF,2026-08-31,MTF Delivery Voucher,283256.490000,0.000000,189390.188335
+Interest for MTF funded value on 2026-08-29,2026-08-31,Journal Entry,834.284000,0.000000,188555.904335
+Interest for MTF funded value on 2026-08-30,2026-08-31,Journal Entry,834.284000,0.000000,187721.620335
+Interest for MTF funded value on 2026-08-31,2026-08-31,Journal Entry,834.284000,0.000000,186887.336335
+MTF pledge charges for LODHA,2026-08-31,Journal Entry,17.700000,0.000000,186869.636335
+DP Charges for Sale of INDGN on 01/09/2026,2026-09-01,Journal Entry,15.340000,0.000000,186854.296335
+MTM obligation reversed for MTF,2026-09-01,MTF Delivery Voucher,0.000000,283256.490000,470110.786335
+MTM obligation blocked for MTF,2026-09-01,MTF Delivery Voucher,302517.070000,0.000000,167593.716335
+Additional maintenance margin blocked for MTF,2026-09-01,MTF Delivery Voucher,257.613773,0.000000,167336.102562
+Initial margin charged for MTF,2026-09-01,Book Voucher,49735.665000,0.000000,117600.437562
+Net settlement for Equity with settlement number: 2026165,2026-09-01,Book Voucher,0.000000,59581.110823,177181.548385
+Interest for MTF funded value on 2026-09-01,2026-09-01,Journal Entry,834.284000,0.000000,176347.264385
+MTF unpledge charges for INDGN,2026-09-01,Journal Entry,17.700000,0.000000,176329.564385
+MTM obligation reversed for MTF,2026-09-02,MTF Delivery Voucher,0.000000,302517.070000,478846.634385
+Additional maintenance margin reversed for MTF,2026-09-02,MTF Delivery Voucher,0.000000,257.613773,479104.248158
+MTM obligation blocked for MTF,2026-09-02,MTF Delivery Voucher,296833.340000,0.000000,182270.908158
+Additional maintenance margin blocked for MTF,2026-09-02,MTF Delivery Voucher,177.952382,0.000000,182092.955776
+Interest for MTF funded value on 2026-09-02,2026-09-02,Journal Entry,806.873000,0.000000,181286.082776
+MTF pledge charges for RACLGEAR,2026-09-02,Journal Entry,17.700000,0.000000,181268.382776
+MTM obligation reversed for MTF,2026-09-03,MTF Delivery Voucher,0.000000,296833.340000,478101.722776
+Additional maintenance margin reversed for MTF,2026-09-03,MTF Delivery Voucher,0.000000,177.952382,478279.675158
+MTM obligation blocked for MTF,2026-09-03,MTF Delivery Voucher,281269.140000,0.000000,197010.535158
+Additional maintenance margin blocked for MTF,2026-09-03,MTF Delivery Voucher,131.019950,0.000000,196879.515208
+Interest for MTF funded value on 2026-09-03,2026-09-03,Journal Entry,806.873000,0.000000,196072.642208
+DP Charges for Sale of LALITHAA on 04/09/2026,2026-09-04,Journal Entry,15.340000,0.000000,196057.302208
+MTM obligation reversed for MTF,2026-09-04,MTF Delivery Voucher,0.000000,281269.140000,477326.442208
+Additional maintenance margin reversed for MTF,2026-09-04,MTF Delivery Voucher,0.000000,131.019950,477457.462158
+Delayed payment charges for August - 2026,2026-09-04,Journal Entry,32.720000,0.000000,477424.742158
+MTM obligation blocked for MTF,2026-09-04,MTF Delivery Voucher,261490.660000,0.000000,215934.082158
+Additional maintenance margin blocked for MTF,2026-09-04,MTF Delivery Voucher,113.004450,0.000000,215821.077708
+Net settlement for Equity with settlement number: 2026168,2026-09-04,Book Voucher,0.000000,115849.119665,331670.197373
+Interest for MTF funded value on 2026-09-04,2026-09-04,Journal Entry,806.873000,0.000000,330863.324373
