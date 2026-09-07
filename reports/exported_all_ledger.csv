@@ -572,3 +572,11 @@ MTM obligation blocked for MTF,2026-09-04,MTF Delivery Voucher,261490.660000,0.0
 Additional maintenance margin blocked for MTF,2026-09-04,MTF Delivery Voucher,113.004450,0.000000,215821.077708
 Net settlement for Equity with settlement number: 2026168,2026-09-04,Book Voucher,0.000000,115849.119665,331670.197373
 Interest for MTF funded value on 2026-09-04,2026-09-04,Journal Entry,806.873000,0.000000,330863.324373
+Kite Connect API Charges (2026-09-07),2026-09-07,Journal Entry,500.000220,0.000000,330363.324153
+MTM obligation reversed for MTF,2026-09-07,MTF Delivery Voucher,0.000000,261490.660000,591853.984153
+Additional maintenance margin reversed for MTF,2026-09-07,MTF Delivery Voucher,0.000000,113.004450,591966.988603
+MTM obligation blocked for MTF,2026-09-07,MTF Delivery Voucher,257986.970000,0.000000,333980.018603
+Additional maintenance margin blocked for MTF,2026-09-07,MTF Delivery Voucher,45.210000,0.000000,333934.808603
+Interest for MTF funded value on 2026-09-05,2026-09-07,Journal Entry,806.873000,0.000000,333127.935603
+Interest for MTF funded value on 2026-09-06,2026-09-07,Journal Entry,806.873000,0.000000,332321.062603
+Interest for MTF funded value on 2026-09-07,2026-09-07,Journal Entry,806.873000,0.000000,331514.189603
