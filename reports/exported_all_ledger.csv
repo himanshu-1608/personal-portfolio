@@ -580,3 +580,7 @@ Additional maintenance margin blocked for MTF,2026-09-07,MTF Delivery Voucher,45
 Interest for MTF funded value on 2026-09-05,2026-09-07,Journal Entry,806.873000,0.000000,333127.935603
 Interest for MTF funded value on 2026-09-06,2026-09-07,Journal Entry,806.873000,0.000000,332321.062603
 Interest for MTF funded value on 2026-09-07,2026-09-07,Journal Entry,806.873000,0.000000,331514.189603
+MTM obligation reversed for MTF,2026-09-08,MTF Delivery Voucher,0.000000,257986.970000,589501.159603
+Additional maintenance margin reversed for MTF,2026-09-08,MTF Delivery Voucher,0.000000,45.210000,589546.369603
+MTM obligation blocked for MTF,2026-09-08,MTF Delivery Voucher,258012.930000,0.000000,331533.439603
+Additional maintenance margin blocked for MTF,2026-09-08,MTF Delivery Voucher,12.453300,0.000000,331520.986303
