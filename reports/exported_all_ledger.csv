@@ -584,3 +584,11 @@ MTM obligation reversed for MTF,2026-09-08,MTF Delivery Voucher,0.000000,257986.
 Additional maintenance margin reversed for MTF,2026-09-08,MTF Delivery Voucher,0.000000,45.210000,589546.369603
 MTM obligation blocked for MTF,2026-09-08,MTF Delivery Voucher,258012.930000,0.000000,331533.439603
 Additional maintenance margin blocked for MTF,2026-09-08,MTF Delivery Voucher,12.453300,0.000000,331520.986303
+Interest for MTF funded value on 2026-09-08,2026-09-08,Journal Entry,806.873000,0.000000,330714.113303
+DP Charges for Sale of INOXINDIA on 09/09/2026,2026-09-09,Journal Entry,15.340000,0.000000,330698.773303
+MTM obligation reversed for MTF,2026-09-09,MTF Delivery Voucher,0.000000,258012.930000,588711.703303
+Additional maintenance margin reversed for MTF,2026-09-09,MTF Delivery Voucher,0.000000,12.453300,588724.156603
+MTM obligation blocked for MTF,2026-09-09,MTF Delivery Voucher,262771.180000,0.000000,325952.976603
+Net settlement for Equity with settlement number: 2026171,2026-09-09,Book Voucher,0.000000,60814.496381,386767.472984
+Interest for MTF funded value on 2026-09-09,2026-09-09,Journal Entry,806.873000,0.000000,385960.599984
+MTF unpledge charges for INOXINDIA,2026-09-09,Journal Entry,17.700000,0.000000,385942.899984
