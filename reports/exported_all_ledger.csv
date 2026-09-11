@@ -593,3 +593,16 @@ Net settlement for Equity with settlement number: 2026171,2026-09-09,Book Vouche
 Interest for MTF funded value on 2026-09-09,2026-09-09,Journal Entry,806.873000,0.000000,385960.599984
 MTF unpledge charges for INOXINDIA,2026-09-09,Journal Entry,17.700000,0.000000,385942.899984
 DP Charges for Sale of WELCORP on 10/09/2026,2026-09-10,Journal Entry,15.340000,0.000000,385927.559984
+MTM obligation reversed for MTF,2026-09-10,MTF Delivery Voucher,0.000000,262771.180000,648698.739984
+MTM obligation blocked for MTF,2026-09-10,MTF Delivery Voucher,282582.700000,0.000000,366116.039984
+Additional maintenance margin blocked for MTF,2026-09-10,MTF Delivery Voucher,43.831095,0.000000,366072.208889
+Initial margin charged for MTF,2026-09-10,Book Voucher,50339.405760,0.000000,315732.803129
+Net settlement for Equity with settlement number: 2026172,2026-09-10,Book Voucher,0.000000,72662.045310,388394.848439
+Interest for MTF funded value on 2026-09-10,2026-09-10,Journal Entry,767.448000,0.000000,387627.400439
+MTF unpledge charges for WELCORP,2026-09-10,Journal Entry,17.700000,0.000000,387609.700439
+MTM obligation reversed for MTF,2026-09-11,MTF Delivery Voucher,0.000000,282582.700000,670192.400439
+Additional maintenance margin reversed for MTF,2026-09-11,MTF Delivery Voucher,0.000000,43.831095,670236.231534
+MTM obligation blocked for MTF,2026-09-11,MTF Delivery Voucher,294086.180000,0.000000,376150.051534
+Initial margin charged for MTF,2026-09-11,Book Voucher,51658.100000,0.000000,324491.951534
+Net settlement for Equity with settlement number: 2026173,2026-09-11,Book Voucher,0.000000,60315.143126,384807.094660
+DP Charges for Sale of RACLGEAR on 11/09/2026,2026-09-11,Journal Entry,15.340000,0.000000,384791.754660
