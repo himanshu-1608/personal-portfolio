@@ -606,3 +606,6 @@ MTM obligation blocked for MTF,2026-09-11,MTF Delivery Voucher,294086.180000,0.0
 Initial margin charged for MTF,2026-09-11,Book Voucher,51658.100000,0.000000,324491.951534
 Net settlement for Equity with settlement number: 2026173,2026-09-11,Book Voucher,0.000000,60315.143126,384807.094660
 DP Charges for Sale of RACLGEAR on 11/09/2026,2026-09-11,Journal Entry,15.340000,0.000000,384791.754660
+Interest for MTF funded value on 2026-09-11,2026-09-11,Journal Entry,769.862000,0.000000,384021.892660
+MTF pledge charges for SPLPETRO,2026-09-11,Journal Entry,17.700000,0.000000,384004.192660
+MTF unpledge charges for RACLGEAR,2026-09-11,Journal Entry,17.700000,0.000000,383986.492660
