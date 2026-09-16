@@ -617,3 +617,8 @@ Interest for MTF funded value on 2026-09-13,2026-09-15,Journal Entry,770.631000,
 Interest for MTF funded value on 2026-09-14,2026-09-15,Journal Entry,770.631000,0.000000,304122.940040
 Interest for MTF funded value on 2026-09-15,2026-09-15,Journal Entry,770.631000,0.000000,303352.309040
 MTF pledge charges for KRN,2026-09-15,Journal Entry,17.700000,0.000000,303334.609040
+MTM obligation reversed for MTF,2026-09-16,MTF Delivery Voucher,0.000000,371553.960000,674888.569040
+Additional maintenance margin reversed for MTF,2026-09-16,MTF Delivery Voucher,0.000000,83.879620,674972.448660
+MTM obligation blocked for MTF,2026-09-16,MTF Delivery Voucher,390638.260000,0.000000,284334.188660
+Additional maintenance margin blocked for MTF,2026-09-16,MTF Delivery Voucher,249.531115,0.000000,284084.657545
+Interest for MTF funded value on 2026-09-16,2026-09-16,Journal Entry,770.631000,0.000000,283314.026545
