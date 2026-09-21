@@ -634,3 +634,13 @@ Additional maintenance margin blocked for MTF,2026-09-18,MTF Delivery Voucher,19
 Initial margin charged for MTF,2026-09-18,Book Voucher,152094.655680,0.000000,206027.190507
 Net settlement for Equity with settlement number: 2026177,2026-09-18,Book Voucher,109433.195920,0.000000,96593.994587
 Interest for MTF funded value on 2026-09-18,2026-09-18,Journal Entry,770.631000,0.000000,95823.363587
+MTM obligation reversed for MTF,2026-09-21,MTF Delivery Voucher,0.000000,315109.390000,410932.753587
+Additional maintenance margin reversed for MTF,2026-09-21,MTF Delivery Voucher,0.000000,199.950473,411132.704060
+MTM obligation blocked for MTF,2026-09-21,MTF Delivery Voucher,328879.990000,0.000000,82252.714060
+Additional maintenance margin blocked for MTF,2026-09-21,MTF Delivery Voucher,276.733150,0.000000,81975.980910
+Interest for MTF funded value on 2026-09-19,2026-09-21,Journal Entry,876.595000,0.000000,81099.385910
+Interest for MTF funded value on 2026-09-20,2026-09-21,Journal Entry,876.595000,0.000000,80222.790910
+Interest for MTF funded value on 2026-09-21,2026-09-21,Journal Entry,876.595000,0.000000,79346.195910
+MTF pledge charges for AEROFLEX,2026-09-21,Journal Entry,17.700000,0.000000,79328.495910
+MTF pledge charges for KAYNES,2026-09-21,Journal Entry,17.700000,0.000000,79310.795910
+MTF pledge charges for INOXINDIA,2026-09-21,Journal Entry,17.700000,0.000000,79293.095910
