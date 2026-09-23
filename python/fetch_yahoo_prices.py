@@ -756,6 +756,29 @@ def build_output_row(
 
         merged_row = dict(existing_row)
 
+        # Re-sync recommendation-derived columns from the (possibly corrected)
+        # recommendation. The incremental path used to trust the stored row for
+        # Target 1/2 and Buy Price, so a fixed recommendation.csv had no effect on
+        # an already-present row — stale/swapped targets and buy price persisted.
+        rec_target_1 = parse_optional_float(recommendation.target_1) if recommendation.target_1 else None
+        rec_target_2 = parse_optional_float(recommendation.target_2) if recommendation.target_2 else None
+        rec_buy = (
+            parse_optional_float(recommendation.buy_price_recommendation)
+            if recommendation.buy_price_recommendation
+            else None
+        )
+        merged_row[TARGET_1_COLUMN] = format_number(rec_target_1) if rec_target_1 is not None else ""
+        merged_row[TARGET_2_COLUMN] = format_number(rec_target_2) if rec_target_2 is not None else ""
+        merged_row[BUY_PRICE_RECOMMENDATION_COLUMN] = recommendation.buy_price_recommendation
+        merged_row["Target 1 Return %"] = (
+            f"{(((rec_target_1 / rec_buy) - 1) * 100):.2f}%"
+            if rec_target_1 is not None and rec_buy not in (None, 0) else ""
+        )
+        merged_row["Target 2 Return %"] = (
+            f"{(((rec_target_2 / rec_buy) - 1) * 100):.2f}%"
+            if rec_target_2 is not None and rec_buy not in (None, 0) else ""
+        )
+
         old_high = parse_optional_float(existing_row.get("Highest Price") or "") or 0.0
         new_high = parse_optional_float(new_highest_str) or 0.0
         merged_high = max(old_high, new_high)
@@ -788,6 +811,14 @@ def build_output_row(
             next_slot += 1
 
         resequence_date_slots(merged_row, rec_date)
+        # Recompute every stored Day N Return % against the corrected buy price —
+        # returns previously stored may have been measured vs a wrong/swapped buy.
+        if base_price not in (None, 0):
+            for i in range(1, DAY_COUNT + 1):
+                day_price = (merged_row.get(f"Day {i} Price") or "").strip()
+                if day_price:
+                    return_pct = ((float(day_price) / base_price) - 1) * 100
+                    merged_row[f"Day {i} Return %"] = f"{return_pct:.2f}%"
         _apply_hit_targets(merged_row)
         return merged_row
 
