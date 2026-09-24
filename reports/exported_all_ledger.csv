@@ -654,3 +654,8 @@ Additional maintenance margin reversed for MTF,2026-09-23,MTF Delivery Voucher,0
 MTM obligation blocked for MTF,2026-09-23,MTF Delivery Voucher,302092.630000,0.000000,105480.594060
 Additional maintenance margin blocked for MTF,2026-09-23,MTF Delivery Voucher,155.280938,0.000000,105325.313122
 Interest for MTF funded value on 2026-09-23,2026-09-23,Journal Entry,876.595000,0.000000,104448.718122
+Instant Payout of 100000.0/- to AXIS BANK LTD 925010035869969 A/C number as per withdrawal request made on 2026-09-24 with reference number 20260924f645f48ef3,2026-09-24,Bank Payments,100000.000000,0.000000,4448.718122
+MTM obligation reversed for MTF,2026-09-24,MTF Delivery Voucher,0.000000,302092.630000,306541.348122
+Additional maintenance margin reversed for MTF,2026-09-24,MTF Delivery Voucher,0.000000,155.280938,306696.629060
+MTM obligation blocked for MTF,2026-09-24,MTF Delivery Voucher,341872.710000,0.000000,-35176.080940
+Additional maintenance margin blocked for MTF,2026-09-24,MTF Delivery Voucher,107.086050,0.000000,-35283.166990
