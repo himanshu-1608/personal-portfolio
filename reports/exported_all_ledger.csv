@@ -666,3 +666,14 @@ Additional maintenance margin reversed for MTF,2026-09-25,MTF Delivery Voucher,0
 MTM obligation blocked for MTF,2026-09-25,MTF Delivery Voucher,332634.560000,0.000000,23185.474060
 Additional maintenance margin blocked for MTF,2026-09-25,MTF Delivery Voucher,43.891375,0.000000,23141.582685
 Interest for MTF funded value on 2026-09-25,2026-09-25,Journal Entry,876.595000,0.000000,22264.987685
+MTM obligation reversed for MTF,2026-09-28,MTF Delivery Voucher,0.000000,332634.560000,354899.547685
+Additional maintenance margin reversed for MTF,2026-09-28,MTF Delivery Voucher,0.000000,43.891375,354943.439060
+MTM obligation blocked for MTF,2026-09-28,MTF Delivery Voucher,385842.360000,0.000000,-30898.920940
+Interest for MTF funded value on 2026-09-26,2026-09-28,Journal Entry,876.595000,0.000000,-31775.515940
+Interest for MTF funded value on 2026-09-27,2026-09-28,Journal Entry,876.595000,0.000000,-32652.110940
+Interest for MTF funded value on 2026-09-28,2026-09-28,Journal Entry,876.595000,0.000000,-33528.705940
+Funds added using UPI from VG7860 with reference number 100968242726,2026-09-29,Bank Receipts,0.000000,35000.000000,1471.294060
+MTM obligation reversed for MTF,2026-09-29,MTF Delivery Voucher,0.000000,385842.360000,387313.654060
+MTM obligation blocked for MTF,2026-09-29,MTF Delivery Voucher,380533.080000,0.000000,6780.574060
+Additional maintenance margin blocked for MTF,2026-09-29,MTF Delivery Voucher,87.172415,0.000000,6693.401645
+Interest for MTF funded value on 2026-09-29,2026-09-29,Journal Entry,876.595000,0.000000,5816.806645
