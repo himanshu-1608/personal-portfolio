@@ -681,3 +681,15 @@ MTM obligation reversed for MTF,2026-09-30,MTF Delivery Voucher,0.000000,380533.
 Additional maintenance margin reversed for MTF,2026-09-30,MTF Delivery Voucher,0.000000,87.172415,386437.059060
 MTM obligation blocked for MTF,2026-09-30,MTF Delivery Voucher,389733.100000,0.000000,-3296.040940
 Additional maintenance margin blocked for MTF,2026-09-30,MTF Delivery Voucher,42.761125,0.000000,-3338.802065
+Interest for MTF funded value on 2026-09-30,2026-09-30,Journal Entry,876.595000,0.000000,-4215.397065
+Funds added using UPI from VG7860 with reference number 568814242746,2026-10-01,Bank Receipts,0.000000,50000.000000,45784.602935
+Funds added using UPI from VG7860 with reference number 104135431122,2026-10-01,Bank Receipts,0.000000,10000.000000,55784.602935
+MTM obligation reversed for MTF,2026-10-01,MTF Delivery Voucher,0.000000,389733.100000,445517.702935
+Additional maintenance margin reversed for MTF,2026-10-01,MTF Delivery Voucher,0.000000,42.761125,445560.464060
+MTM obligation blocked for MTF,2026-10-01,MTF Delivery Voucher,421253.950000,0.000000,24306.514060
+Additional maintenance margin blocked for MTF,2026-10-01,MTF Delivery Voucher,41.653480,0.000000,24264.860580
+Initial margin charged for MTF,2026-10-01,Book Voucher,50729.128128,0.000000,-26464.267548
+Net settlement for Equity with settlement number: 2026186,2026-10-01,Book Voucher,0.000000,45283.262170,18818.994622
+Interest for MTF funded value on 2026-10-01,2026-10-01,Journal Entry,876.595000,0.000000,17942.399622
+MTF unpledge charges for SPLPETRO,2026-10-01,Journal Entry,17.700000,0.000000,17924.699622
+DP Charges for Sale of SPLPETRO on 01/10/2026,2026-10-01,Journal Entry,15.340000,0.000000,17909.359622
