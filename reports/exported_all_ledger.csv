@@ -693,3 +693,20 @@ Net settlement for Equity with settlement number: 2026186,2026-10-01,Book Vouche
 Interest for MTF funded value on 2026-10-01,2026-10-01,Journal Entry,876.595000,0.000000,17942.399622
 MTF unpledge charges for SPLPETRO,2026-10-01,Journal Entry,17.700000,0.000000,17924.699622
 DP Charges for Sale of SPLPETRO on 01/10/2026,2026-10-01,Journal Entry,15.340000,0.000000,17909.359622
+MTM obligation reversed for MTF,2026-10-05,MTF Delivery Voucher,0.000000,421253.950000,439163.309622
+Additional maintenance margin reversed for MTF,2026-10-05,MTF Delivery Voucher,0.000000,41.653480,439204.963102
+MTM obligation blocked for MTF,2026-10-05,MTF Delivery Voucher,413070.810000,0.000000,26134.153102
+Additional maintenance margin blocked for MTF,2026-10-05,MTF Delivery Voucher,42.666938,0.000000,26091.486164
+Interest for MTF funded value on 2026-10-02,2026-10-05,Journal Entry,868.988000,0.000000,25222.498164
+Interest for MTF funded value on 2026-10-03,2026-10-05,Journal Entry,868.988000,0.000000,24353.510164
+Interest for MTF funded value on 2026-10-04,2026-10-05,Journal Entry,868.988000,0.000000,23484.522164
+Interest for MTF funded value on 2026-10-05,2026-10-05,Journal Entry,868.988000,0.000000,22615.534164
+MTF pledge charges for AEGISLOG,2026-10-05,Journal Entry,17.700000,0.000000,22597.834164
+Delayed payment charges for September - 2026,2026-10-06,Journal Entry,36.950000,0.000000,22560.884164
+MTM obligation reversed for MTF,2026-10-06,MTF Delivery Voucher,0.000000,413070.810000,435631.694164
+Additional maintenance margin reversed for MTF,2026-10-06,MTF Delivery Voucher,0.000000,42.666938,435674.361102
+MTM obligation blocked for MTF,2026-10-06,MTF Delivery Voucher,364151.400000,0.000000,71522.961102
+Additional maintenance margin blocked for MTF,2026-10-06,MTF Delivery Voucher,42.783730,0.000000,71480.177372
+Initial margin charged for MTF,2026-10-06,Book Voucher,21595.058800,0.000000,49885.118572
+Net settlement for Equity with settlement number: 2026188,2026-10-06,Book Voucher,100.922139,0.000000,49784.196433
+Interest for MTF funded value on 2026-10-06,2026-10-06,Journal Entry,868.988000,0.000000,48915.208433
