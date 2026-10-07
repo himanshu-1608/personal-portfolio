@@ -710,3 +710,9 @@ Additional maintenance margin blocked for MTF,2026-10-06,MTF Delivery Voucher,42
 Initial margin charged for MTF,2026-10-06,Book Voucher,21595.058800,0.000000,49885.118572
 Net settlement for Equity with settlement number: 2026188,2026-10-06,Book Voucher,100.922139,0.000000,49784.196433
 Interest for MTF funded value on 2026-10-06,2026-10-06,Journal Entry,868.988000,0.000000,48915.208433
+Kite Connect API Charges (2026-10-07),2026-10-07,Journal Entry,500.000220,0.000000,48415.208213
+MTM obligation reversed for MTF,2026-10-07,MTF Delivery Voucher,0.000000,364151.400000,412566.608213
+Additional maintenance margin reversed for MTF,2026-10-07,MTF Delivery Voucher,0.000000,42.783730,412609.391943
+MTM obligation blocked for MTF,2026-10-07,MTF Delivery Voucher,364026.180000,0.000000,48583.211943
+Interest for MTF funded value on 2026-10-07,2026-10-07,Journal Entry,886.251000,0.000000,47696.960943
+MTF pledge charges for SPLPETRO,2026-10-07,Journal Entry,17.700000,0.000000,47679.260943
