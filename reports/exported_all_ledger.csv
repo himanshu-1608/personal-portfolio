@@ -716,3 +716,6 @@ Additional maintenance margin reversed for MTF,2026-10-07,MTF Delivery Voucher,0
 MTM obligation blocked for MTF,2026-10-07,MTF Delivery Voucher,364026.180000,0.000000,48583.211943
 Interest for MTF funded value on 2026-10-07,2026-10-07,Journal Entry,886.251000,0.000000,47696.960943
 MTF pledge charges for SPLPETRO,2026-10-07,Journal Entry,17.700000,0.000000,47679.260943
+MTM obligation reversed for MTF,2026-10-08,MTF Delivery Voucher,0.000000,364026.180000,411705.440943
+MTM obligation blocked for MTF,2026-10-08,MTF Delivery Voucher,461648.090000,0.000000,-49942.649057
+Interest for MTF funded value on 2026-10-08,2026-10-08,Journal Entry,886.251000,0.000000,-50828.900057
