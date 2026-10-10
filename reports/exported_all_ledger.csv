@@ -719,3 +719,13 @@ MTF pledge charges for SPLPETRO,2026-10-07,Journal Entry,17.700000,0.000000,4767
 MTM obligation reversed for MTF,2026-10-08,MTF Delivery Voucher,0.000000,364026.180000,411705.440943
 MTM obligation blocked for MTF,2026-10-08,MTF Delivery Voucher,461648.090000,0.000000,-49942.649057
 Interest for MTF funded value on 2026-10-08,2026-10-08,Journal Entry,886.251000,0.000000,-50828.900057
+Call and Trade charges(Auto Square Off) for 2026-10-09,2026-10-09,Journal Entry,118.000000,0.000000,-50946.900057
+DP Charges for Sale of SPARC on 09/10/2026,2026-10-09,Journal Entry,15.340000,0.000000,-50962.240057
+DP Charges for Sale of GULPOLY on 09/10/2026,2026-10-09,Journal Entry,15.340000,0.000000,-50977.580057
+MTM obligation reversed for MTF,2026-10-09,MTF Delivery Voucher,0.000000,461648.090000,410670.509943
+MTM obligation blocked for MTF,2026-10-09,MTF Delivery Voucher,417940.661753,0.000000,-7270.151810
+Additional maintenance margin blocked for MTF,2026-10-09,MTF Delivery Voucher,69.291860,0.000000,-7339.443670
+Net settlement for Equity with settlement number: 2026191,2026-10-09,Book Voucher,0.000000,9844.395533,2504.951863
+Interest for MTF funded value on 2026-10-09,2026-10-09,Journal Entry,886.251000,0.000000,1618.700863
+MTF unpledge charges for GULPOLY,2026-10-09,Journal Entry,17.700000,0.000000,1601.000863
+MTF unpledge charges for SPARC,2026-10-09,Journal Entry,17.700000,0.000000,1583.300863
