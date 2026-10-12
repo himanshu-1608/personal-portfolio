@@ -729,3 +729,12 @@ Net settlement for Equity with settlement number: 2026191,2026-10-09,Book Vouche
 Interest for MTF funded value on 2026-10-09,2026-10-09,Journal Entry,886.251000,0.000000,1618.700863
 MTF unpledge charges for GULPOLY,2026-10-09,Journal Entry,17.700000,0.000000,1601.000863
 MTF unpledge charges for SPARC,2026-10-09,Journal Entry,17.700000,0.000000,1583.300863
+DP Charges for Sale of AEROFLEX on 12/10/2026,2026-10-12,Journal Entry,15.340000,0.000000,1567.960863
+MTM obligation reversed for MTF,2026-10-12,MTF Delivery Voucher,0.000000,417940.661753,419508.622616
+Additional maintenance margin reversed for MTF,2026-10-12,MTF Delivery Voucher,0.000000,69.291860,419577.914476
+MTM obligation blocked for MTF,2026-10-12,MTF Delivery Voucher,401196.461753,0.000000,18381.452723
+Net settlement for Equity with settlement number: 2026192,2026-10-12,Book Voucher,0.000000,69463.355146,87844.807869
+Interest for MTF funded value on 2026-10-10,2026-10-12,Journal Entry,857.392000,0.000000,86987.415869
+Interest for MTF funded value on 2026-10-11,2026-10-12,Journal Entry,857.392000,0.000000,86130.023869
+Interest for MTF funded value on 2026-10-12,2026-10-12,Journal Entry,857.392000,0.000000,85272.631869
+MTF unpledge charges for AEROFLEX,2026-10-12,Journal Entry,17.700000,0.000000,85254.931869
