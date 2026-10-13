@@ -738,3 +738,8 @@ Interest for MTF funded value on 2026-10-10,2026-10-12,Journal Entry,857.392000,
 Interest for MTF funded value on 2026-10-11,2026-10-12,Journal Entry,857.392000,0.000000,86130.023869
 Interest for MTF funded value on 2026-10-12,2026-10-12,Journal Entry,857.392000,0.000000,85272.631869
 MTF unpledge charges for AEROFLEX,2026-10-12,Journal Entry,17.700000,0.000000,85254.931869
+MTM obligation reversed for MTF,2026-10-13,MTF Delivery Voucher,0.000000,401196.461753,486451.393622
+MTM obligation blocked for MTF,2026-10-13,MTF Delivery Voucher,395559.021753,0.000000,90892.371869
+Initial margin charged for MTF,2026-10-13,Book Voucher,32050.322040,0.000000,58842.049829
+Net settlement for Equity with settlement number: 2026193,2026-10-13,Book Voucher,120.418255,0.000000,58721.631574
+Interest for MTF funded value on 2026-10-13,2026-10-13,Journal Entry,829.807000,0.000000,57891.824574
