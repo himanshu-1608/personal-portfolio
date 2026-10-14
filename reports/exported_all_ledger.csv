@@ -743,3 +743,10 @@ MTM obligation blocked for MTF,2026-10-13,MTF Delivery Voucher,395559.021753,0.0
 Initial margin charged for MTF,2026-10-13,Book Voucher,32050.322040,0.000000,58842.049829
 Net settlement for Equity with settlement number: 2026193,2026-10-13,Book Voucher,120.418255,0.000000,58721.631574
 Interest for MTF funded value on 2026-10-13,2026-10-13,Journal Entry,829.807000,0.000000,57891.824574
+MTM obligation reversed for MTF,2026-10-14,MTF Delivery Voucher,0.000000,395559.021753,453450.846327
+MTM obligation blocked for MTF,2026-10-14,MTF Delivery Voucher,385249.341753,0.000000,68201.504574
+Net settlement for Equity with settlement number: 2026194,2026-10-14,Book Voucher,0.000000,14209.283362,82410.787936
+DP Charges for Sale of AEGISLOG on 14/10/2026,2026-10-14,Journal Entry,15.340000,0.000000,82395.447936
+Interest for MTF funded value on 2026-10-14,2026-10-14,Journal Entry,849.369000,0.000000,81546.078936
+MTF pledge charges for SPARC,2026-10-14,Journal Entry,17.700000,0.000000,81528.378936
+MTF unpledge charges for AEGISLOG,2026-10-14,Journal Entry,17.700000,0.000000,81510.678936
