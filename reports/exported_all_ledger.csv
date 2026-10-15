@@ -750,3 +750,5 @@ DP Charges for Sale of AEGISLOG on 14/10/2026,2026-10-14,Journal Entry,15.340000
 Interest for MTF funded value on 2026-10-14,2026-10-14,Journal Entry,849.369000,0.000000,81546.078936
 MTF pledge charges for SPARC,2026-10-14,Journal Entry,17.700000,0.000000,81528.378936
 MTF unpledge charges for AEGISLOG,2026-10-14,Journal Entry,17.700000,0.000000,81510.678936
+MTM obligation reversed for MTF,2026-10-15,MTF Delivery Voucher,0.000000,385249.341753,466760.020689
+MTM obligation blocked for MTF,2026-10-15,MTF Delivery Voucher,419055.831753,0.000000,47704.188936
