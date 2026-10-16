@@ -752,3 +752,6 @@ MTF pledge charges for SPARC,2026-10-14,Journal Entry,17.700000,0.000000,81528.3
 MTF unpledge charges for AEGISLOG,2026-10-14,Journal Entry,17.700000,0.000000,81510.678936
 MTM obligation reversed for MTF,2026-10-15,MTF Delivery Voucher,0.000000,385249.341753,466760.020689
 MTM obligation blocked for MTF,2026-10-15,MTF Delivery Voucher,419055.831753,0.000000,47704.188936
+Interest for MTF funded value on 2026-10-15,2026-10-15,Journal Entry,816.444000,0.000000,46887.744936
+MTM obligation reversed for MTF,2026-10-16,MTF Delivery Voucher,0.000000,419055.831753,465943.576689
+MTM obligation blocked for MTF,2026-10-16,MTF Delivery Voucher,395494.981753,0.000000,70448.594936
