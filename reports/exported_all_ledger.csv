@@ -755,3 +755,5 @@ MTM obligation blocked for MTF,2026-10-15,MTF Delivery Voucher,419055.831753,0.0
 Interest for MTF funded value on 2026-10-15,2026-10-15,Journal Entry,816.444000,0.000000,46887.744936
 MTM obligation reversed for MTF,2026-10-16,MTF Delivery Voucher,0.000000,419055.831753,465943.576689
 MTM obligation blocked for MTF,2026-10-16,MTF Delivery Voucher,395494.981753,0.000000,70448.594936
+Interest for MTF funded value on 2026-10-16,2026-10-16,Journal Entry,816.444000,0.000000,69632.150936
+Funds transferred back as part of quarterly settlement with reference number 69ce13d6c3b989e150123b,2026-10-16,Bank Payments,69632.150000,0.000000,0.000936
