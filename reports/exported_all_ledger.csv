@@ -771,3 +771,10 @@ Funds added using UPI from VG7860 with reference number 533536632956,2026-10-22,
 MTM obligation reversed for MTF,2026-10-22,MTF Delivery Voucher,0.000000,509616.581753,511412.762689
 MTM obligation blocked for MTF,2026-10-22,MTF Delivery Voucher,535270.131753,0.000000,-23857.369064
 Interest for MTF funded value on 2026-10-22,2026-10-22,Journal Entry,816.444000,0.000000,-24673.813064
+DP Charges for Sale of KRN on 23/10/2026,2026-10-23,Journal Entry,15.340000,0.000000,-24689.153064
+MTM obligation reversed for MTF,2026-10-23,MTF Delivery Voucher,0.000000,535270.131753,510580.978689
+MTM obligation blocked for MTF,2026-10-23,MTF Delivery Voucher,594000.041753,0.000000,-83419.063064
+Net settlement for Equity with settlement number: 2026200,2026-10-23,Book Voucher,0.000000,14445.823872,-68973.239192
+Interest for MTF funded value on 2026-10-23,2026-10-23,Journal Entry,816.444000,0.000000,-69789.683192
+MTF unpledge charges for KRN,2026-10-23,Journal Entry,17.700000,0.000000,-69807.383192
+Call and Trade charges for 2026-10-23,2026-10-23,Journal Entry,59.000000,0.000000,-69866.383192
